@@ -10,7 +10,7 @@
     "test": "node scripts/check-docs.mjs"
   },
   "dependencies": {
-    "@astrojs/starlight": "^0.35.0",
+    "@astrojs/starlight": "^0.41.1",
     "astro": "^5.0.0",
     "typescript": "^5.7.2"
   },
