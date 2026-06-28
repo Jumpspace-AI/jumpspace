@@ -1,0 +1,59 @@
+{
+  "suite": "shared-candidates",
+  "shared_candidates": [
+    {
+      "path": "src/metrics/quarterly-extract.ts",
+      "statuses": ["modified"],
+      "sources": ["fixture"],
+      "content": "export function extractQuarterlyMetrics() { return normalizeQuarterlyMetricRows(); }\n"
+    },
+    {
+      "path": "src/auth/password-entry.tsx",
+      "statuses": ["modified"],
+      "sources": ["fixture"],
+      "content": "export function PasswordEntryForm() { return credentialPasswordEntry(); }\n"
+    },
+    {
+      "path": "docs/local-development.md",
+      "statuses": ["untracked"],
+      "sources": ["fixture"],
+      "content": "Local development instructions mention changed files but not product features.\n"
+    }
+  ],
+  "cases": [
+    {
+      "id": "metrics-heading",
+      "description": "Metrics heading chooses the metrics file from a shared candidate pool.",
+      "task": {
+        "id": "TASK-METRICS",
+        "title": "Quarterly metrics extraction",
+        "module": "metrics",
+        "keywords": ["quarterly", "metrics", "extraction"],
+        "spec": "Quarterly metrics extraction normalizes metric rows for reporting."
+      },
+      "expected": {
+        "path": "src/metrics/quarterly-extract.ts",
+        "field": "code",
+        "max_rank": 1,
+        "min_matched_terms": 2
+      }
+    },
+    {
+      "id": "password-heading",
+      "description": "Password heading chooses the auth file from the same candidate pool.",
+      "task": {
+        "id": "TASK-PASSWORD",
+        "title": "Password entry form",
+        "module": "auth",
+        "keywords": ["password", "credential", "entry"],
+        "spec": "Users enter credentials through the password entry form."
+      },
+      "expected": {
+        "path": "src/auth/password-entry.tsx",
+        "field": "code",
+        "max_rank": 1,
+        "min_matched_terms": 2
+      }
+    }
+  ]
+}

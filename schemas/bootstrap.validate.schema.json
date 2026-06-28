@@ -1,0 +1,140 @@
+{
+  "contract_version": 1,
+  "name": "bootstrap.validate",
+  "command": "jumpspace bootstrap validate --file <proposal-file> --json",
+  "description": "Bootstrap proposal validation result.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "proposal",
+      "issues",
+      "errors",
+      "warnings"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "type": "boolean"
+      },
+      "proposal": {
+        "type": "object"
+      },
+      "issues": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "severity",
+            "code",
+            "message"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "severity": {
+              "enum": [
+                "warning",
+                "error"
+              ]
+            },
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "line": {
+              "type": "number"
+            },
+            "taskId": {
+              "type": "string"
+            },
+            "stepId": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "errors": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "severity",
+            "code",
+            "message"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "severity": {
+              "enum": [
+                "warning",
+                "error"
+              ]
+            },
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "line": {
+              "type": "number"
+            },
+            "taskId": {
+              "type": "string"
+            },
+            "stepId": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "warnings": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "severity",
+            "code",
+            "message"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "severity": {
+              "enum": [
+                "warning",
+                "error"
+              ]
+            },
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "line": {
+              "type": "number"
+            },
+            "taskId": {
+              "type": "string"
+            },
+            "stepId": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

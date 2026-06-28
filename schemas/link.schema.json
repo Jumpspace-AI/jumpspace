@@ -1,0 +1,114 @@
+{
+  "contract_version": 1,
+  "name": "link",
+  "command": "jumpspace link update <id> [link options] --json",
+  "description": "Dry-run or applied task metadata link updates for code, tests, dependencies, refs, and gaps.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "task_id",
+      "dry_run",
+      "applied",
+      "changed",
+      "operations",
+      "touched_files"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "const": true
+      },
+      "task_id": {
+        "type": "string"
+      },
+      "dry_run": {
+        "type": "boolean"
+      },
+      "applied": {
+        "type": "boolean"
+      },
+      "changed": {
+        "type": "boolean"
+      },
+      "operations": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "action",
+            "field",
+            "value",
+            "changed",
+            "reason"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "action": {
+              "enum": [
+                "add",
+                "remove"
+              ]
+            },
+            "field": {
+              "enum": [
+                "code",
+                "tests",
+                "depends_on",
+                "refs",
+                "gaps"
+              ]
+            },
+            "value": {
+              "type": "string"
+            },
+            "changed": {
+              "type": "boolean"
+            },
+            "reason": {
+              "enum": [
+                "added",
+                "removed",
+                "already_present",
+                "not_present"
+              ]
+            },
+            "ref": {
+              "type": "object",
+              "required": [
+                "type",
+                "id"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "type": {
+                  "enum": [
+                    "depends_on",
+                    "related_to",
+                    "implements",
+                    "supersedes",
+                    "conflicts_with",
+                    "informs"
+                  ]
+                },
+                "id": {
+                  "type": "string"
+                },
+                "note": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "touched_files": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

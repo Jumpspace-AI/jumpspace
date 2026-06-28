@@ -1,0 +1,41 @@
+name: Bug report
+description: Report a reproducible Jumpspace bug.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Please include command output when possible.
+  - type: input
+    id: version
+    attributes:
+      label: Jumpspace version
+      description: Output of `jumpspace --version`.
+      placeholder: "0.1.0"
+  - type: textarea
+    id: command
+    attributes:
+      label: Command
+      description: The exact command that failed.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output
+      description: Paste human or JSON output. Redact secrets.
+      render: text
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Include `jumpspace release install-doctor --json` when the installed binary may be stale.

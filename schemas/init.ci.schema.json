@@ -1,0 +1,96 @@
+{
+  "contract_version": 1,
+  "name": "init.ci",
+  "command": "jumpspace init --ci github --json",
+  "description": "Installs or previews a repo-local Jumpspace-managed GitHub Actions PR assistant workflow.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "provider",
+      "dry_run",
+      "files",
+      "warnings"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "const": true
+      },
+      "provider": {
+        "const": "github"
+      },
+      "dry_run": {
+        "type": "boolean"
+      },
+      "files": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "provider",
+            "path",
+            "action",
+            "changed",
+            "managed",
+            "reason"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "provider": {
+              "const": "github"
+            },
+            "path": {
+              "type": "string"
+            },
+            "action": {
+              "enum": [
+                "created",
+                "updated",
+                "unchanged"
+              ]
+            },
+            "changed": {
+              "type": "boolean"
+            },
+            "managed": {
+              "type": "boolean"
+            },
+            "reason": {
+              "enum": [
+                "missing",
+                "managed_block",
+                "legacy_jumpspace_template",
+                "already_current",
+                "user_owned"
+              ]
+            }
+          }
+        }
+      },
+      "warnings": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "code",
+            "message"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

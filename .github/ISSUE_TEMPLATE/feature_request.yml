@@ -1,0 +1,30 @@
+name: Feature request
+description: Suggest a Jumpspace improvement.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What workflow is painful or missing?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: What should Jumpspace do?
+    validations:
+      required: true
+  - type: textarea
+    id: agent-use
+    attributes:
+      label: Agent workflow
+      description: How should Codex, Claude Code, or another coding agent use this?
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence or examples
+      description: Link docs, commands, repo examples, or failure cases.

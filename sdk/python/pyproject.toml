@@ -1,0 +1,10 @@
+[project]
+name = "jumpspace-sdk"
+version = "0.0.0"
+description = "Typed Python contract helpers for Jumpspace JSON output."
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["jumpspace_sdk*"]

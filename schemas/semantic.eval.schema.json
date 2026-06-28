@@ -1,0 +1,205 @@
+{
+  "contract_version": 1,
+  "name": "semantic.eval",
+  "command": "jumpspace semantic eval --json",
+  "description": "Compares lexical, deterministic task-vector, and active semantic retrieval on built-in evaluation fixtures.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "query_count",
+      "summary",
+      "active_backend",
+      "results"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "const": true
+      },
+      "query_count": {
+        "type": "number"
+      },
+      "summary": {
+        "type": "object",
+        "required": [
+          "lexical_hits",
+          "local_hits",
+          "active_hits"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "lexical_hits": {
+            "type": "number"
+          },
+          "local_hits": {
+            "type": "number"
+          },
+          "active_hits": {
+            "type": "number"
+          }
+        }
+      },
+      "active_backend": {
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "active",
+              "preferred",
+              "selected",
+              "optional_dependencies",
+              "model",
+              "vector_kind",
+              "store",
+              "degraded",
+              "reason"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "active": {
+                "enum": [
+                  "local-task-vector-v1",
+                  "lancedb-onnx-v1"
+                ]
+              },
+              "preferred": {
+                "const": "lancedb+onnx"
+              },
+              "selected": {
+                "enum": [
+                  "auto",
+                  "local-task-vector-v1",
+                  "lancedb-onnx-v1"
+                ]
+              },
+              "optional_dependencies": {
+                "type": "object",
+                "required": [
+                  "lancedb",
+                  "onnx"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "lancedb": {
+                    "type": "boolean"
+                  },
+                  "onnx": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "model": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "source"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "enum": [
+                      "default",
+                      "config",
+                      "option",
+                      "provider"
+                    ]
+                  },
+                  "dimensions": {
+                    "type": "number"
+                  }
+                }
+              },
+              "vector_kind": {
+                "enum": [
+                  "sparse_terms",
+                  "dense_embedding"
+                ]
+              },
+              "store": {
+                "type": "object",
+                "required": [
+                  "kind",
+                  "path",
+                  "available"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "kind": {
+                    "enum": [
+                      "json",
+                      "lancedb"
+                    ]
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "table": {
+                    "type": "string"
+                  },
+                  "available": {
+                    "type": "boolean"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              },
+              "degraded": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "results": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "id",
+            "query",
+            "expected_task_ids",
+            "lexical",
+            "local",
+            "active"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "query": {
+              "type": "string"
+            },
+            "expected_task_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "lexical": {
+              "type": "object"
+            },
+            "local": {
+              "type": "object"
+            },
+            "active": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    }
+  }
+}
