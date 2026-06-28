@@ -1,0 +1,13 @@
+{
+  "docs": [
+    "docs/specs/**/*.md"
+  ],
+  "indexPath": ".jumpspace/index.json",
+  "semanticIndex": {
+    "enabled": true,
+    "path": ".jumpspace/semantic-index.json",
+    "backend": "auto",
+    "model": "Xenova/all-MiniLM-L6-v2",
+    "storePath": ".jumpspace/semantic-lancedb"
+  }
+}

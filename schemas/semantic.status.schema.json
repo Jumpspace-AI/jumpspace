@@ -1,0 +1,243 @@
+{
+  "contract_version": 1,
+  "name": "semantic.status",
+  "command": "jumpspace semantic status --json",
+  "description": "Reports semantic index readiness, staleness, backend, and non-blocking issues.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "enabled",
+      "path",
+      "exists",
+      "ready",
+      "stale",
+      "issues",
+      "source_index",
+      "backend",
+      "document_count"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "const": true
+      },
+      "enabled": {
+        "type": "boolean"
+      },
+      "path": {
+        "type": "string"
+      },
+      "exists": {
+        "type": "boolean"
+      },
+      "ready": {
+        "type": "boolean"
+      },
+      "stale": {
+        "type": "boolean"
+      },
+      "issues": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "severity",
+            "code",
+            "message"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "severity": {
+              "enum": [
+                "warning",
+                "error"
+              ]
+            },
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "line": {
+              "type": "number"
+            },
+            "taskId": {
+              "type": "string"
+            },
+            "stepId": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "source_index": {
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "path",
+              "generated_at",
+              "task_count",
+              "task_ids",
+              "hash"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "generated_at": {
+                "type": "string"
+              },
+              "task_count": {
+                "type": "number"
+              },
+              "task_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "hash": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "backend": {
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "active",
+              "preferred",
+              "selected",
+              "optional_dependencies",
+              "model",
+              "vector_kind",
+              "store",
+              "degraded",
+              "reason"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "active": {
+                "enum": [
+                  "local-task-vector-v1",
+                  "lancedb-onnx-v1"
+                ]
+              },
+              "preferred": {
+                "const": "lancedb+onnx"
+              },
+              "selected": {
+                "enum": [
+                  "auto",
+                  "local-task-vector-v1",
+                  "lancedb-onnx-v1"
+                ]
+              },
+              "optional_dependencies": {
+                "type": "object",
+                "required": [
+                  "lancedb",
+                  "onnx"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "lancedb": {
+                    "type": "boolean"
+                  },
+                  "onnx": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "model": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "source"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "enum": [
+                      "default",
+                      "config",
+                      "option",
+                      "provider"
+                    ]
+                  },
+                  "dimensions": {
+                    "type": "number"
+                  }
+                }
+              },
+              "vector_kind": {
+                "enum": [
+                  "sparse_terms",
+                  "dense_embedding"
+                ]
+              },
+              "store": {
+                "type": "object",
+                "required": [
+                  "kind",
+                  "path",
+                  "available"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "kind": {
+                    "enum": [
+                      "json",
+                      "lancedb"
+                    ]
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "table": {
+                    "type": "string"
+                  },
+                  "available": {
+                    "type": "boolean"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              },
+              "degraded": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "document_count": {
+        "type": "number"
+      }
+    }
+  }
+}

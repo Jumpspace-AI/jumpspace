@@ -1,0 +1,45 @@
+{
+  "contract_version": 1,
+  "name": "ask",
+  "command": "jumpspace ask <question...> --json",
+  "description": "Evidence summary for a repo-local question. This is retrieval evidence, not an authoritative answer.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "question",
+      "retrieval_mode",
+      "evidence",
+      "coverage",
+      "unanswered_terms"
+    ],
+    "additionalProperties": true,
+    "properties": {
+      "ok": {
+        "const": true
+      },
+      "question": {
+        "type": "string"
+      },
+      "retrieval_mode": {
+        "type": "string"
+      },
+      "evidence": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "coverage": {
+        "type": "object"
+      },
+      "unanswered_terms": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

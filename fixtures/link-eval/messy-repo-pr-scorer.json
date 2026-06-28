@@ -1,0 +1,99 @@
+{
+  "suite": "messy-repo-pr-scorer",
+  "shared_candidates": [
+    {
+      "path": "src/metrics/quarterly-extract.ts",
+      "statuses": ["modified"],
+      "sources": ["fixture"],
+      "content": "export function extractQuarterlyMetrics() { return normalizeQuarterlyMetricRows(); }\n"
+    },
+    {
+      "path": "src/auth/password-entry.tsx",
+      "statuses": ["modified"],
+      "sources": ["fixture"],
+      "content": "export function PasswordEntryForm() { return credentialPasswordEntry(); }\n"
+    },
+    {
+      "path": "src/attio/local-development-client.ts",
+      "statuses": ["untracked"],
+      "sources": ["fixture"],
+      "content": "export const attioLocalDevelopmentClient = true;\n"
+    },
+    {
+      "path": "src/shared/touched-file.ts",
+      "statuses": ["untracked"],
+      "sources": ["fixture"],
+      "content": "export const touchedFile = true;\n"
+    }
+  ],
+  "cases": [
+    {
+      "id": "quarterly-metrics-heading",
+      "description": "The metrics heading picks only the metrics implementation from a shared changed-file pool.",
+      "task": {
+        "id": "TASK-METRICS",
+        "title": "Quarterly metrics extraction",
+        "module": "metrics",
+        "keywords": ["quarterly", "metrics", "extraction"],
+        "spec": "Quarterly metrics extraction normalizes metric rows for reporting."
+      },
+      "expected": {
+        "path": "src/metrics/quarterly-extract.ts",
+        "field": "code",
+        "max_rank": 1,
+        "min_matched_terms": 2
+      }
+    },
+    {
+      "id": "password-entry-heading",
+      "description": "The password heading picks only the auth implementation from the same changed-file pool.",
+      "task": {
+        "id": "TASK-PASSWORD",
+        "title": "Password entry form",
+        "module": "auth",
+        "keywords": ["password", "credential", "entry"],
+        "spec": "Users enter credentials through the password entry form."
+      },
+      "expected": {
+        "path": "src/auth/password-entry.tsx",
+        "field": "code",
+        "max_rank": 1,
+        "min_matched_terms": 2
+      }
+    },
+    {
+      "id": "local-development-heading",
+      "description": "A repeated Local development heading does not inherit every touched file as a useful link.",
+      "task": {
+        "id": "TASK-LOCAL-DEVELOPMENT",
+        "title": "Local development",
+        "module": "docs",
+        "keywords": ["local", "development", "setup"],
+        "spec": "Local development setup explains how to run the repo."
+      },
+      "expected": {
+        "path": "src/attio/local-development-client.ts",
+        "field": "code",
+        "max_rank": 1,
+        "min_matched_terms": 2
+      }
+    },
+    {
+      "id": "unrelated-heading",
+      "description": "An unrelated heading rejects the shared touched files rather than presenting score-only candidates.",
+      "task": {
+        "id": "TASK-BILLING",
+        "title": "Invoice approval workflow",
+        "module": "billing",
+        "keywords": ["invoice", "approval"],
+        "spec": "Approvers review invoice totals before payment."
+      },
+      "expected": {
+        "path": null,
+        "field": null,
+        "max_rank": null,
+        "min_matched_terms": 0
+      }
+    }
+  ]
+}

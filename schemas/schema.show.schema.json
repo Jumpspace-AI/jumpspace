@@ -1,0 +1,27 @@
+{
+  "contract_version": 1,
+  "name": "schema.show",
+  "command": "jumpspace schema show <name> --json",
+  "description": "Returns one named JSON schema contract.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "contract_version",
+      "schema"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "const": true
+      },
+      "contract_version": {
+        "const": 1
+      },
+      "schema": {
+        "type": "object"
+      }
+    }
+  }
+}

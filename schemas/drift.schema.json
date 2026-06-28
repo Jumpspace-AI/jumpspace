@@ -1,0 +1,44 @@
+{
+  "contract_version": 1,
+  "name": "drift",
+  "command": "jumpspace drift --since <ref> --json",
+  "description": "Factual task-memory drift separated from heuristic maintenance warnings.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "since",
+      "changed",
+      "facts",
+      "warnings"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "const": true
+      },
+      "since": {
+        "type": "string"
+      },
+      "changed": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "facts": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "warnings": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

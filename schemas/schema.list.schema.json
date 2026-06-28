@@ -1,0 +1,47 @@
+{
+  "contract_version": 1,
+  "name": "schema.list",
+  "command": "jumpspace schema list --json",
+  "description": "Lists available JSON schema contracts.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "contract_version",
+      "schemas"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "const": true
+      },
+      "contract_version": {
+        "const": 1
+      },
+      "schemas": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "name",
+            "command",
+            "description"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "command": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

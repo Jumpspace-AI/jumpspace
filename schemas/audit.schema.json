@@ -1,0 +1,136 @@
+{
+  "contract_version": 1,
+  "name": "audit",
+  "command": "jumpspace audit --json",
+  "description": "Validation issues for task metadata and graph references.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "issues",
+      "ok",
+      "errors",
+      "warnings"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "issues": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "severity",
+            "code",
+            "message"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "severity": {
+              "enum": [
+                "warning",
+                "error"
+              ]
+            },
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "line": {
+              "type": "number"
+            },
+            "taskId": {
+              "type": "string"
+            },
+            "stepId": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ok": {
+        "type": "boolean"
+      },
+      "errors": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "severity",
+            "code",
+            "message"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "severity": {
+              "enum": [
+                "warning",
+                "error"
+              ]
+            },
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "line": {
+              "type": "number"
+            },
+            "taskId": {
+              "type": "string"
+            },
+            "stepId": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "warnings": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "severity",
+            "code",
+            "message"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "severity": {
+              "enum": [
+                "warning",
+                "error"
+              ]
+            },
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "line": {
+              "type": "number"
+            },
+            "taskId": {
+              "type": "string"
+            },
+            "stepId": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

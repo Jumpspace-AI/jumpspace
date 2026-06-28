@@ -1,0 +1,593 @@
+{
+  "contract_version": 1,
+  "name": "release.install-doctor",
+  "command": "jumpspace release install-doctor --json",
+  "description": "Active install freshness diagnostics for the invoked and PATH-resolved Jumpspace binaries.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "checked_at",
+      "status",
+      "summary",
+      "invocation",
+      "binaries",
+      "workspace",
+      "comparisons",
+      "warnings",
+      "blockers",
+      "repair_commands"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "type": "boolean"
+      },
+      "checked_at": {
+        "type": "string"
+      },
+      "status": {
+        "enum": [
+          "current",
+          "attention",
+          "blocked"
+        ]
+      },
+      "summary": {
+        "type": "object",
+        "required": [
+          "blockers",
+          "warnings",
+          "repair_commands"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "blockers": {
+            "type": "number"
+          },
+          "warnings": {
+            "type": "number"
+          },
+          "repair_commands": {
+            "type": "number"
+          }
+        }
+      },
+      "invocation": {
+        "type": "object",
+        "required": [
+          "argv1",
+          "exec_path",
+          "cwd"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "argv1": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "exec_path": {
+            "type": "string"
+          },
+          "cwd": {
+            "type": "string"
+          }
+        }
+      },
+      "binaries": {
+        "type": "object",
+        "required": [
+          "invoked",
+          "path"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "invoked": {
+            "type": "object",
+            "required": [
+              "label",
+              "path",
+              "realpath",
+              "exists",
+              "mode",
+              "executable",
+              "package_root",
+              "package_name",
+              "package_version",
+              "cli_version",
+              "schema_count",
+              "schema_contract_version",
+              "probe_errors"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "label": {
+                "enum": [
+                  "invoked",
+                  "path"
+                ]
+              },
+              "path": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "realpath": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "exists": {
+                "type": "boolean"
+              },
+              "mode": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "executable": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "package_root": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "package_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "package_version": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "cli_version": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "schema_count": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "schema_contract_version": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "probe_errors": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "path": {
+            "type": "object",
+            "required": [
+              "label",
+              "path",
+              "realpath",
+              "exists",
+              "mode",
+              "executable",
+              "package_root",
+              "package_name",
+              "package_version",
+              "cli_version",
+              "schema_count",
+              "schema_contract_version",
+              "probe_errors"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "label": {
+                "enum": [
+                  "invoked",
+                  "path"
+                ]
+              },
+              "path": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "realpath": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "exists": {
+                "type": "boolean"
+              },
+              "mode": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "executable": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "package_root": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "package_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "package_version": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "cli_version": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "schema_count": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "schema_contract_version": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "probe_errors": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "workspace": {
+        "type": "object",
+        "required": [
+          "root",
+          "is_jumpspace_checkout",
+          "package_name",
+          "package_version",
+          "dist_cli_path",
+          "dist_cli_realpath",
+          "dist_cli_exists",
+          "dist_cli_executable",
+          "schema_count"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "root": {
+            "type": "string"
+          },
+          "is_jumpspace_checkout": {
+            "type": "boolean"
+          },
+          "package_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "package_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "dist_cli_path": {
+            "type": "string"
+          },
+          "dist_cli_realpath": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "dist_cli_exists": {
+            "type": "boolean"
+          },
+          "dist_cli_executable": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "schema_count": {
+            "type": "number"
+          }
+        }
+      },
+      "comparisons": {
+        "type": "object",
+        "required": [
+          "invoked_matches_workspace_dist",
+          "path_matches_workspace_dist",
+          "invoked_matches_path_binary",
+          "invoked_cli_version_matches_workspace",
+          "path_cli_version_matches_workspace",
+          "invoked_schema_count_matches_workspace",
+          "path_schema_count_matches_workspace"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "invoked_matches_workspace_dist": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "path_matches_workspace_dist": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "invoked_matches_path_binary": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "invoked_cli_version_matches_workspace": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "path_cli_version_matches_workspace": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "invoked_schema_count_matches_workspace": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "path_schema_count_matches_workspace": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "warnings": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "code",
+            "message"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "expected": {
+              "type": "string"
+            },
+            "actual": {
+              "type": "string"
+            },
+            "command": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "code",
+            "message"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "expected": {
+              "type": "string"
+            },
+            "actual": {
+              "type": "string"
+            },
+            "command": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "repair_commands": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "contract_version": 1,
+  "name": "plan.validate",
+  "command": "jumpspace plan validate <id> --json",
+  "description": "Durable plan validation result with issues and structured errors.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "task_id",
+      "ok",
+      "issues",
+      "errors"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "task_id": {
+        "type": "string"
+      },
+      "ok": {
+        "type": "boolean"
+      },
+      "issues": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "severity",
+            "code",
+            "message"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "severity": {
+              "enum": [
+                "warning",
+                "error"
+              ]
+            },
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "line": {
+              "type": "number"
+            },
+            "taskId": {
+              "type": "string"
+            },
+            "stepId": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "errors": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "code",
+            "message"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "taskId": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "stepId": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

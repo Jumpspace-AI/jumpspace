@@ -1,0 +1,294 @@
+{
+  "contract_version": 1,
+  "schema_count": 48,
+  "schemas": [
+    {
+      "name": "error",
+      "command": "all --json failures",
+      "description": "Standard JSON failure envelope emitted by command failures.",
+      "file": "error.schema.json"
+    },
+    {
+      "name": "schema.list",
+      "command": "jumpspace schema list --json",
+      "description": "Lists available JSON schema contracts.",
+      "file": "schema.list.schema.json"
+    },
+    {
+      "name": "schema.show",
+      "command": "jumpspace schema show <name> --json",
+      "description": "Returns one named JSON schema contract.",
+      "file": "schema.show.schema.json"
+    },
+    {
+      "name": "schema.coverage",
+      "command": "jumpspace schema coverage --json",
+      "description": "Reports schema coverage across declared JSON commands, the live catalog, generated artifacts, and SDK contract surfaces.",
+      "file": "schema.coverage.schema.json"
+    },
+    {
+      "name": "list",
+      "command": "jumpspace list --json",
+      "description": "Indexed task list.",
+      "file": "list.schema.json"
+    },
+    {
+      "name": "find",
+      "command": "jumpspace find <query...> --json",
+      "description": "Task search results with matched and unmatched terms.",
+      "file": "find.schema.json"
+    },
+    {
+      "name": "find.compact",
+      "command": "jumpspace find <query...> --json --compact",
+      "description": "Compact task search results for agent orientation without embedded plans or long specs.",
+      "file": "find.compact.schema.json"
+    },
+    {
+      "name": "audit",
+      "command": "jumpspace audit --json",
+      "description": "Validation issues for task metadata and graph references.",
+      "file": "audit.schema.json"
+    },
+    {
+      "name": "last",
+      "command": "jumpspace last --json",
+      "description": "Most recent successful mutation summary.",
+      "file": "last.schema.json"
+    },
+    {
+      "name": "history",
+      "command": "jumpspace history [--task <id>] [--limit <n>] --json",
+      "description": "Generated mutation history entries, newest first, with task and limit filters.",
+      "file": "history.schema.json"
+    },
+    {
+      "name": "handoff",
+      "command": "jumpspace handoff [--task <id>] [--limit <n>] --json",
+      "description": "Agent handoff recap with recent mutations, graph health, optional task state, and suggested next commands.",
+      "file": "handoff.schema.json"
+    },
+    {
+      "name": "init.ci",
+      "command": "jumpspace init --ci github --json",
+      "description": "Installs or previews a repo-local Jumpspace-managed GitHub Actions PR assistant workflow.",
+      "file": "init.ci.schema.json"
+    },
+    {
+      "name": "doctor",
+      "command": "jumpspace doctor [--since <ref>] --json",
+      "description": "Post-mutation diagnostics that separate blocking errors, factual warnings, and suggested repairs.",
+      "file": "doctor.schema.json"
+    },
+    {
+      "name": "release.doctor",
+      "command": "jumpspace release doctor [--check-registry] --json",
+      "description": "Package release-readiness diagnostics with local blockers separated from external npm registry state.",
+      "file": "release.doctor.schema.json"
+    },
+    {
+      "name": "release.install-doctor",
+      "command": "jumpspace release install-doctor --json",
+      "description": "Active install freshness diagnostics for the invoked and PATH-resolved Jumpspace binaries.",
+      "file": "release.install-doctor.schema.json"
+    },
+    {
+      "name": "context",
+      "command": "jumpspace context <id> --json",
+      "description": "Agent-ready task context packet.",
+      "file": "context.schema.json"
+    },
+    {
+      "name": "related",
+      "command": "jumpspace related <id> --json",
+      "description": "Full dependency and reference relationships for a task.",
+      "file": "related.schema.json"
+    },
+    {
+      "name": "related.compact",
+      "command": "jumpspace related <id> --json --compact",
+      "description": "Compact dependency and reference relationships for agent orientation without embedded plans or long specs.",
+      "file": "related.compact.schema.json"
+    },
+    {
+      "name": "plan.review",
+      "command": "jumpspace plan review <id> --json",
+      "description": "Human approval and execution-readiness packet for a documented task.",
+      "file": "plan.review.schema.json"
+    },
+    {
+      "name": "plan.save",
+      "command": "jumpspace plan save <id> --file <plan-file> --json",
+      "description": "Successful durable plan persistence result.",
+      "file": "plan.save.schema.json"
+    },
+    {
+      "name": "plan.show",
+      "command": "jumpspace plan show <id> --json",
+      "description": "Persisted durable plan for a task.",
+      "file": "plan.show.schema.json"
+    },
+    {
+      "name": "plan.validate",
+      "command": "jumpspace plan validate <id> --json",
+      "description": "Durable plan validation result with issues and structured errors.",
+      "file": "plan.validate.schema.json"
+    },
+    {
+      "name": "ready",
+      "command": "jumpspace ready --json",
+      "description": "Approved or partial tasks ready for agent execution.",
+      "file": "ready.schema.json"
+    },
+    {
+      "name": "execute",
+      "command": "jumpspace execute <id> --json",
+      "description": "Execution gate packet for an approved or partial task.",
+      "file": "execute.schema.json"
+    },
+    {
+      "name": "next",
+      "command": "jumpspace next <id> --json",
+      "description": "Pending unblocked durable plan steps for a task.",
+      "file": "next.schema.json"
+    },
+    {
+      "name": "step.complete",
+      "command": "jumpspace step complete <task-id> <step-id> --evidence <evidence> --json",
+      "description": "Successful durable plan step completion result.",
+      "file": "step.complete.schema.json"
+    },
+    {
+      "name": "status",
+      "command": "jumpspace status <id> <status> --json",
+      "description": "Successful task status update result. Verified status is excluded and must be earned with verify.",
+      "file": "status.schema.json"
+    },
+    {
+      "name": "verify",
+      "command": "jumpspace verify <id> --check <cmd> --criteria <criterion-id> --json",
+      "description": "Successful earned verification result with commit, checks, criteria coverage, and evidence.",
+      "file": "verify.schema.json"
+    },
+    {
+      "name": "work",
+      "command": "jumpspace work <id> [--since <ref>] --json",
+      "description": "Complete agent start packet for a ready task, including plan state, next steps, verification, schemas, guardrails, and optional drift.",
+      "file": "work.schema.json"
+    },
+    {
+      "name": "ask",
+      "command": "jumpspace ask <question...> --json",
+      "description": "Evidence summary for a repo-local question. This is retrieval evidence, not an authoritative answer.",
+      "file": "ask.schema.json"
+    },
+    {
+      "name": "ask.compact",
+      "command": "jumpspace ask <question...> --json --compact",
+      "description": "Compact evidence summary for agent orientation. This is retrieval evidence, not an authoritative answer.",
+      "file": "ask.compact.schema.json"
+    },
+    {
+      "name": "semantic.build",
+      "command": "jumpspace semantic build --json",
+      "description": "Builds and enables the optional local semantic task index.",
+      "file": "semantic.build.schema.json"
+    },
+    {
+      "name": "semantic.status",
+      "command": "jumpspace semantic status --json",
+      "description": "Reports semantic index readiness, staleness, backend, and non-blocking issues.",
+      "file": "semantic.status.schema.json"
+    },
+    {
+      "name": "semantic.search",
+      "command": "jumpspace semantic search <query...> --json",
+      "description": "Searches the generated local semantic task index.",
+      "file": "semantic.search.schema.json"
+    },
+    {
+      "name": "semantic.eval",
+      "command": "jumpspace semantic eval --json",
+      "description": "Compares lexical, deterministic task-vector, and active semantic retrieval on built-in evaluation fixtures.",
+      "file": "semantic.eval.schema.json"
+    },
+    {
+      "name": "query",
+      "command": "jumpspace query [filters] --json",
+      "description": "Deterministic graph query results with applied filters, matched graph paths, and unanswered constraints.",
+      "file": "query.schema.json"
+    },
+    {
+      "name": "drift",
+      "command": "jumpspace drift --since <ref> --json",
+      "description": "Factual task-memory drift separated from heuristic maintenance warnings.",
+      "file": "drift.schema.json"
+    },
+    {
+      "name": "ci",
+      "command": "jumpspace ci --since <ref> [--query <field=value>] --json",
+      "description": "Local CI/PR report with scan, audit, doctor, drift, repair suggestions, graph query packets, task-block suggestions, and a Markdown PR comment.",
+      "file": "ci.schema.json"
+    },
+    {
+      "name": "pr.comment",
+      "command": "jumpspace pr comment --since <ref> --json",
+      "description": "Idempotent, review-only PR assistant comment packet built from the local CI report.",
+      "file": "pr.comment.schema.json"
+    },
+    {
+      "name": "repair",
+      "command": "jumpspace repair --since <ref> [--apply] --json",
+      "description": "Dry-run or applied task-memory repairs for Git path drift. Renames are mechanical fixes; missing/deleted linked files become explicit gaps.",
+      "file": "repair.schema.json"
+    },
+    {
+      "name": "link",
+      "command": "jumpspace link update <id> [link options] --json",
+      "description": "Dry-run or applied task metadata link updates for code, tests, dependencies, refs, and gaps.",
+      "file": "link.schema.json"
+    },
+    {
+      "name": "link.suggest",
+      "command": "jumpspace link suggest <id> [--since <ref>] [--path <path>] --json",
+      "description": "Evidence-backed code/test link suggestions from changed files or explicit candidate paths. This command never mutates source.",
+      "file": "link.suggest.schema.json"
+    },
+    {
+      "name": "link.eval",
+      "command": "jumpspace link eval [--file <fixture-file>] --json",
+      "description": "Built-in or file-based ranking quality evaluation for link suggestion fixtures.",
+      "file": "link.eval.schema.json"
+    },
+    {
+      "name": "bootstrap.context",
+      "command": "jumpspace bootstrap context [paths...] --json",
+      "description": "Markdown heading context packet for AI-assisted graph bootstrap proposals.",
+      "file": "bootstrap.context.schema.json"
+    },
+    {
+      "name": "bootstrap.discover",
+      "command": "jumpspace bootstrap discover --json",
+      "description": "Discovers common Markdown docs, recommended config globs, profile hints, and ignored noisy paths.",
+      "file": "bootstrap.discover.schema.json"
+    },
+    {
+      "name": "bootstrap.propose",
+      "command": "jumpspace bootstrap propose [paths...] [--file <proposal-file>] --json",
+      "description": "Deterministic bootstrap proposal draft packet. This is extraction evidence, not agent reasoning, and apply still requires human approval.",
+      "file": "bootstrap.propose.schema.json"
+    },
+    {
+      "name": "bootstrap.validate",
+      "command": "jumpspace bootstrap validate --file <proposal-file> --json",
+      "description": "Bootstrap proposal validation result.",
+      "file": "bootstrap.validate.schema.json"
+    },
+    {
+      "name": "bootstrap.apply",
+      "command": "jumpspace bootstrap apply --file <proposal-file> [--dry-run] --json",
+      "description": "Bootstrap apply or dry-run result.",
+      "file": "bootstrap.apply.schema.json"
+    }
+  ]
+}

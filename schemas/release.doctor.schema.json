@@ -1,0 +1,530 @@
+{
+  "contract_version": 1,
+  "name": "release.doctor",
+  "command": "jumpspace release doctor [--check-registry] --json",
+  "description": "Package release-readiness diagnostics with local blockers separated from external npm registry state.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "checked_at",
+      "status",
+      "summary",
+      "package",
+      "package_dry_run",
+      "schemas",
+      "registry",
+      "local_blockers",
+      "local_warnings",
+      "external_warnings"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "type": "boolean"
+      },
+      "checked_at": {
+        "type": "string"
+      },
+      "status": {
+        "enum": [
+          "ready",
+          "blocked"
+        ]
+      },
+      "summary": {
+        "type": "object",
+        "required": [
+          "local_blockers",
+          "local_warnings",
+          "external_warnings"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "local_blockers": {
+            "type": "number"
+          },
+          "local_warnings": {
+            "type": "number"
+          },
+          "external_warnings": {
+            "type": "number"
+          }
+        }
+      },
+      "package": {
+        "type": "object",
+        "required": [
+          "name",
+          "version",
+          "license",
+          "repository",
+          "homepage",
+          "bugs",
+          "keywords",
+          "metadata_checks",
+          "license_file",
+          "bin"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "license": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "repository": {},
+          "homepage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "bugs": {},
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "metadata_checks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "status",
+                "message"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "status": {
+                  "enum": [
+                    "pass",
+                    "fail",
+                    "warning"
+                  ]
+                },
+                "message": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "expected": {
+                  "type": "string"
+                },
+                "actual": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "license_file": {
+            "type": "object",
+            "required": [
+              "path",
+              "exists"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "exists": {
+                "type": "boolean"
+              }
+            }
+          },
+          "bin": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "name",
+                  "target",
+                  "path",
+                  "exists",
+                  "mode",
+                  "executable"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "target": {
+                    "type": "string"
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "exists": {
+                    "type": "boolean"
+                  },
+                  "mode": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "executable": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "package_dry_run": {
+        "type": "object",
+        "required": [
+          "ok",
+          "command",
+          "exit_code",
+          "stderr",
+          "error",
+          "filename",
+          "entry_count",
+          "files",
+          "required_files"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "command": {
+            "type": "string"
+          },
+          "exit_code": {
+            "type": "number"
+          },
+          "stderr": {
+            "type": "string"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "filename": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "entry_count": {
+            "type": "number"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "path"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "size": {
+                  "type": "number"
+                },
+                "mode": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "required_files": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "name",
+                "status",
+                "message"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "status": {
+                  "enum": [
+                    "pass",
+                    "fail",
+                    "warning"
+                  ]
+                },
+                "message": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "expected": {
+                  "type": "string"
+                },
+                "actual": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "schemas": {
+        "type": "object",
+        "required": [
+          "expected",
+          "included",
+          "missing"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "expected": {
+            "type": "number"
+          },
+          "included": {
+            "type": "number"
+          },
+          "missing": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "registry": {
+        "type": "object",
+        "required": [
+          "package_name",
+          "status",
+          "check",
+          "checked",
+          "command",
+          "exit_code",
+          "version",
+          "reason"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "package_name": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "available",
+              "unavailable",
+              "unknown"
+            ]
+          },
+          "check": {
+            "enum": [
+              "checked",
+              "not_requested",
+              "failed"
+            ]
+          },
+          "checked": {
+            "type": "boolean"
+          },
+          "command": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "exit_code": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "local_blockers": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "code",
+            "message",
+            "category"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "category": {
+              "enum": [
+                "local",
+                "external"
+              ]
+            },
+            "path": {
+              "type": "string"
+            },
+            "field": {
+              "type": "string"
+            },
+            "expected": {
+              "type": "string"
+            },
+            "actual": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "local_warnings": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "code",
+            "message",
+            "category"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "category": {
+              "enum": [
+                "local",
+                "external"
+              ]
+            },
+            "path": {
+              "type": "string"
+            },
+            "field": {
+              "type": "string"
+            },
+            "expected": {
+              "type": "string"
+            },
+            "actual": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "external_warnings": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "code",
+            "message",
+            "category"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "category": {
+              "enum": [
+                "local",
+                "external"
+              ]
+            },
+            "path": {
+              "type": "string"
+            },
+            "field": {
+              "type": "string"
+            },
+            "expected": {
+              "type": "string"
+            },
+            "actual": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

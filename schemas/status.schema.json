@@ -1,0 +1,34 @@
+{
+  "contract_version": 1,
+  "name": "status",
+  "command": "jumpspace status <id> <status> --json",
+  "description": "Successful task status update result. Verified status is excluded and must be earned with verify.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "task_id",
+      "status"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "const": true
+      },
+      "task_id": {
+        "type": "string"
+      },
+      "status": {
+        "enum": [
+          "draft",
+          "proposed",
+          "approved",
+          "partial",
+          "implemented",
+          "stale"
+        ]
+      }
+    }
+  }
+}

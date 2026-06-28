@@ -1,0 +1,193 @@
+{
+  "contract_version": 1,
+  "name": "schema.coverage",
+  "command": "jumpspace schema coverage --json",
+  "description": "Reports schema coverage across declared JSON commands, the live catalog, generated artifacts, and SDK contract surfaces.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "contract_version",
+      "summary",
+      "declared",
+      "catalog",
+      "generated",
+      "sdk",
+      "issues"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "type": "boolean"
+      },
+      "contract_version": {
+        "const": 1
+      },
+      "summary": {
+        "type": "object",
+        "required": [
+          "declared",
+          "catalog",
+          "artifacts",
+          "sdk_names",
+          "missing",
+          "orphaned",
+          "stale",
+          "issues",
+          "errors"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "declared": {
+            "type": "number"
+          },
+          "catalog": {
+            "type": "number"
+          },
+          "artifacts": {
+            "type": "number"
+          },
+          "sdk_names": {
+            "type": "number"
+          },
+          "missing": {
+            "type": "number"
+          },
+          "orphaned": {
+            "type": "number"
+          },
+          "stale": {
+            "type": "number"
+          },
+          "issues": {
+            "type": "number"
+          },
+          "errors": {
+            "type": "number"
+          }
+        }
+      },
+      "declared": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "name",
+            "command",
+            "description"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "command": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "catalog": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "name",
+            "command",
+            "description"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "command": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "generated": {
+        "type": "object",
+        "required": [
+          "schema_dir",
+          "catalog_path",
+          "artifact_count"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "schema_dir": {
+            "type": "string"
+          },
+          "catalog_path": {
+            "type": "string"
+          },
+          "artifact_count": {
+            "type": "number"
+          }
+        }
+      },
+      "sdk": {
+        "type": "object",
+        "required": [
+          "name_count",
+          "schema_names"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name_count": {
+            "type": "number"
+          },
+          "schema_names": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "issues": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "severity",
+            "code",
+            "message"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "severity": {
+              "enum": [
+                "error",
+                "warning"
+              ]
+            },
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "command": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

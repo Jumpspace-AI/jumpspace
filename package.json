@@ -1,0 +1,79 @@
+{
+  "name": "jumpspace",
+  "version": "0.1.0",
+  "description": "Repo-local implementation memory for AI coding agents.",
+  "license": "MIT",
+  "keywords": [
+    "ai",
+    "agents",
+    "cli",
+    "developer-tools",
+    "documentation",
+    "knowledge-graph",
+    "repo-memory"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/christopherrote/jumpspace.git"
+  },
+  "bugs": {
+    "url": "https://github.com/christopherrote/jumpspace/issues"
+  },
+  "homepage": "https://github.com/christopherrote/jumpspace#readme",
+  "type": "module",
+  "types": "./dist/sdk/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/sdk/index.d.ts",
+      "import": "./dist/sdk/index.js"
+    },
+    "./sdk": {
+      "types": "./dist/sdk/index.d.ts",
+      "import": "./dist/sdk/index.js"
+    },
+    "./schemas": {
+      "types": "./dist/core/schemas.d.ts",
+      "import": "./dist/core/schemas.js"
+    },
+    "./schemas/catalog.json": "./schemas/catalog.json",
+    "./schemas/*.schema.json": "./schemas/*.schema.json",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "jumpspace": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "CHANGELOG.md",
+    "schemas/*.json",
+    "sdk/python/jumpspace_sdk/*.py",
+    "sdk/python/pyproject.toml",
+    "src/templates",
+    "README.md"
+  ],
+  "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "npm run clean && tsc && npm run copy:templates && node scripts/fix-bin-mode.mjs",
+    "copy:templates": "mkdir -p dist/templates && cp src/templates/* dist/templates/",
+    "generate:schemas": "npm run build && node scripts/generate-schemas.mjs",
+    "test": "vitest run",
+    "dev": "tsx src/cli.ts"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "commander": "^12.1.0",
+    "fast-glob": "^3.3.3",
+    "yaml": "^2.6.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^4.1.9"
+  }
+}
