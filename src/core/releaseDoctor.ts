@@ -104,6 +104,8 @@ const REQUIRED_PACKAGE_FILES = [
   "package.json",
   "README.md",
   "LICENSE",
+  "NOTICE",
+  "TRADEMARKS.md",
   "dist/cli.js",
   "dist/templates/AGENTS.md",
   "dist/templates/SKILL.md",

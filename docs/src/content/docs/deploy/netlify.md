@@ -42,10 +42,10 @@ The module includes `docs/netlify.toml` with the build command, publish director
 The docs module sets Astro's `site` option from environment variables:
 
 ```bash
-DOCS_SITE_URL=https://docs.example.com npm run build
+DOCS_SITE_URL=https://docs.jumpspace.ai npm run build
 ```
 
-On Netlify, set `DOCS_SITE_URL` to the canonical docs domain after the production site is assigned. If that variable is not set, the config falls back to Netlify's `URL` build environment variable and then to `https://jumpspace.netlify.app` for local builds.
+On Netlify, set `DOCS_SITE_URL` to `https://docs.jumpspace.ai`. If that variable is not set, the config falls back to Netlify's `URL` build environment variable and then to `https://docs.jumpspace.ai` for local builds.
 
 This keeps sitemap and canonical URL generation enabled during local verification while still letting the hosted production URL be controlled by Netlify settings.
 

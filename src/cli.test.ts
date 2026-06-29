@@ -341,7 +341,7 @@ describe("CLI durable plans", () => {
       package: {
         name: "jumpspace",
         version: "0.1.0",
-        license: "MIT",
+        license: "Apache-2.0",
         license_file: { exists: true },
         bin: {
           name: "jumpspace",
@@ -1977,10 +1977,10 @@ async function createReleasePackageRepo(): Promise<string> {
       {
         name: "jumpspace",
         version: "0.1.0",
-        license: "MIT",
-        repository: { type: "git", url: "https://github.com/christopherrote/jumpspace.git" },
-        homepage: "https://github.com/christopherrote/jumpspace#readme",
-        bugs: { url: "https://github.com/christopherrote/jumpspace/issues" },
+        license: "Apache-2.0",
+        repository: { type: "git", url: "https://github.com/Jumpspace-AI/jumpspace.git" },
+        homepage: "https://github.com/Jumpspace-AI/jumpspace#readme",
+        bugs: { url: "https://github.com/Jumpspace-AI/jumpspace/issues" },
         keywords: ["ai", "agents", "developer-tools", "knowledge-graph"],
         bin: { jumpspace: "./dist/cli.js" },
         files: [
@@ -1989,7 +1989,9 @@ async function createReleasePackageRepo(): Promise<string> {
           "sdk/python/jumpspace_sdk/*.py",
           "sdk/python/pyproject.toml",
           "README.md",
-          "LICENSE"
+          "LICENSE",
+          "NOTICE",
+          "TRADEMARKS.md"
         ],
       },
       null,
@@ -1997,7 +1999,9 @@ async function createReleasePackageRepo(): Promise<string> {
     ),
   );
   await write(root, "README.md", "# Jumpspace\n");
-  await write(root, "LICENSE", "MIT\n");
+  await write(root, "LICENSE", "Apache-2.0\n");
+  await write(root, "NOTICE", "Jumpspace Core\n");
+  await write(root, "TRADEMARKS.md", "# Trademarks\n");
   await write(
     root,
     "dist/cli.js",

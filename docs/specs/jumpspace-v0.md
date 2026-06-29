@@ -3816,7 +3816,7 @@ plan:
         - ls -l dist/cli.js
         - npm test -- src/packageHygiene.test.ts
       evidence:
-        - "Updated package.json to version 0.1.0 with MIT license, keywords, repository, bugs, homepage, and LICENSE in package files; added LICENSE; added scripts/fix-bin-mode.mjs and wired build to chmod dist/cli.js. Verification passed: npm run build passed, ls -l dist/cli.js showed -rwxr-xr-x, ./dist/cli.js --help printed help successfully, and npm test -- src/packageHygiene.test.ts passed 1 file/1 test."
+        - "Updated package.json to version 0.1.0 with launch-ready license metadata, keywords, repository, bugs, homepage, and LICENSE in package files; added LICENSE; added scripts/fix-bin-mode.mjs and wired build to chmod dist/cli.js. JS-051 later finalized the policy as Apache-2.0 for Jumpspace Core with NOTICE and TRADEMARKS.md covering the company-controlled Jumpspace name/logo. Verification passed: npm run build passed, ls -l dist/cli.js showed -rwxr-xr-x, ./dist/cli.js --help printed help successfully, and npm test -- src/packageHygiene.test.ts passed 1 file/1 test."
     - id: write-schema-contracts
       outcome: Write-side commands publish schemas and SDK schema-name lists cover them in TypeScript and Python.
       status: complete
@@ -6322,6 +6322,11 @@ code:
   - SECURITY.md
   - SUPPORT.md
   - CODE_OF_CONDUCT.md
+  - LICENSE
+  - NOTICE
+  - TRADEMARKS.md
+  - package.json
+  - package-lock.json
   - .github/PULL_REQUEST_TEMPLATE.md
   - .github/ISSUE_TEMPLATE/config.yml
   - .github/ISSUE_TEMPLATE/bug_report.yml
@@ -6333,12 +6338,14 @@ code:
   - docs/src/content/docs/deploy/netlify.md
   - launch/jumpspace-launch-readiness.md
 tests:
+  - src/packageHygiene.test.ts
+  - src/core/releaseDoctor.test.ts
   - src/cli.test.ts
   - docs/scripts/check-docs.mjs
 gaps:
-  - Netlify production URL and deploy status remain unverified for the current docs build; https://jumpspace.netlify.app returned 200 but /deploy/netlify/ returned 404 on 2026-06-28.
+  - Netlify canonical docs URL is https://docs.jumpspace.ai, but local and escalated curl could not resolve docs.jumpspace.ai on 2026-06-28, so deployed route verification remains pending.
   - npm public publish and install smoke test require npm credentials; https://registry.npmjs.org/jumpspace returned 404 on 2026-06-28, so the package name appeared unclaimed at check time.
-  - GitHub CI green status, branch protection, private security advisories, labels, and release notes require a pushed GitHub repository with admin access; the unauthenticated GitHub API returned 404 for christopherrote/jumpspace on 2026-06-28.
+  - GitHub public repository and latest main CI run are visible for Jumpspace-AI/jumpspace, but branch protection, private security advisories, labels, release notes, and Dependabot PR failures still require hosted GitHub follow-up.
 depends_on:
   - JS-033
   - JS-042
@@ -6363,6 +6370,9 @@ plan:
         - SECURITY.md
         - SUPPORT.md
         - CODE_OF_CONDUCT.md
+        - LICENSE
+        - NOTICE
+        - TRADEMARKS.md
         - .github/PULL_REQUEST_TEMPLATE.md
         - .github/ISSUE_TEMPLATE/config.yml
         - .github/ISSUE_TEMPLATE/bug_report.yml
@@ -6371,14 +6381,17 @@ plan:
         - .github/workflows/jumpspace.yml
         - .github/dependabot.yml
         - package.json
+        - package-lock.json
       tests:
+        - src/packageHygiene.test.ts
+        - src/core/releaseDoctor.test.ts
         - src/cli.test.ts
       checks:
         - npm run build
         - npm test
         - node dist/cli.js release doctor --json
       evidence:
-        - Added OSS hygiene docs, GitHub issue and PR templates, CI, Jumpspace PR assistant workflow, Dependabot config, and included CHANGELOG.md in the npm package files list. Root build and full test suite passed locally.
+        - Added OSS hygiene docs, GitHub issue and PR templates, CI, Jumpspace PR assistant workflow, Dependabot config, and included CHANGELOG.md in the npm package files list. Package metadata now points at https://github.com/Jumpspace-AI/jumpspace. Jumpspace Core is Apache-2.0 and Jumpspace name/logo trademark notice files are included in source and package metadata. Root build and full test suite passed locally.
     - id: docs-netlify-config
       outcome: The docs module has a Netlify-suitable site URL configuration and documented deployment settings.
       status: complete
@@ -6394,7 +6407,7 @@ plan:
         - npm --prefix docs test
         - npm --prefix docs run build
       evidence:
-        - Updated Astro config to prefer DOCS_SITE_URL, then Netlify URL, then the jumpspace.netlify.app fallback. The Netlify guide now documents the environment variable path. Docs structure check and Starlight build passed locally.
+        - Updated Astro config to prefer DOCS_SITE_URL, then Netlify URL, then the docs.jumpspace.ai fallback. The Netlify guide now documents DOCS_SITE_URL=https://docs.jumpspace.ai. Docs structure check and Starlight build passed locally.
     - id: jumpspace-launch-tracker
       outcome: Launch readiness is tracked as Jumpspace-specific roadmap/workbook data instead of the earlier generic document-ticket framing.
       status: complete
@@ -6423,7 +6436,7 @@ plan:
         - npm --prefix docs run build
         - curl -I <production-docs-url>
       evidence:
-        - https://jumpspace.netlify.app returned 200, but https://jumpspace.netlify.app/deploy/netlify/ returned 404 on 2026-06-28, so the current Starlight docs deploy is not verified.
+        - Canonical docs URL is https://docs.jumpspace.ai. Local sandbox curl and escalated curl both failed DNS resolution for docs.jumpspace.ai on 2026-06-28, so deployed route verification remains pending.
     - id: external-npm-verify
       outcome: The npm package name/version, publish path, and clean public install are verified against the registry.
       status: pending
@@ -6455,7 +6468,7 @@ plan:
         - gh release view
         - gh api repos/<owner>/<repo>/branches/main/protection
       evidence:
-        - Local workspace is not a git repository and unauthenticated curl to https://api.github.com/repos/christopherrote/jumpspace returned 404 on 2026-06-28, so hosted CI, release, and branch protection are not verified here.
+        - The local workspace is now a git repository with origin https://github.com/Jumpspace-AI/jumpspace.git and a clean worktree before metadata updates. Public GitHub API returned 200 for Jumpspace-AI/jumpspace. The latest main CI run was successful at https://github.com/Jumpspace-AI/jumpspace/actions/runs/28322339496, but Dependabot PR CI runs were failing, branch protection API returned 401 without valid credentials, and gh auth tokens were invalid locally, so release/admin settings remain unverified.
 acceptance_criteria:
   - id: AC-1
     description: Repo-local OSS hygiene files exist for changelog, contributing, security, support, and conduct.
@@ -6470,3 +6483,110 @@ acceptance_criteria:
 -->
 
 The OSS launch checklist should describe Jumpspace as it exists now, not the earlier generic document-ticket CLI. Local readiness includes the package, docs, OSS files, and GitHub workflow scaffolding. Hosted readiness remains external until Netlify, npm, and GitHub repository checks can be verified with live credentials.
+
+### Apache core license and trademark policy
+
+<!-- jumpspace
+id: JS-051
+type: engineering
+status: implemented
+module: launch
+space: repo
+keywords:
+  - apache license
+  - trademark policy
+  - oss launch
+  - package metadata
+code:
+  - LICENSE
+  - NOTICE
+  - TRADEMARKS.md
+  - README.md
+  - package.json
+  - package-lock.json
+  - src/core/releaseDoctor.ts
+  - docs/specs/jumpspace-v0.md
+  - launch/jumpspace-launch-readiness.md
+tests:
+  - src/packageHygiene.test.ts
+  - src/core/releaseDoctor.test.ts
+  - src/cli.test.ts
+gaps: []
+depends_on:
+  - JS-033
+  - JS-050
+refs:
+  - type: related_to
+    id: JS-033
+    note: Package hygiene and release doctor should report the current core license and required notice files.
+  - type: related_to
+    id: JS-050
+    note: OSS launch readiness needs a clear split between open-source core code and controlled brand assets.
+plan:
+  task_id: JS-051
+  goal: Change Jumpspace Core to Apache-2.0 while making the Jumpspace name and logo trademark-controlled by the company.
+  status: complete
+  steps:
+    - id: license-files
+      outcome: Source license files express Apache-2.0 for Jumpspace Core and trademark control for the Jumpspace name/logo.
+      status: complete
+      depends_on: []
+      source_files:
+        - LICENSE
+        - NOTICE
+        - TRADEMARKS.md
+        - README.md
+      tests: []
+      checks:
+        - rg -n "Apache-2.0|Trademark|TRADEMARKS|NOTICE" LICENSE NOTICE TRADEMARKS.md README.md
+      evidence:
+        - Replaced the prior license file with Apache License 2.0 text, added NOTICE for Jumpspace Core and brand notice, added TRADEMARKS.md stating the Jumpspace name/logo are controlled by Jumpspace AI, and added a README License and Trademarks section.
+    - id: package-metadata
+      outcome: Package metadata, package contents, and release doctor required files include the Apache license and trademark/notice files.
+      status: complete
+      depends_on:
+        - license-files
+      source_files:
+        - package.json
+        - package-lock.json
+        - src/core/releaseDoctor.ts
+      tests:
+        - src/packageHygiene.test.ts
+        - src/core/releaseDoctor.test.ts
+        - src/cli.test.ts
+      checks:
+        - npx vitest run src/packageHygiene.test.ts src/core/releaseDoctor.test.ts src/cli.test.ts
+        - npm run build
+        - node dist/cli.js release doctor --json
+      evidence:
+        - Set package license to Apache-2.0, included NOTICE and TRADEMARKS.md in package files, required those files in release doctor package checks, and updated package hygiene, release doctor, and CLI fixtures.
+    - id: roadmap-and-launch
+      outcome: Jumpspace task metadata and launch tracker reflect the Apache core and controlled trademark policy.
+      status: complete
+      depends_on:
+        - package-metadata
+      source_files:
+        - docs/specs/jumpspace-v0.md
+        - launch/jumpspace-launch-readiness.md
+        - launch/jumpspace_oss_launch_plan.xlsx
+      tests: []
+      checks:
+        - node dist/cli.js scan
+        - node dist/cli.js audit --json
+        - node dist/cli.js plan validate JS-051 --json
+      evidence:
+        - Added JS-051 and updated JS-050 launch metadata so the roadmap tracks Apache-2.0 core licensing and Jumpspace trademark controls.
+acceptance_criteria:
+  - id: AC-1
+    description: package.json uses SPDX license Apache-2.0 for Jumpspace Core.
+  - id: AC-2
+    description: LICENSE contains Apache License 2.0 terms.
+  - id: AC-3
+    description: NOTICE and TRADEMARKS.md state that the Jumpspace name/logo and related brand assets are controlled by Jumpspace AI and are not granted by Apache-2.0.
+  - id: AC-4
+    description: npm package files and release doctor required-file checks include LICENSE, NOTICE, and TRADEMARKS.md.
+  - id: AC-5
+    description: README and launch tracking explain the license/trademark split.
+-->
+
+Jumpspace Core should be licensed as Apache-2.0 while the Jumpspace name, logo, and related brand assets remain trademark-controlled by Jumpspace AI. Package metadata, package dry-run checks, source notices, and launch docs should make that split clear before public release.

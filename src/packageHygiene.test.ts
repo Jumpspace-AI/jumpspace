@@ -11,14 +11,14 @@ describe("package hygiene", () => {
     const packageJson = JSON.parse(await fs.readFile(path.join(process.cwd(), "package.json"), "utf8"));
 
     expect(packageJson.version).not.toBe("0.0.0");
-    expect(packageJson.license).toBe("MIT");
+    expect(packageJson.license).toBe("Apache-2.0");
     expect(packageJson.repository).toMatchObject({
       type: "git",
-      url: expect.stringContaining("github.com/christopherrote/jumpspace"),
+      url: expect.stringContaining("github.com/Jumpspace-AI/jumpspace"),
     });
-    expect(packageJson.homepage).toContain("github.com/christopherrote/jumpspace");
+    expect(packageJson.homepage).toContain("github.com/Jumpspace-AI/jumpspace");
     expect(packageJson.bugs).toMatchObject({
-      url: expect.stringContaining("github.com/christopherrote/jumpspace/issues"),
+      url: expect.stringContaining("github.com/Jumpspace-AI/jumpspace/issues"),
     });
     expect(packageJson.keywords).toEqual(expect.arrayContaining(["ai", "agents", "developer-tools", "knowledge-graph"]));
     expect(packageJson.scripts.clean).toContain("rmSync('dist'");
@@ -27,6 +27,8 @@ describe("package hygiene", () => {
       expect.arrayContaining([
         "dist",
         "LICENSE",
+        "NOTICE",
+        "TRADEMARKS.md",
         "schemas/*.json",
         "sdk/python/jumpspace_sdk/*.py",
         "sdk/python/pyproject.toml",
@@ -38,6 +40,8 @@ describe("package hygiene", () => {
     });
     expect(packageJson.files).not.toContain("sdk/python");
     await expect(fs.access(path.join(process.cwd(), "LICENSE"))).resolves.toBeUndefined();
+    await expect(fs.access(path.join(process.cwd(), "NOTICE"))).resolves.toBeUndefined();
+    await expect(fs.access(path.join(process.cwd(), "TRADEMARKS.md"))).resolves.toBeUndefined();
     await expect(fs.access(path.join(process.cwd(), "scripts/fix-bin-mode.mjs"))).resolves.toBeUndefined();
   });
 

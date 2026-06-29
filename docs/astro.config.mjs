@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
-const site = process.env.DOCS_SITE_URL ?? process.env.URL ?? 'https://jumpspace.netlify.app';
+const site = process.env.DOCS_SITE_URL ?? process.env.URL ?? 'https://docs.jumpspace.ai';
 
 export default defineConfig({
   site,

@@ -493,6 +493,16 @@ jumpspace doctor --json
 jumpspace audit --json
 ```
 
+## License and Trademarks
+
+Jumpspace Core is licensed under the Apache License, Version 2.0. See
+`LICENSE` and `NOTICE`.
+
+The Jumpspace name, logo, and related brand assets are trademarks controlled
+by Jumpspace AI. The Apache-2.0 license does not grant permission to use those
+marks except as required for reasonable and customary use in describing the
+origin of the software. See `TRADEMARKS.md`.
+
 ## v0 Scope
 
 Jumpspace v0 is for one repo, local Markdown docs, and small teams. It is not a hosted knowledge graph, Jira replacement, or Confluence replacement.

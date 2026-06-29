@@ -2,7 +2,7 @@
   "name": "jumpspace",
   "version": "0.1.0",
   "description": "Repo-local implementation memory for AI coding agents.",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "keywords": [
     "ai",
     "agents",
@@ -14,12 +14,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/christopherrote/jumpspace.git"
+    "url": "git+https://github.com/Jumpspace-AI/jumpspace.git"
   },
   "bugs": {
-    "url": "https://github.com/christopherrote/jumpspace/issues"
+    "url": "https://github.com/Jumpspace-AI/jumpspace/issues"
   },
-  "homepage": "https://github.com/christopherrote/jumpspace#readme",
+  "homepage": "https://github.com/Jumpspace-AI/jumpspace#readme",
   "type": "module",
   "types": "./dist/sdk/index.d.ts",
   "exports": {
@@ -45,6 +45,8 @@
   "files": [
     "dist",
     "LICENSE",
+    "NOTICE",
+    "TRADEMARKS.md",
     "CHANGELOG.md",
     "schemas/*.json",
     "sdk/python/jumpspace_sdk/*.py",

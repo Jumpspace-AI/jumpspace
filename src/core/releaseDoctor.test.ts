@@ -26,7 +26,7 @@ describe("createReleaseDoctorReport", () => {
       package: {
         name: "jumpspace",
         version: "0.1.0",
-        license: "MIT",
+        license: "Apache-2.0",
         license_file: { exists: true },
         bin: {
           name: "jumpspace",
@@ -116,10 +116,10 @@ async function createReleaseFixture(): Promise<string> {
       {
         name: "jumpspace",
         version: "0.1.0",
-        license: "MIT",
-        repository: { type: "git", url: "https://github.com/christopherrote/jumpspace.git" },
-        homepage: "https://github.com/christopherrote/jumpspace#readme",
-        bugs: { url: "https://github.com/christopherrote/jumpspace/issues" },
+        license: "Apache-2.0",
+        repository: { type: "git", url: "https://github.com/Jumpspace-AI/jumpspace.git" },
+        homepage: "https://github.com/Jumpspace-AI/jumpspace#readme",
+        bugs: { url: "https://github.com/Jumpspace-AI/jumpspace/issues" },
         keywords: ["ai", "agents", "developer-tools"],
         bin: { jumpspace: "./dist/cli.js" },
       },
@@ -127,7 +127,9 @@ async function createReleaseFixture(): Promise<string> {
       2,
     ),
   );
-  await fs.writeFile(path.join(root, "LICENSE"), "MIT\n");
+  await fs.writeFile(path.join(root, "LICENSE"), "Apache-2.0\n");
+  await fs.writeFile(path.join(root, "NOTICE"), "Jumpspace Core\n");
+  await fs.writeFile(path.join(root, "TRADEMARKS.md"), "# Trademarks\n");
   await fs.writeFile(path.join(root, "dist", "cli.js"), "#!/usr/bin/env node\n");
   await fs.chmod(path.join(root, "dist", "cli.js"), 0o755);
   return root;
@@ -138,6 +140,8 @@ function allPackFiles(): string[] {
     "package.json",
     "README.md",
     "LICENSE",
+    "NOTICE",
+    "TRADEMARKS.md",
     "dist/cli.js",
     "dist/templates/AGENTS.md",
     "dist/templates/SKILL.md",

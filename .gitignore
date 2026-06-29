@@ -5,3 +5,6 @@ coverage/
 __pycache__/
 *.pyc
 .jumpspace/semantic-index.json
+
+# Local launch readiness artifacts
+/launch/
