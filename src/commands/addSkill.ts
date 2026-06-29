@@ -1,9 +1,18 @@
-import { addJumpspaceSkills, SUPPORTED_SKILL_AGENTS, type SkillAgent } from "../core/agentSkills.js";
+import {
+  addJumpspaceSkills,
+  resolveAgentSkillName,
+  SUPPORTED_AGENT_SKILLS,
+  SUPPORTED_SKILL_AGENTS,
+  type AgentSkillName,
+  type SkillAgent,
+} from "../core/agentSkills.js";
 import { commandError, errorEnvelope } from "../core/errors.js";
 import { recordMutation } from "../core/mutations.js";
 
 export type AddSkillOptions = {
   root?: string;
+  skills?: string[];
+  agent?: string;
   codex?: boolean;
   claude?: boolean;
   all?: boolean;
@@ -17,18 +26,40 @@ export async function runAddSkill(options: AddSkillOptions = {}): Promise<number
   const writeLine = options.writeLine ?? console.log;
   const errorLine = options.errorLine ?? console.error;
   const agents = selectedAgents(options);
+  const skills = selectedSkills(options.skills ?? []);
 
   if (agents.length === 0) {
-    const error = commandError("MISSING_AGENT", "Choose at least one skill target: --codex, --claude, or --all.");
-    if (options.json) {
-      writeLine(JSON.stringify(errorEnvelope(error), null, 2));
-    } else {
-      errorLine(error.message);
-    }
+    const error = commandError(
+      "MISSING_AGENT",
+      "Choose at least one skill target: --codex, --claude, --agent <agent>, or --all.",
+    );
+    renderError(error, options.json, writeLine, errorLine);
     return 1;
   }
 
-  const result = await addJumpspaceSkills(root, agents);
+  if (agents.some((agent) => !isSkillAgent(agent))) {
+    const unknown = agents.find((agent) => !isSkillAgent(agent));
+    const error = commandError(
+      "UNKNOWN_AGENT",
+      `Unknown skill target "${unknown}". Supported agents: ${SUPPORTED_SKILL_AGENTS.join(", ")}.`,
+    );
+    renderError(error, options.json, writeLine, errorLine);
+    return 1;
+  }
+
+  if (skills.some((skill) => skill === undefined)) {
+    const unknown = (options.skills ?? []).find((skill) => resolveAgentSkillName(skill) === undefined);
+    const error = commandError(
+      "UNKNOWN_SKILL",
+      `Unknown Jumpspace skill "${unknown}". Supported skills: ${SUPPORTED_AGENT_SKILLS.join(", ")}.`,
+    );
+    renderError(error, options.json, writeLine, errorLine);
+    return 1;
+  }
+
+  const result = await addJumpspaceSkills(root, agents as SkillAgent[], {
+    skills: skills as AgentSkillName[],
+  });
   const changedFiles = result.files.filter((file) => file.action !== "unchanged");
   if (changedFiles.length > 0) {
     await recordMutation(root, {
@@ -51,12 +82,15 @@ export async function runAddSkill(options: AddSkillOptions = {}): Promise<number
   return 0;
 }
 
-function selectedAgents(options: Pick<AddSkillOptions, "codex" | "claude" | "all">): SkillAgent[] {
+function selectedAgents(options: Pick<AddSkillOptions, "agent" | "codex" | "claude" | "all">): string[] {
   if (options.all) {
     return [...SUPPORTED_SKILL_AGENTS];
   }
 
-  const agents: SkillAgent[] = [];
+  const agents: string[] = [];
+  if (options.agent) {
+    agents.push(options.agent);
+  }
   if (options.codex) {
     agents.push("codex");
   }
@@ -64,4 +98,25 @@ function selectedAgents(options: Pick<AddSkillOptions, "codex" | "claude" | "all
     agents.push("claude");
   }
   return agents;
+}
+
+function selectedSkills(values: string[]): Array<AgentSkillName | undefined> {
+  return values.map(resolveAgentSkillName);
+}
+
+function isSkillAgent(value: string): value is SkillAgent {
+  return SUPPORTED_SKILL_AGENTS.includes(value as SkillAgent);
+}
+
+function renderError(
+  error: ReturnType<typeof commandError>,
+  json: boolean | undefined,
+  writeLine: (line: string) => void,
+  errorLine: (line: string) => void,
+): void {
+  if (json) {
+    writeLine(JSON.stringify(errorEnvelope(error), null, 2));
+  } else {
+    errorLine(error.message);
+  }
 }

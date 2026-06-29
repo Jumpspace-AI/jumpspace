@@ -125,7 +125,7 @@ async function createInstallFixture(version: string): Promise<{ root: string; di
     path.join(root, "package.json"),
     JSON.stringify(
       {
-        name: "jumpspace",
+        name: "@jumpspace/cli",
         version,
       },
       null,

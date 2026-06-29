@@ -21,7 +21,7 @@ By the end of first setup, your repo should have:
 ## Install
 
 ```bash
-npm install -D jumpspace
+npm install -D @jumpspace/cli
 ```
 
 If you are testing a local Jumpspace checkout before npm publishing, link it from the Jumpspace repo first:

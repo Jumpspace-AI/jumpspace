@@ -1,7 +1,7 @@
 {
   "version": 1,
   "command": "semantic build",
-  "recorded_at": "2026-06-29T11:56:19.144Z",
+  "recorded_at": "2026-06-29T14:54:08.387Z",
   "touched_files": [
     ".jumpspace/semantic-index.json"
   ],

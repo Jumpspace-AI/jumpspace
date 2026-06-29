@@ -24,7 +24,7 @@ describe("createReleaseDoctorReport", () => {
         external_warnings: 1,
       },
       package: {
-        name: "jumpspace",
+        name: "@jumpspace/cli",
         version: "0.1.0",
         license: "Apache-2.0",
         license_file: { exists: true },
@@ -114,8 +114,9 @@ async function createReleaseFixture(): Promise<string> {
     path.join(root, "package.json"),
     JSON.stringify(
       {
-        name: "jumpspace",
+        name: "@jumpspace/cli",
         version: "0.1.0",
+        publishConfig: { access: "public" },
         license: "Apache-2.0",
         repository: { type: "git", url: "https://github.com/Jumpspace-AI/jumpspace.git" },
         homepage: "https://github.com/Jumpspace-AI/jumpspace#readme",
@@ -160,10 +161,10 @@ function packOutput(files: string | string[]): string {
   const fileList = Array.isArray(files) ? files : [files];
   return JSON.stringify([
     {
-      id: "jumpspace@0.1.0",
-      name: "jumpspace",
+      id: "@jumpspace/cli@0.1.0",
+      name: "@jumpspace/cli",
       version: "0.1.0",
-      filename: "jumpspace-0.1.0.tgz",
+      filename: "jumpspace-cli-0.1.0.tgz",
       entryCount: fileList.length,
       files: fileList.map((filePath) => ({
         path: filePath,

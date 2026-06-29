@@ -946,18 +946,18 @@ refs:
     note: Bootstrap workflows should be installed into agent skill definitions so an AI can build the first graph for an existing repo.
 acceptance_criteria:
   - id: AC-1
-    description: The CLI exposes jumpspace add-skill with --codex, --claude, --all, and --json options.
+    description: The CLI exposes jumpspace add-skill with --codex, --claude, --agent, --all, optional named skills, and --json options.
   - id: AC-2
-    description: Codex installation appends managed guidance to AGENTS.md, @-mentions .codex/skills/jumpspace-workflow/SKILL.md, and preserves existing user-authored skill content.
+    description: Codex installation appends managed guidance to AGENTS.md, @-mentions repo-local .codex/skills/Jumpspace skill files, and preserves existing user-authored skill content.
   - id: AC-3
-    description: Claude installation appends managed guidance to CLAUDE.md, @-mentions .claude/skills/jumpspace-workflow/SKILL.md, and preserves existing user-authored skill content.
+    description: Claude installation appends managed guidance to CLAUDE.md, @-mentions repo-local .claude/skills/Jumpspace skill files, and preserves existing user-authored skill content.
   - id: AC-4
     description: Re-running the installer is idempotent; existing files receive an appended managed block or an in-place managed-block update, never a clean overwrite.
   - id: AC-5
     description: Missing agent selection returns a structured JSON error when --json is used.
 -->
 
-Jumpspace should make it easy to add repo-local agent skill definitions to an existing project after Jumpspace is installed. `jumpspace add-skill --codex` appends Codex guidance to `AGENTS.md`, @-mentions `.codex/skills/jumpspace-workflow/SKILL.md`, and creates or appends to that skill file. `jumpspace add-skill --claude` appends Claude guidance to `CLAUDE.md`, @-mentions `.claude/skills/jumpspace-workflow/SKILL.md`, and creates or appends to that skill file. `jumpspace add-skill --all` installs every supported target. The installer is additive, idempotent, and non-destructive: it creates missing files, appends managed blocks to existing files, and updates only existing Jumpspace-managed blocks.
+Jumpspace should make it easy to add repo-local agent skill definitions to an existing project after Jumpspace is installed. `jumpspace add-skill --codex` appends Codex guidance to `AGENTS.md`, @-mentions `.codex/skills/jumpspace-workflow/SKILL.md` plus the supported pipeline skills, and creates or appends to those skill files. `jumpspace add-skill --claude` appends Claude guidance to `CLAUDE.md`, @-mentions `.claude/skills/jumpspace-workflow/SKILL.md` plus the supported pipeline skills, and creates or appends to those skill files. `jumpspace add-skill --all` installs every supported target. `jumpspace add-skill <skill> --agent <codex|claude>` installs one named pipeline skill plus the reference workflow skill. The installer is additive, idempotent, and non-destructive: it creates missing files, appends managed blocks to existing files, and updates only existing Jumpspace-managed blocks.
 
 ## Agent-grade contracts and bootstrap safety
 
@@ -2296,7 +2296,7 @@ acceptance_criteria:
     description: Agent guidance points tool builders to the SDKs instead of encouraging ad hoc JSON parsing.
 -->
 
-Agents and integrations should not reverse-engineer JSON by trial and error. Jumpspace now publishes a first contract SDK surface: TypeScript consumers can import versioned schema names, command result types, schema helpers, and error guards from `jumpspace/sdk`; Python consumers can use the pure-stdlib dataclass package in `sdk/python/jumpspace_sdk`. Both SDKs are tested against `jumpspace schema list --json` so contract drift becomes explicit instead of becoming agent guesswork.
+Agents and integrations should not reverse-engineer JSON by trial and error. Jumpspace now publishes a first contract SDK surface: TypeScript consumers can import versioned schema names, command result types, schema helpers, and error guards from `@jumpspace/cli/sdk`; Python consumers can use the pure-stdlib dataclass package in `sdk/python/jumpspace_sdk`. Both SDKs are tested against `jumpspace schema list --json` so contract drift becomes explicit instead of becoming agent guesswork.
 
 ### Package artifact hygiene
 
@@ -3386,7 +3386,7 @@ acceptance_criteria:
     description: Contract versioning and migration notes are documented for agent and integration authors.
 -->
 
-The current SDKs stop agents from guessing JSON shapes, but manual contract surfaces still carry drift risk. Jumpspace now generates versioned schema artifacts from the canonical `schemaCatalog`: `schemas/catalog.json` lists every command contract and `schemas/<name>.schema.json` stores each individual schema. The npm package exposes those JSON files alongside `jumpspace/sdk`, and TypeScript/Python SDK tests compare their schema names against both the live catalog and generated artifacts so contract drift fails loudly in CI. Integrators can choose the CLI schema commands for discovery, SDK helpers for typed app code, or pinned JSON artifacts for language-agnostic tooling.
+The current SDKs stop agents from guessing JSON shapes, but manual contract surfaces still carry drift risk. Jumpspace now generates versioned schema artifacts from the canonical `schemaCatalog`: `schemas/catalog.json` lists every command contract and `schemas/<name>.schema.json` stores each individual schema. The npm package exposes those JSON files alongside `@jumpspace/cli/sdk`, and TypeScript/Python SDK tests compare their schema names against both the live catalog and generated artifacts so contract drift fails loudly in CI. Integrators can choose the CLI schema commands for discovery, SDK helpers for typed app code, or pinned JSON artifacts for language-agnostic tooling.
 
 ### Pluggable local embeddings
 
@@ -6153,7 +6153,7 @@ keywords:
   - astro
   - starlight
   - documentation
-  - netlify
+  - cloud
   - getting started
 code:
   - .jumpspace/config.json
@@ -6179,7 +6179,7 @@ code:
   - docs/src/content/docs/agents/using-with-agents.md
   - docs/src/content/docs/getting-started/why-jumpspace.md
   - docs/netlify.toml
-  - docs/src/content/docs/deploy/netlify.md
+  - docs/src/content/docs/jumpspace-cloud.md
 tests:
   - docs/scripts/check-docs.mjs
 gaps: []
@@ -6193,7 +6193,7 @@ refs:
     note: The docs site should expand the README quickstart into a hosted learning path.
 plan:
   task_id: JS-049
-  goal: Create a separate Astro Starlight documentation module under docs that teaches Jumpspace from quickstart through advanced agent workflows and can be hosted on Netlify.
+  goal: Create a separate Astro Starlight documentation module under docs that teaches Jumpspace from quickstart through advanced agent workflows and can be hosted as a static site.
   status: complete
   steps:
     - id: orient
@@ -6213,7 +6213,7 @@ plan:
       evidence:
         - Used Jumpspace context, related, audit, help, and README reads to confirm JS-049 scope, dependencies JS-007/JS-023/JS-033, CLI surfaces, and docs-module constraints. Tightened root scan config to docs/specs/**/*.md so Starlight instructional pages do not become task metadata.
     - id: starlight-shell
-      outcome: The docs directory contains an Astro Starlight module with package scripts, Astro config, content config, and Netlify-friendly static output.
+      outcome: The docs directory contains an Astro Starlight module with package scripts, Astro config, content config, and static output.
       status: complete
       depends_on:
         - orient
@@ -6247,7 +6247,7 @@ plan:
       evidence:
         - Added beginner docs covering the homepage overview, getting started path, task block format, first agent workflow, and tasks/graph concepts. Coverage check passed with rg -n "Quickstart|task block|jumpspace scan|jumpspace context|jumpspace work" docs/src/content/docs.
     - id: advanced-reference-docs
-      outcome: Advanced and reference docs cover bootstrap, planning, verification, retrieval, graph queries, drift, CI, repair, agent skills, schemas, SDKs, release diagnostics, and Netlify deployment.
+      outcome: Advanced and reference docs cover bootstrap, planning, verification, retrieval, graph queries, drift, CI, repair, agent skills, schemas, SDKs, release diagnostics, and Jumpspace Cloud.
       status: complete
       depends_on:
         - beginner-docs
@@ -6259,12 +6259,12 @@ plan:
         - docs/src/content/docs/advanced/drift-ci-and-repair.md
         - docs/src/content/docs/advanced/agent-skills.md
         - docs/src/content/docs/reference/cli.md
-        - docs/src/content/docs/deploy/netlify.md
+        - docs/src/content/docs/jumpspace-cloud.md
       tests: []
       checks:
-        - rg -n "bootstrap|verify|semantic|query|drift|ci|repair|add-skill|schema|release install-doctor|Netlify" docs/src/content/docs
+        - rg -n "bootstrap|verify|semantic|query|drift|ci|repair|add-skill|schema|release install-doctor|Jumpspace Cloud" docs/src/content/docs
       evidence:
-        - Added advanced and reference docs for bootstrap, durable planning, verification, retrieval, graph queries, semantic search, drift, CI, repair, agent skills, JSON schemas/SDKs, CLI reference, and Netlify deployment. Coverage check passed with rg -n "bootstrap|verify|semantic|query|drift|ci|repair|add-skill|schema|release install-doctor|Netlify" docs/src/content/docs.
+        - Added advanced and reference docs for bootstrap, durable planning, verification, retrieval, graph queries, semantic search, drift, CI, repair, agent skills, JSON schemas/SDKs, CLI reference, and Jumpspace Cloud. Coverage check passed with rg -n "bootstrap|verify|semantic|query|drift|ci|repair|add-skill|schema|release install-doctor|Jumpspace Cloud" docs/src/content/docs.
     - id: final-verify
       outcome: Docs module files, Jumpspace scan/audit/doctor, plan validation, handoff, and available docs build checks pass or report truthful dependency constraints.
       status: complete
@@ -6286,21 +6286,21 @@ plan:
         - node dist/cli.js plan validate JS-049 --json
         - node dist/cli.js handoff --task JS-049 --json
       evidence:
-        - "Latest verification passed for the available checks: npm test in docs passed the docs structure check for 22 files including the Netlify deployment guide; npm run build in docs built 17 static pages including /deploy/netlify/; source grep found no stale host references; node dist/cli.js scan indexed 49 tasks; semantic build refreshed 49 documents using local-task-vector-v1 fallback because optional LanceDB/ONNX dependencies are not installed; audit --json returned ok true with no issues; doctor --json returned ok true with no warnings or suggestions; plan validate JS-049 --json returned ok true; handoff --task JS-049 --json returned ready. jumpspace verify was attempted previously and correctly refused to write a verification record with GIT_COMMIT_UNAVAILABLE because /Users/christopherrote/jumpspace is not a Git repository."
+        - "Latest verification passed for the available checks: npm test in docs passed the docs structure check; npm run build in docs built the static site; source grep found no stale host references; node dist/cli.js scan indexed 49 tasks; semantic build refreshed 49 documents using local-task-vector-v1 fallback because optional LanceDB/ONNX dependencies are not installed; audit --json returned ok true with no issues; doctor --json returned ok true with no warnings or suggestions; plan validate JS-049 --json returned ok true; handoff --task JS-049 --json returned ready. jumpspace verify was attempted previously and correctly refused to write a verification record with GIT_COMMIT_UNAVAILABLE because /Users/christopherrote/jumpspace is not a Git repository."
 acceptance_criteria:
   - id: AC-1
-    description: A separate Astro Starlight docs module exists under docs with its own package, config, content collection, and Netlify-friendly build scripts.
+    description: A separate Astro Starlight docs module exists under docs with its own package, config, content collection, and static build scripts.
   - id: AC-2
     description: The docs site starts with a beginner quickstart covering installation, init, scan, task blocks, context, and the first agent workflow.
   - id: AC-3
     description: Advanced docs cover bootstrap, durable planning, verification, retrieval, graph queries, drift, CI/PR assistant, repair, agent skills, schemas, SDKs, and release/install diagnostics.
   - id: AC-4
-    description: The docs include a CLI reference page organized by workflow and a Netlify deployment page for hosting the docs module.
+    description: The docs include a CLI reference page organized by workflow and a Jumpspace Cloud page for early design partners.
   - id: AC-5
     description: The root Jumpspace graph indexes the docs-site task and final verification includes build or a truthful explanation if dependency installation is unavailable.
 -->
 
-Jumpspace needs a hosted documentation site that teaches humans and agents how to use the tool without making the README carry every explanation. The first version should be a separate Astro Starlight module rooted at `docs/`, keep the existing spec docs intact, and provide a Netlify-ready static documentation site with beginner and advanced paths.
+Jumpspace needs a hosted documentation site that teaches humans and agents how to use the tool without making the README carry every explanation. The first version should be a separate Astro Starlight module rooted at `docs/`, keep the existing spec docs intact, and provide a static documentation site with beginner and advanced paths.
 
 ### OSS launch readiness
 
@@ -6313,7 +6313,7 @@ space: repo
 keywords:
   - oss launch
   - github templates
-  - netlify docs
+  - docs hosting
   - npm publish
   - release readiness
 code:
@@ -6333,9 +6333,10 @@ code:
   - .github/ISSUE_TEMPLATE/feature_request.yml
   - .github/workflows/ci.yml
   - .github/workflows/jumpspace.yml
+  - .github/workflows/publish.yml
   - .github/dependabot.yml
   - docs/astro.config.mjs
-  - docs/src/content/docs/deploy/netlify.md
+  - docs/src/content/docs/jumpspace-cloud.md
   - launch/jumpspace-launch-readiness.md
 tests:
   - src/packageHygiene.test.ts
@@ -6343,8 +6344,8 @@ tests:
   - src/cli.test.ts
   - docs/scripts/check-docs.mjs
 gaps:
-  - Netlify canonical docs URL is https://docs.jumpspace.ai, but local and escalated curl could not resolve docs.jumpspace.ai on 2026-06-28, so deployed route verification remains pending.
-  - npm public publish and install smoke test require npm credentials; https://registry.npmjs.org/jumpspace returned 404 on 2026-06-28, so the package name appeared unclaimed at check time.
+  - Docs canonical URL is https://docs.jumpspace.ai, but local and escalated curl could not resolve docs.jumpspace.ai on 2026-06-28, so deployed route verification remains pending.
+  - npm public publish and install smoke test require npm credentials; the package is now scoped as @jumpspace/cli and registry publish/install verification remains pending.
   - GitHub public repository and latest main CI run are visible for Jumpspace-AI/jumpspace, but branch protection, private security advisories, labels, release notes, and Dependabot PR failures still require hosted GitHub follow-up.
 depends_on:
   - JS-033
@@ -6379,6 +6380,7 @@ plan:
         - .github/ISSUE_TEMPLATE/feature_request.yml
         - .github/workflows/ci.yml
         - .github/workflows/jumpspace.yml
+        - .github/workflows/publish.yml
         - .github/dependabot.yml
         - package.json
         - package-lock.json
@@ -6391,15 +6393,15 @@ plan:
         - npm test
         - node dist/cli.js release doctor --json
       evidence:
-        - Added OSS hygiene docs, GitHub issue and PR templates, CI, Jumpspace PR assistant workflow, Dependabot config, and included CHANGELOG.md in the npm package files list. Package metadata now points at https://github.com/Jumpspace-AI/jumpspace. Jumpspace Core is Apache-2.0 and Jumpspace name/logo trademark notice files are included in source and package metadata. Root build and full test suite passed locally.
-    - id: docs-netlify-config
-      outcome: The docs module has a Netlify-suitable site URL configuration and documented deployment settings.
+        - Added OSS hygiene docs, GitHub issue and PR templates, CI, Jumpspace PR assistant workflow, Dependabot config, tag-triggered npm publish workflow, and included CHANGELOG.md in the npm package files list. Package metadata now points at https://github.com/Jumpspace-AI/jumpspace. Jumpspace Core is Apache-2.0 and Jumpspace name/logo trademark notice files are included in source and package metadata. Root build and full test suite passed locally.
+    - id: docs-cloud-page
+      outcome: The docs module has canonical site URL configuration and a Jumpspace Cloud design-partner page.
       status: complete
       depends_on:
         - local-oss-hygiene
       source_files:
         - docs/astro.config.mjs
-        - docs/src/content/docs/deploy/netlify.md
+        - docs/src/content/docs/jumpspace-cloud.md
         - docs/netlify.toml
       tests:
         - docs/scripts/check-docs.mjs
@@ -6407,7 +6409,7 @@ plan:
         - npm --prefix docs test
         - npm --prefix docs run build
       evidence:
-        - Updated Astro config to prefer DOCS_SITE_URL, then Netlify URL, then the docs.jumpspace.ai fallback. The Netlify guide now documents DOCS_SITE_URL=https://docs.jumpspace.ai. Docs structure check and Starlight build passed locally.
+        - Updated Astro config to prefer DOCS_SITE_URL, then hosted build URL, then the docs.jumpspace.ai fallback. The docs site now includes a Jumpspace Cloud design-partner page with the hi@jumpspace.ai contact. Docs structure check and Starlight build passed locally.
     - id: jumpspace-launch-tracker
       outcome: Launch readiness is tracked as Jumpspace-specific roadmap/workbook data instead of the earlier generic document-ticket framing.
       status: complete
@@ -6423,11 +6425,11 @@ plan:
         - node dist/cli.js audit --json
       evidence:
         - Added a Jumpspace-specific launch readiness tracker and generated launch/jumpspace_oss_launch_plan.xlsx from the launch checklist. Jumpspace scan indexed 50 tasks.
-    - id: external-netlify-verify
-      outcome: The docs site is deployed on Netlify and the production URL is recorded.
+    - id: external-docs-hosting-verify
+      outcome: The docs site is deployed and the production URL is recorded.
       status: pending
       depends_on:
-        - docs-netlify-config
+        - docs-cloud-page
       source_files:
         - docs/netlify.toml
         - docs/astro.config.mjs
@@ -6449,9 +6451,9 @@ plan:
       checks:
         - node dist/cli.js release doctor --check-registry --json
         - npm pack --dry-run --json
-        - npm install -g jumpspace@<version>
+        - npm install -g @jumpspace/cli@<version>
       evidence:
-        - node dist/cli.js release doctor --check-registry --json reported no local blockers but npm view exited 1; direct registry curl to https://registry.npmjs.org/jumpspace returned 404 on 2026-06-28. Public install remains blocked until publish.
+        - Package publication and clean public install for @jumpspace/cli remain blocked until npm credentials and a semver release tag are available.
     - id: external-github-verify
       outcome: GitHub CI, release notes, labels, branch protection, and security settings are verified in the hosted repository.
       status: pending
@@ -6475,14 +6477,14 @@ acceptance_criteria:
   - id: AC-2
     description: GitHub PR, issue, CI, PR assistant, and dependency update templates exist locally.
   - id: AC-3
-    description: Docs build has a configured Astro site URL path suitable for Netlify and local verification.
+    description: Docs build has a configured Astro site URL path suitable for hosted static docs and local verification.
   - id: AC-4
     description: A Jumpspace-specific launch tracker replaces the generic document-ticket spreadsheet assumptions.
   - id: AC-5
     description: External launch blockers are explicit rather than marked complete without credentials or hosted evidence.
 -->
 
-The OSS launch checklist should describe Jumpspace as it exists now, not the earlier generic document-ticket CLI. Local readiness includes the package, docs, OSS files, and GitHub workflow scaffolding. Hosted readiness remains external until Netlify, npm, and GitHub repository checks can be verified with live credentials.
+The OSS launch checklist should describe Jumpspace as it exists now, not the earlier generic document-ticket CLI. Local readiness includes the package, docs, OSS files, and GitHub workflow scaffolding. Hosted readiness remains external until docs hosting, npm, and GitHub repository checks can be verified with live credentials.
 
 ### Apache core license and trademark policy
 
@@ -6590,3 +6592,793 @@ acceptance_criteria:
 -->
 
 Jumpspace Core should be licensed as Apache-2.0 while the Jumpspace name, logo, and related brand assets remain trademark-controlled by Jumpspace AI. Package metadata, package dry-run checks, source notices, and launch docs should make that split clear before public release.
+
+### First-contact docs and agent skills experience
+
+<!-- jumpspace
+id: JS-052
+type: engineering
+status: implemented
+module: docs
+space: repo
+keywords:
+  - README
+  - documentation
+  - first contact
+  - agent skills
+  - quickstart
+code:
+  - README.md
+  - skills/README.md
+  - docs/astro.config.mjs
+  - docs/scripts/check-docs.mjs
+  - docs/public/llms.txt
+  - docs/public/llms-full.txt
+  - docs/src/content/docs/index.md
+  - docs/src/content/docs/start-here/welcome.md
+  - docs/src/content/docs/start-here/quickstart.md
+  - docs/src/content/docs/start-here/existing-repo-bootstrap.md
+  - docs/src/content/docs/start-here/agent-setup.md
+  - docs/src/content/docs/start-here/why-jumpspace.md
+  - docs/src/content/docs/start-here/faq.md
+  - docs/src/content/docs/workflows/add-jumpspace-to-a-repo.md
+  - docs/src/content/docs/workflows/bootstrap-existing-docs.md
+  - docs/src/content/docs/workflows/canonical-demo.md
+  - docs/src/content/docs/workflows/ask-questions-with-evidence.md
+  - docs/src/content/docs/workflows/start-agent-work.md
+  - docs/src/content/docs/workflows/verify-work.md
+  - docs/src/content/docs/workflows/review-pr-drift.md
+  - docs/src/content/docs/workflows/handoff-between-agents.md
+  - docs/src/content/docs/agent-skills/overview.md
+  - docs/src/content/docs/agent-skills/claude-code.md
+  - docs/src/content/docs/agent-skills/codex.md
+  - docs/src/content/docs/agent-skills/cursor.md
+  - docs/src/content/docs/agent-skills/github-copilot.md
+  - docs/src/content/docs/agent-skills/opencode.md
+  - docs/src/content/docs/agent-skills/manual-install.md
+  - docs/src/content/docs/agent-skills/skill-authoring.md
+  - docs/src/content/docs/core-concepts/task-blocks.md
+  - docs/src/content/docs/core-concepts/source-backed-memory.md
+  - docs/src/content/docs/core-concepts/plans.md
+  - docs/src/content/docs/core-concepts/acceptance-criteria.md
+  - docs/src/content/docs/core-concepts/verification-records.md
+  - docs/src/content/docs/core-concepts/dependencies-and-refs.md
+  - docs/src/content/docs/core-concepts/drift-and-repair.md
+  - docs/src/content/docs/core-concepts/semantic-retrieval.md
+  - docs/src/content/docs/reference/cli.md
+  - docs/src/content/docs/reference/json-schemas.md
+  - docs/src/content/docs/reference/config.md
+  - docs/src/content/docs/reference/status-lifecycle.md
+  - docs/src/content/docs/reference/error-envelopes.md
+  - docs/src/content/docs/reference/ci.md
+  - docs/src/content/docs/reference/sdks.md
+  - docs/src/content/docs/contribute/development-setup.md
+  - docs/src/content/docs/contribute/adding-commands.md
+  - docs/src/content/docs/contribute/adding-schemas.md
+  - docs/src/content/docs/contribute/adding-skills.md
+  - docs/src/content/docs/contribute/future-improvements.md
+  - docs/src/content/docs/contribute/release-checklist.md
+tests:
+  - docs/scripts/check-docs.mjs
+gaps: []
+depends_on:
+  - JS-007
+  - JS-049
+  - JS-050
+refs:
+  - type: related_to
+    id: JS-049
+    note: The existing Starlight docs site is expanded into a first-contact documentation IA.
+  - type: related_to
+    id: JS-007
+    note: The README quickstart is rewritten as a landing page and detailed command material moves into docs.
+plan:
+  task_id: JS-052
+  goal: Upgrade the README, docs information architecture, and agent skills experience so skeptical developers understand Jumpspace quickly and agents have clear workflow routing.
+  status: complete
+  steps:
+    - id: orient
+      outcome: Existing README, Starlight docs, agent guidance, docs scripts, and CLI help are audited before edits.
+      status: complete
+      depends_on: []
+      source_files:
+        - README.md
+        - docs/astro.config.mjs
+        - docs/scripts/check-docs.mjs
+        - docs/src/content/docs/reference/cli.md
+      tests: []
+      checks:
+        - node dist/cli.js find docs README documentation agents getting started --mode any --json --compact
+        - node dist/cli.js context JS-049 --json
+        - node dist/cli.js --help
+        - node dist/cli.js add-skill --help
+        - node dist/cli.js bootstrap --help
+        - node dist/cli.js work --help
+      evidence:
+        - Used Jumpspace find/context plus CLI help to confirm JS-049/JS-007 were the guiding docs tasks, identify the current command surface, and avoid documenting unsupported named skill installers.
+    - id: readme-landing
+      outcome: README is a concise landing page with a prominent Why Jumpspace section, first demo path, quick routes, generic example task block, and docs links.
+      status: complete
+      depends_on:
+        - orient
+      source_files:
+        - README.md
+      tests: []
+      checks:
+        - rg -n "Why Jumpspace|30-Second Demo|DOC-PROJECT-001|implementation memory" README.md
+      evidence:
+        - Rewrote README from a command encyclopedia into a landing page that positions Jumpspace as implementation memory for AI coding agents and routes exhaustive command detail to the docs.
+    - id: docs-ia
+      outcome: Starlight navigation exposes Start Here, Workflows, Agent Skills, Core Concepts, Reference, and Contribute sections with useful non-stub pages.
+      status: complete
+      depends_on:
+        - readme-landing
+      source_files:
+        - docs/astro.config.mjs
+        - docs/src/content/docs/index.md
+        - docs/src/content/docs/start-here/quickstart.md
+        - docs/src/content/docs/workflows/start-agent-work.md
+        - docs/src/content/docs/workflows/canonical-demo.md
+        - docs/src/content/docs/reference/cli.md
+      tests:
+        - docs/scripts/check-docs.mjs
+      checks:
+        - npm --prefix docs test
+        - npm --prefix docs run build
+      evidence:
+        - Added the requested docs IA, expanded workflow/reference pages with copy-pasteable current commands, added a canonical demo flow and clearly marked future improvements page, updated Starlight sidebar, and passed docs structure check plus static docs build.
+    - id: agent-skills
+      outcome: Agent skills docs explain supported Codex/Claude installers, named pipeline skills, and manual paths for other agents without overclaiming unsupported integrations.
+      status: complete
+      depends_on:
+        - docs-ia
+      source_files:
+        - skills/README.md
+        - docs/src/content/docs/agent-skills/overview.md
+        - docs/src/content/docs/agent-skills/claude-code.md
+        - docs/src/content/docs/agent-skills/codex.md
+        - docs/src/content/docs/agent-skills/manual-install.md
+      tests:
+        - docs/scripts/check-docs.mjs
+      checks:
+        - rg -n "does not ship a dedicated|jumpspace-work --agent|add-skill --all" skills docs/src/content/docs/agent-skills
+      evidence:
+        - Documented add-skill --all, --codex, --claude, and named pipeline installs as current support; Cursor, GitHub Copilot, and OpenCode remain described as manual or future native integrations.
+    - id: final-verify
+      outcome: Docs, README, task metadata, and package-facing docs checks pass after scan/audit/build.
+      status: complete
+      depends_on:
+        - agent-skills
+      source_files:
+        - docs/specs/jumpspace-v0.md
+        - .jumpspace/index.json
+        - .jumpspace/semantic-index.json
+      tests:
+        - docs/scripts/check-docs.mjs
+        - src/packageHygiene.test.ts
+      checks:
+        - npm --prefix docs test
+        - npm --prefix docs run build
+        - npm test -- src/packageHygiene.test.ts
+        - node dist/cli.js scan
+        - node dist/cli.js semantic build --json
+        - node dist/cli.js plan validate JS-052 --json
+        - node dist/cli.js audit --json
+      evidence:
+        - Final verification passed for docs test/build, package hygiene focused test, Jumpspace scan, semantic build, plan validation, and audit. Audit remains ok with only pre-existing JS-050 external launch gaps.
+acceptance_criteria:
+  - id: AC-1
+    description: README acts as a concise landing page with a strong Why Jumpspace section, first demo path, generic example, and links into docs.
+  - id: AC-2
+    description: Docs sidebar exposes Start Here, Workflows, Agent Skills, Core Concepts, Reference, and Contribute sections.
+  - id: AC-3
+    description: CLI reference preserves exhaustive command coverage with supported commands and examples rather than unsupported promises.
+  - id: AC-4
+    description: Agent skills docs explain current Codex/Claude/add-skill support including named pipeline skills, and clearly mark unsupported native installers for other agents as manual/future paths.
+  - id: AC-5
+    description: llms.txt/llms-full.txt, canonical demo docs, future-improvement TODOs, and docs tests/build support agent-facing navigation and validation.
+-->
+
+Jumpspace should make first contact feel obvious: one clear promise, one first win, and direct routes for new repos, existing repo bootstrap, agents, workflows, and reference material. The README should sell the category without becoming the manual, and the docs site should carry the detailed command and agent workflow guidance.
+
+## Named pipeline agent skills
+
+<!-- jumpspace
+id: JS-053
+type: spec
+status: verified
+module: core-cli
+space: repo
+keywords:
+  - add-skill
+  - named skills
+  - pipeline skills
+  - codex
+  - claude
+code:
+  - src/cli.ts
+  - src/commands/addSkill.ts
+  - src/core/agentSkills.ts
+  - skills/README.md
+  - docs/src/content/docs/agent-skills/overview.md
+  - docs/src/content/docs/agent-skills/skill-authoring.md
+  - docs/src/content/docs/agent-skills/codex.md
+  - docs/src/content/docs/agent-skills/claude-code.md
+  - docs/src/content/docs/start-here/agent-setup.md
+  - docs/src/content/docs/reference/cli.md
+tests:
+  - src/core/agentSkills.test.ts
+  - src/cli.test.ts
+  - docs/scripts/check-docs.mjs
+gaps: []
+depends_on:
+  - JS-014
+  - JS-052
+refs:
+  - type: related_to
+    id: JS-013
+    note: Bootstrap work should be packaged as a named skill so an agent can build the first graph from existing docs.
+  - type: related_to
+    id: JS-017
+    note: Work-packet execution should be packaged as a named skill for implementation starts.
+  - type: related_to
+    id: JS-046
+    note: Handoff packet generation should be packaged as a named skill for agent switching.
+plan:
+  task_id: JS-053
+  goal: Implement named pipeline agent skills so add-skill can install bootstrap, work, review, and handoff workflows for Codex or Claude Code.
+  status: complete
+  steps:
+    - id: orient
+      outcome: Existing agent skill installer, CLI command shape, docs references, and tests are inspected before edits.
+      status: complete
+      depends_on: []
+      source_files:
+        - src/core/agentSkills.ts
+        - src/commands/addSkill.ts
+        - src/cli.ts
+        - src/core/agentSkills.test.ts
+        - src/cli.test.ts
+      tests: []
+      checks:
+        - node dist/cli.js find agent skills add-skill pipeline bootstrap work review handoff --mode any --json --compact
+      evidence:
+        - Used Jumpspace find plus focused source reads to identify JS-014, JS-052, JS-013, JS-017, and JS-046 as the guiding tasks for named pipeline skill installation.
+    - id: core-installer
+      outcome: add-skill installs the full reference-plus-pipeline bundle by default and supports named skill installs with --agent.
+      status: complete
+      depends_on:
+        - orient
+      source_files:
+        - src/core/agentSkills.ts
+        - src/commands/addSkill.ts
+        - src/cli.ts
+      tests:
+        - src/core/agentSkills.test.ts
+        - src/cli.test.ts
+      checks:
+        - npm test -- src/core/agentSkills.test.ts src/cli.test.ts
+      evidence:
+        - Added pipeline skill definitions for jumpspace-bootstrap, jumpspace-work, jumpspace-review, and jumpspace-handoff; wired optional skill arguments and --agent into add-skill; focused unit and CLI integration tests passed.
+    - id: docs
+      outcome: Skill docs, CLI reference, and agent setup pages describe named pipeline installs as current behavior.
+      status: complete
+      depends_on:
+        - core-installer
+      source_files:
+        - skills/README.md
+        - docs/src/content/docs/agent-skills/overview.md
+        - docs/src/content/docs/agent-skills/skill-authoring.md
+        - docs/src/content/docs/agent-skills/codex.md
+        - docs/src/content/docs/agent-skills/claude-code.md
+        - docs/src/content/docs/start-here/agent-setup.md
+        - docs/src/content/docs/reference/cli.md
+        - docs/scripts/check-docs.mjs
+      tests:
+        - docs/scripts/check-docs.mjs
+      checks:
+        - npm --prefix docs test
+      evidence:
+        - Updated the skill docs and docs checker so named pipeline installs are current, while native installers for unsupported agents remain future/manual.
+    - id: final-verify
+      outcome: Build, docs, tests, scan, plan validation, and audit pass after the named skill implementation.
+      status: complete
+      depends_on:
+        - docs
+      source_files:
+        - docs/specs/jumpspace-v0.md
+        - .jumpspace/index.json
+      tests:
+        - src/core/agentSkills.test.ts
+        - src/cli.test.ts
+        - docs/scripts/check-docs.mjs
+      checks:
+        - npm test -- src/core/agentSkills.test.ts src/cli.test.ts
+        - npm --prefix docs test
+        - npm --prefix docs run build
+        - npm run build
+        - node dist/cli.js scan
+        - node dist/cli.js plan validate JS-053 --json
+        - node dist/cli.js audit --json
+      evidence:
+        - Focused installer tests passed (26 tests), full npm test passed (43 files / 173 tests), docs test and docs build passed, npm run build passed, dist add-skill smoke tests passed, semantic build refreshed 53 tasks, scan indexed 53 tasks, plan validate JS-053 passed, and audit/doctor were ok with only existing JS-050 launch gaps.
+acceptance_criteria:
+  - id: AC-1
+    description: add-skill --codex, --claude, and --all install the reference workflow skill plus bootstrap, work, review, and handoff pipeline skills.
+  - id: AC-2
+    description: add-skill <skill> --agent <codex|claude> installs the selected named skill plus the reference workflow skill.
+  - id: AC-3
+    description: Named skill aliases such as bootstrap, work, review, and handoff resolve to their jumpspace-* skill names.
+  - id: AC-4
+    description: Unknown agents and unknown skill names return structured JSON errors when --json is used.
+  - id: AC-5
+    description: Installer writes remain additive, idempotent, and limited to Jumpspace-managed blocks.
+  - id: AC-6
+    description: Docs and agent-facing skill README describe named pipeline installs as current behavior and keep unsupported native agent installers marked manual or future.
+verification_records:
+  - id: verify-20260629125916
+    verified_at: 2026-06-29T12:59:16.422Z
+    commit: 5b205a0bd911abac61d0909a38a5217982c4c81a
+    checks:
+      - command: npm test -- src/core/agentSkills.test.ts src/cli.test.ts
+        exit_code: 0
+      - command: npm --prefix docs test
+        exit_code: 0
+      - command: npm run build
+        exit_code: 0
+      - command: node dist/cli.js plan validate JS-053 --json
+        exit_code: 0
+    acceptance_criteria_covered:
+      - AC-1
+      - AC-2
+      - AC-3
+      - AC-4
+      - AC-5
+      - AC-6
+    evidence:
+      - Named pipeline skills are implemented for Codex and Claude add-skill flows, docs describe them as current behavior, and focused installer/docs/build checks pass.
+-->
+
+Jumpspace should package the workflow skills described in the docs as real repo-local skill files. The default installer should give Codex and Claude Code the full reference-plus-pipeline bundle, while named installs let a human or agent add a narrower skill such as `jumpspace-work` or `jumpspace-handoff` to one supported agent target.
+
+## Jumpspace Cloud docs page
+
+<!-- jumpspace
+id: JS-054
+type: engineering
+status: verified
+module: docs
+space: repo
+keywords:
+  - Jumpspace Cloud
+  - docs
+  - design partners
+  - Netlify page removal
+code:
+  - docs/astro.config.mjs
+  - docs/scripts/check-docs.mjs
+  - docs/public/llms.txt
+  - docs/public/llms-full.txt
+  - docs/src/content/docs/index.md
+  - docs/src/content/docs/jumpspace-cloud.md
+  - docs/specs/jumpspace-v0.md
+tests:
+  - docs/scripts/check-docs.mjs
+gaps: []
+depends_on:
+  - JS-049
+  - JS-052
+refs:
+  - type: related_to
+    id: JS-050
+    note: Launch docs should avoid exposing provider-specific deployment instructions while keeping hosted-readiness gaps explicit.
+plan:
+  task_id: JS-054
+  goal: Remove the public Netlify deployment guide from the docs and add a Jumpspace Cloud design-partner page.
+  status: complete
+  steps:
+    - id: orient
+      outcome: Existing docs tasks and public Netlify references are located before editing.
+      status: complete
+      depends_on: []
+      source_files:
+        - docs/astro.config.mjs
+        - docs/scripts/check-docs.mjs
+        - docs/specs/jumpspace-v0.md
+      tests: []
+      checks:
+        - node dist/cli.js find netlify cloud docs deploy --mode any --json --compact
+        - rg -n "Netlify|netlify|deploy/netlify|Jumpspace Cloud|Cloud" docs README.md skills docs/specs/jumpspace-v0.md
+      evidence:
+        - Used Jumpspace find and source search to identify JS-049, JS-050, and JS-052 plus the public Netlify deployment page, sidebar item, docs checker requirement, and source-backed code links.
+    - id: docs-update
+      outcome: Public docs no longer expose a Netlify deployment guide and include a Jumpspace Cloud page with design-partner contact copy.
+      status: complete
+      depends_on:
+        - orient
+      source_files:
+        - docs/astro.config.mjs
+        - docs/scripts/check-docs.mjs
+        - docs/public/llms.txt
+        - docs/public/llms-full.txt
+        - docs/src/content/docs/index.md
+        - docs/src/content/docs/jumpspace-cloud.md
+        - docs/specs/jumpspace-v0.md
+      tests:
+        - docs/scripts/check-docs.mjs
+      checks:
+        - rg -n "Netlify|netlify|deploy/netlify" docs/src/content/docs docs/public docs/scripts/check-docs.mjs docs/astro.config.mjs
+        - rg -n "Jumpspace Cloud|jumpspace-cloud|hi@jumpspace.ai" docs/src/content/docs docs/public docs/astro.config.mjs docs/scripts/check-docs.mjs
+      evidence:
+        - Deleted docs/src/content/docs/deploy/netlify.md, removed the sidebar entry and docs checker requirement, added docs/src/content/docs/jumpspace-cloud.md, linked it from the docs homepage and agent routing files, and updated task code links away from the deleted page.
+    - id: final-verify
+      outcome: Docs checks, docs build, scan, plan validation, and audit pass after the Cloud docs change.
+      status: complete
+      depends_on:
+        - docs-update
+      source_files:
+        - docs/specs/jumpspace-v0.md
+        - .jumpspace/index.json
+      tests:
+        - docs/scripts/check-docs.mjs
+      checks:
+        - npm --prefix docs test
+        - npm --prefix docs run build
+        - node dist/cli.js scan
+        - node dist/cli.js plan validate JS-054 --json
+        - node dist/cli.js audit --json
+      evidence:
+        - Docs structure check passed for 53 files, Starlight docs build passed and generated /jumpspace-cloud/ with no /deploy/netlify/ route, scan indexed 54 tasks, plan validate JS-054 passed, semantic build refreshed 54 tasks, and audit/doctor were ok apart from existing JS-050 external launch gaps.
+acceptance_criteria:
+  - id: AC-1
+    description: The public docs sidebar no longer links to a Netlify deployment page.
+  - id: AC-2
+    description: The Netlify deployment guide page is removed from the Starlight docs content.
+  - id: AC-3
+    description: The docs include a Jumpspace Cloud section/page that invites early design partners.
+  - id: AC-4
+    description: The Jumpspace Cloud page includes hi@jumpspace.ai as the contact address.
+  - id: AC-5
+    description: Docs checks and Jumpspace audit do not reference the deleted deployment guide as a required or linked source file.
+verification_records:
+  - id: verify-20260629140541
+    verified_at: 2026-06-29T14:05:41.215Z
+    commit: 5b205a0bd911abac61d0909a38a5217982c4c81a
+    checks:
+      - command: npm --prefix docs test
+        exit_code: 0
+      - command: npm --prefix docs run build
+        exit_code: 0
+      - command: node dist/cli.js plan validate JS-054 --json
+        exit_code: 0
+      - command: node dist/cli.js audit --json
+        exit_code: 0
+    acceptance_criteria_covered:
+      - AC-1
+      - AC-2
+      - AC-3
+      - AC-4
+      - AC-5
+    evidence:
+      - Public Netlify deployment docs were removed, the Jumpspace Cloud design-partner page was added with hi@jumpspace.ai, docs checks/build passed, and Jumpspace plan/audit checks passed.
+-->
+
+Jumpspace should keep public docs focused on product usage and agent workflows rather than provider-specific deployment instructions. The docs should also expose a simple Jumpspace Cloud design-partner callout for teams that want a cloud version.
+
+## Alpha release stability notice
+
+<!-- jumpspace
+id: JS-055
+type: engineering
+status: verified
+module: docs
+space: repo
+keywords:
+  - alpha release
+  - API stability
+  - README
+  - docs
+  - schemas
+code:
+  - README.md
+  - docs/scripts/check-docs.mjs
+  - docs/src/content/docs/index.md
+  - docs/src/content/docs/start-here/quickstart.md
+  - docs/src/content/docs/reference/json-schemas.md
+  - docs/src/content/docs/reference/sdks.md
+  - docs/src/content/docs/contribute/release-checklist.md
+  - docs/specs/jumpspace-v0.md
+tests:
+  - docs/scripts/check-docs.mjs
+gaps: []
+depends_on:
+  - JS-052
+  - JS-023
+  - JS-029
+refs:
+  - type: related_to
+    id: JS-033
+    note: OSS launch hygiene should set honest expectations for pre-1.0 API and schema stability.
+plan:
+  task_id: JS-055
+  goal: Add alpha release warnings to the README and docs so users know CLI, schema, metadata, SDK, and generated guidance contracts may change before 1.0.
+  status: complete
+  steps:
+    - id: orient
+      outcome: Existing docs, README, schema/SDK references, and release checklist are inspected before editing.
+      status: complete
+      depends_on: []
+      source_files:
+        - README.md
+        - docs/src/content/docs/index.md
+        - docs/src/content/docs/start-here/quickstart.md
+        - docs/src/content/docs/reference/json-schemas.md
+        - docs/src/content/docs/reference/sdks.md
+        - docs/src/content/docs/contribute/release-checklist.md
+      tests: []
+      checks:
+        - node dist/cli.js find alpha release README docs schemas SDK --mode any --json --compact
+      evidence:
+        - Used Jumpspace find plus focused source reads to identify JS-052, JS-023, JS-029, JS-033, and JS-042 as relevant to alpha release messaging, schema contracts, SDK contracts, and launch positioning.
+    - id: alpha-copy
+      outcome: README and docs clearly state that Jumpspace is alpha software and contracts may change before 1.0.
+      status: complete
+      depends_on:
+        - orient
+      source_files:
+        - README.md
+        - docs/src/content/docs/index.md
+        - docs/src/content/docs/start-here/quickstart.md
+        - docs/src/content/docs/reference/json-schemas.md
+        - docs/src/content/docs/reference/sdks.md
+        - docs/src/content/docs/contribute/release-checklist.md
+        - docs/scripts/check-docs.mjs
+      tests:
+        - docs/scripts/check-docs.mjs
+      checks:
+        - rg -n "alpha software|stable 1.0|Pin versions|Alpha Compatibility" README.md docs/src/content/docs docs/scripts/check-docs.mjs
+      evidence:
+        - Added alpha notices to the README, docs homepage, quickstart, JSON schemas, SDKs, and release checklist; updated the docs checker to require alpha wording in public docs.
+    - id: final-verify
+      outcome: Docs checks, docs build, scan, plan validation, and audit pass after the alpha notice change.
+      status: complete
+      depends_on:
+        - alpha-copy
+      source_files:
+        - docs/specs/jumpspace-v0.md
+        - .jumpspace/index.json
+      tests:
+        - docs/scripts/check-docs.mjs
+      checks:
+        - npm --prefix docs test
+        - npm --prefix docs run build
+        - node dist/cli.js scan
+        - node dist/cli.js plan validate JS-055 --json
+        - node dist/cli.js audit --json
+      evidence:
+        - Alpha notice grep passed across README and docs, docs structure check passed for 53 files, Starlight docs build passed, scan indexed 55 tasks, plan validate JS-055 passed, semantic build refreshed 55 tasks, and audit/doctor were ok apart from existing JS-050 external launch gaps.
+acceptance_criteria:
+  - id: AC-1
+    description: README includes an alpha release warning before users reach install/demo commands.
+  - id: AC-2
+    description: Docs homepage and quickstart include alpha release warnings near the top of each page.
+  - id: AC-3
+    description: JSON schema and SDK reference docs warn that contracts may change before 1.0.
+  - id: AC-4
+    description: Release checklist reminds maintainers to call out CLI, schema, metadata, SDK, and generated guidance changes.
+  - id: AC-5
+    description: Docs structure check enforces the alpha notice on the high-risk docs pages.
+verification_records:
+  - id: verify-20260629142141
+    verified_at: 2026-06-29T14:21:41.211Z
+    commit: 5b205a0bd911abac61d0909a38a5217982c4c81a
+    checks:
+      - command: npm --prefix docs test
+        exit_code: 0
+      - command: npm --prefix docs run build
+        exit_code: 0
+      - command: node dist/cli.js plan validate JS-055 --json
+        exit_code: 0
+      - command: node dist/cli.js audit --json
+        exit_code: 0
+    acceptance_criteria_covered:
+      - AC-1
+      - AC-2
+      - AC-3
+      - AC-4
+      - AC-5
+    evidence:
+      - Alpha release warnings are present in README, docs homepage, quickstart, schema docs, SDK docs, and release checklist; docs checks/build and Jumpspace plan/audit checks pass.
+-->
+
+Jumpspace should set expectations honestly while it is pre-1.0. Users can still adopt it, but they should know to pin versions in CI and review changelogs before upgrading because CLI commands, JSON schemas, task metadata fields, SDKs, and generated agent guidance may change.
+
+## Scoped npm package and tag publish workflow
+
+<!-- jumpspace
+id: JS-056
+type: engineering
+status: verified
+module: packaging
+space: repo
+keywords:
+  - npm
+  - scoped package
+  - semver
+  - git tags
+  - publish workflow
+code:
+  - package.json
+  - package-lock.json
+  - .github/workflows/publish.yml
+  - src/core/releaseDoctor.ts
+  - src/core/installDoctor.ts
+  - README.md
+  - docs/scripts/check-docs.mjs
+  - docs/src/content/docs/contribute/release-checklist.md
+  - docs/src/content/docs/reference/sdks.md
+  - docs/src/content/docs/core-concepts/json-contracts.md
+  - src/templates/AGENTS.md
+  - src/templates/SKILL.md
+  - src/core/agentSkills.ts
+  - docs/specs/jumpspace-v0.md
+tests:
+  - src/packageHygiene.test.ts
+  - src/core/releaseDoctor.test.ts
+  - src/core/installDoctor.test.ts
+  - src/core/agentSkills.test.ts
+  - docs/scripts/check-docs.mjs
+gaps: []
+depends_on:
+  - JS-023
+  - JS-025
+  - JS-042
+  - JS-050
+refs:
+  - type: related_to
+    id: JS-033
+    note: OSS package hygiene should keep the npm package scoped while preserving the jumpspace CLI command.
+plan:
+  task_id: JS-056
+  goal: Rename the npm package to @jumpspace/cli, preserve the jumpspace command, and add semver git-tag publishing to npm.
+  status: complete
+  steps:
+    - id: orient
+      outcome: Existing package, release, docs, and Jumpspace launch tasks are identified.
+      status: complete
+      depends_on: []
+      source_files:
+        - package.json
+        - src/core/releaseDoctor.ts
+        - docs/specs/jumpspace-v0.md
+      tests: []
+      checks:
+        - node dist/cli.js find npm package publish semver tag release workflow --mode any --json --compact
+        - rg -n "@jumpspace/cli|npm install -D jumpspace|jumpspace/sdk|jumpspace/schemas|jumpspace@0.1.0|jumpspace-0.1.0|package name jumpspace" package.json package-lock.json README.md docs src sdk .github
+      evidence:
+        - Jumpspace find identified JS-025, JS-042, JS-050, JS-048, JS-029, JS-031, JS-051, JS-023, and JS-033 as the relevant release/package/docs tasks and linked files.
+    - id: scoped-package
+      outcome: package.json and package-lock.json use @jumpspace/cli while package.json still exposes the jumpspace command.
+      status: complete
+      depends_on:
+        - orient
+      source_files:
+        - package.json
+        - package-lock.json
+        - src/packageHygiene.test.ts
+        - src/core/releaseDoctor.ts
+        - src/core/releaseDoctor.test.ts
+        - src/core/installDoctor.test.ts
+      tests:
+        - src/packageHygiene.test.ts
+        - src/core/releaseDoctor.test.ts
+        - src/core/installDoctor.test.ts
+      checks:
+        - npm test -- src/packageHygiene.test.ts src/core/releaseDoctor.test.ts src/core/installDoctor.test.ts
+      evidence:
+        - package.json and package-lock.json now use @jumpspace/cli, package.json keeps bin jumpspace -> ./dist/cli.js, package hygiene/release-doctor/install-doctor/CLI focused tests passed, and install-doctor recognizes scoped checkouts.
+    - id: publish-workflow
+      outcome: A GitHub Actions workflow publishes @jumpspace/cli from matching semver git tags.
+      status: complete
+      depends_on:
+        - scoped-package
+      source_files:
+        - .github/workflows/publish.yml
+        - docs/src/content/docs/contribute/release-checklist.md
+        - docs/scripts/check-docs.mjs
+      tests:
+        - docs/scripts/check-docs.mjs
+      checks:
+        - npm --prefix docs test
+      evidence:
+        - Added .github/workflows/publish.yml for v*.*.* tags, verified semver tag format and tag/package version match before npm publish --access public --provenance, documented npm version release scripts and NPM_TOKEN requirement, and docs structure check passed.
+    - id: docs-agent-contracts
+      outcome: README, docs, SDK imports, and generated agent guidance refer to @jumpspace/cli package surfaces.
+      status: complete
+      depends_on:
+        - scoped-package
+      source_files:
+        - README.md
+        - docs/src/content/docs/reference/sdks.md
+        - docs/src/content/docs/core-concepts/json-contracts.md
+        - src/templates/AGENTS.md
+        - src/templates/SKILL.md
+        - src/core/agentSkills.ts
+      tests:
+        - src/core/agentSkills.test.ts
+        - docs/scripts/check-docs.mjs
+      checks:
+        - rg -n "npm install -D jumpspace|jumpspace/sdk|jumpspace/schemas" README.md docs/src/content/docs src/templates src/core/agentSkills.ts
+        - npm test -- src/core/agentSkills.test.ts
+      evidence:
+        - README and docs install examples now use npm install -D @jumpspace/cli, SDK docs and JSON contract docs import @jumpspace/cli/sdk, generated AGENTS/SKILL guidance points to @jumpspace/cli/sdk and @jumpspace/cli/schemas, and focused agent-skill/docs checks passed.
+    - id: final-verify
+      outcome: Build, package dry-run, release diagnostics, docs checks, scan, plan validation, and audit pass.
+      status: complete
+      depends_on:
+        - publish-workflow
+        - docs-agent-contracts
+      source_files:
+        - docs/specs/jumpspace-v0.md
+        - .jumpspace/index.json
+      tests:
+        - src/packageHygiene.test.ts
+        - src/core/releaseDoctor.test.ts
+        - src/core/installDoctor.test.ts
+        - src/core/agentSkills.test.ts
+        - docs/scripts/check-docs.mjs
+      checks:
+        - npm test -- src/packageHygiene.test.ts src/core/releaseDoctor.test.ts src/core/installDoctor.test.ts src/core/agentSkills.test.ts
+        - npm run build
+        - npm --prefix docs test
+        - npm pack --dry-run --json
+        - node dist/cli.js release doctor --json
+        - node dist/cli.js scan
+        - node dist/cli.js plan validate JS-056 --json
+        - node dist/cli.js audit --json
+      evidence:
+        - Focused package/release/install/agent/CLI tests passed (5 files, 33 tests); full npm test passed (43 files, 173 tests); python SDK tests passed (3 tests); npm run build passed; docs test and docs build passed; env npm_config_cache=/private/tmp/jumpspace-npm-cache npm pack --dry-run --json produced @jumpspace/cli@0.1.0 as jumpspace-cli-0.1.0.tgz with executable dist/cli.js; release doctor and install-doctor returned ok; schema coverage and plan validate JS-056 returned ok.
+acceptance_criteria:
+  - id: AC-1
+    description: package.json and package-lock.json use the npm package name @jumpspace/cli.
+  - id: AC-2
+    description: The package bin still exposes the jumpspace command at ./dist/cli.js.
+  - id: AC-3
+    description: package.json has public scoped publish configuration and semver bump scripts.
+  - id: AC-4
+    description: A GitHub Actions publish workflow runs on semver git tags and rejects tag/package-version mismatches before npm publish.
+  - id: AC-5
+    description: Docs and agent guidance show @jumpspace/cli install, SDK, and schema package surfaces while retaining jumpspace CLI commands.
+  - id: AC-6
+    description: Release doctor and package hygiene tests validate scoped package publication requirements.
+verification_records:
+  - id: verify-20260629145345
+    verified_at: 2026-06-29T14:53:45.332Z
+    commit: 5b205a0bd911abac61d0909a38a5217982c4c81a
+    checks:
+      - command: npm test -- src/packageHygiene.test.ts src/core/releaseDoctor.test.ts src/core/installDoctor.test.ts src/core/agentSkills.test.ts src/cli.test.ts
+        exit_code: 0
+      - command: npm run build
+        exit_code: 0
+      - command: npm --prefix docs test
+        exit_code: 0
+      - command: env npm_config_cache=/private/tmp/jumpspace-npm-cache npm pack --dry-run --json
+        exit_code: 0
+      - command: node dist/cli.js release doctor --json
+        exit_code: 0
+      - command: node dist/cli.js plan validate JS-056 --json
+        exit_code: 0
+      - command: node dist/cli.js audit --json
+        exit_code: 0
+    acceptance_criteria_covered:
+      - AC-1
+      - AC-2
+      - AC-3
+      - AC-4
+      - AC-5
+      - AC-6
+    evidence:
+      - Scoped npm package, preserved jumpspace command, semver release scripts, tag-triggered npm publish workflow, public scoped publish config, docs/SDK/agent guidance updates, package dry-run, release doctor, plan validation, and audit all verified locally. Actual npm publish remains an external JS-050 launch step requiring credentials and a pushed tag.
+-->
+
+Jumpspace should publish to npm as `@jumpspace/cli` while preserving the installed `jumpspace` command. Releases should use semver package versions and git tags, with a tag-triggered GitHub Actions workflow publishing only when the tag matches `package.json`.

@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { addJumpspaceSkills } from "./agentSkills.js";
+import { addJumpspaceSkills, SUPPORTED_AGENT_SKILLS } from "./agentSkills.js";
 
 describe("addJumpspaceSkills", () => {
   it("installs Codex guidance and a repo-local skill idempotently", async () => {
@@ -12,22 +12,34 @@ describe("addJumpspaceSkills", () => {
     const first = await addJumpspaceSkills(root, ["codex"]);
     const second = await addJumpspaceSkills(root, ["codex"]);
 
+    expect(first.skills).toEqual(SUPPORTED_AGENT_SKILLS);
+    expect(first.files).toHaveLength(1 + SUPPORTED_AGENT_SKILLS.length);
     expect(first.files).toEqual([
       expect.objectContaining({ agent: "codex", path: "AGENTS.md", action: "updated" }),
-      expect.objectContaining({ agent: "codex", path: ".codex/skills/jumpspace-workflow/SKILL.md", action: "created" }),
+      ...SUPPORTED_AGENT_SKILLS.map((skillName) =>
+        expect.objectContaining({
+          agent: "codex",
+          skill: skillName,
+          path: `.codex/skills/${skillName}/SKILL.md`,
+          action: "created",
+        }),
+      ),
     ]);
-    expect(second.files).toEqual([
-      expect.objectContaining({ agent: "codex", path: "AGENTS.md", action: "unchanged" }),
-      expect.objectContaining({ agent: "codex", path: ".codex/skills/jumpspace-workflow/SKILL.md", action: "unchanged" }),
-    ]);
+    expect(second.files).toHaveLength(1 + SUPPORTED_AGENT_SKILLS.length);
+    expect(second.files.every((file) => file.action === "unchanged")).toBe(true);
 
     const agents = await fs.readFile(path.join(root, "AGENTS.md"), "utf8");
     const skill = await fs.readFile(path.join(root, ".codex/skills/jumpspace-workflow/SKILL.md"), "utf8");
+    const workSkill = await fs.readFile(path.join(root, ".codex/skills/jumpspace-work/SKILL.md"), "utf8");
 
     expect(agents).toContain("custom codex notes");
     expect(agents).toContain("Jumpspace workflow for Codex");
     expect(agents).toContain("@.codex/skills/jumpspace-workflow/SKILL.md");
-    expect(agents).toContain("Use this workflow by default");
+    expect(agents).toContain("@.codex/skills/jumpspace-bootstrap/SKILL.md");
+    expect(agents).toContain("@.codex/skills/jumpspace-work/SKILL.md");
+    expect(agents).toContain("@.codex/skills/jumpspace-review/SKILL.md");
+    expect(agents).toContain("@.codex/skills/jumpspace-handoff/SKILL.md");
+    expect(agents).toContain("Use Jumpspace by default");
     expect(agents).toContain('should not have to say "use Jumpspace"');
     expect(agents.match(/BEGIN JUMPSPACE MANAGED: codex/g)).toHaveLength(1);
     expect(skill).toContain("name: jumpspace-workflow");
@@ -57,6 +69,10 @@ describe("addJumpspaceSkills", () => {
     expect(skill).toContain("jumpspace release install-doctor --json");
     expect(skill).toContain("--check-registry");
     expect(skill.match(/BEGIN JUMPSPACE MANAGED: codex-skill/g)).toHaveLength(1);
+    expect(workSkill).toContain("name: jumpspace-work");
+    expect(workSkill).toContain("jumpspace work <id> --json");
+    expect(workSkill).toContain("jumpspace verify <id>");
+    expect(workSkill.match(/BEGIN JUMPSPACE MANAGED: codex-jumpspace-work-skill/g)).toHaveLength(1);
   });
 
   it("installs Claude guidance and preserves existing Claude content", async () => {
@@ -67,11 +83,13 @@ describe("addJumpspaceSkills", () => {
 
     const claude = await fs.readFile(path.join(root, "CLAUDE.md"), "utf8");
     const skill = await fs.readFile(path.join(root, ".claude/skills/jumpspace-workflow/SKILL.md"), "utf8");
+    const handoffSkill = await fs.readFile(path.join(root, ".claude/skills/jumpspace-handoff/SKILL.md"), "utf8");
 
     expect(claude).toContain("custom claude notes");
     expect(claude).toContain("Jumpspace workflow for Claude");
     expect(claude).toContain("@.claude/skills/jumpspace-workflow/SKILL.md");
-    expect(claude).toContain("Use this workflow by default");
+    expect(claude).toContain("@.claude/skills/jumpspace-handoff/SKILL.md");
+    expect(claude).toContain("Use Jumpspace by default");
     expect(claude).toContain('should not have to say "use Jumpspace"');
     expect(claude.match(/BEGIN JUMPSPACE MANAGED: claude/g)).toHaveLength(1);
     expect(skill).toContain("name: jumpspace-workflow");
@@ -100,6 +118,9 @@ describe("addJumpspaceSkills", () => {
     expect(skill).toContain("jumpspace release install-doctor --json");
     expect(skill).toContain("--check-registry");
     expect(skill.match(/BEGIN JUMPSPACE MANAGED: claude-skill/g)).toHaveLength(1);
+    expect(handoffSkill).toContain("name: jumpspace-handoff");
+    expect(handoffSkill).toContain("jumpspace handoff --task <id> --json");
+    expect(handoffSkill.match(/BEGIN JUMPSPACE MANAGED: claude-jumpspace-handoff-skill/g)).toHaveLength(1);
   });
 
   it("appends to an existing skill file without prepending frontmatter", async () => {
@@ -115,5 +136,39 @@ describe("addJumpspaceSkills", () => {
     expect(skill).not.toContain("name: jumpspace-workflow");
     expect(skill).toContain("# Existing skill notes");
     expect(skill).toContain("Jumpspace workflow");
+  });
+
+  it("installs selected pipeline skills with the reference workflow", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "jumpspace-skill-"));
+
+    const result = await addJumpspaceSkills(root, ["claude"], {
+      skills: ["jumpspace-work"],
+    });
+
+    expect(result.skills).toEqual(["jumpspace-workflow", "jumpspace-work"]);
+    expect(result.files).toEqual([
+      expect.objectContaining({ agent: "claude", path: "CLAUDE.md", action: "created" }),
+      expect.objectContaining({
+        agent: "claude",
+        skill: "jumpspace-workflow",
+        path: ".claude/skills/jumpspace-workflow/SKILL.md",
+        action: "created",
+      }),
+      expect.objectContaining({
+        agent: "claude",
+        skill: "jumpspace-work",
+        path: ".claude/skills/jumpspace-work/SKILL.md",
+        action: "created",
+      }),
+    ]);
+
+    const claude = await fs.readFile(path.join(root, "CLAUDE.md"), "utf8");
+    await expect(fs.readFile(path.join(root, ".claude/skills/jumpspace-review/SKILL.md"), "utf8")).rejects.toMatchObject({
+      code: "ENOENT",
+    });
+
+    expect(claude).toContain("@.claude/skills/jumpspace-workflow/SKILL.md");
+    expect(claude).toContain("@.claude/skills/jumpspace-work/SKILL.md");
+    expect(claude).not.toContain("@.claude/skills/jumpspace-review/SKILL.md");
   });
 });

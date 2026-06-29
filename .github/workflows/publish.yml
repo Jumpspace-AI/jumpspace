@@ -1,0 +1,88 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  npm:
+    name: Publish @jumpspace/cli
+    runs-on: ubuntu-latest
+    if: github.repository == 'Jumpspace-AI/jumpspace'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install package dependencies
+        run: npm ci
+
+      - name: Build package
+        run: npm run build
+
+      - name: Run package tests
+        run: npm test
+
+      - name: Run Python SDK contract tests
+        run: python -m unittest discover -s sdk/python/tests
+
+      - name: Verify schema coverage
+        run: node dist/cli.js schema coverage --json
+
+      - name: Verify package dry-run
+        run: npm pack --dry-run --json
+
+      - name: Verify release diagnostics
+        run: node dist/cli.js release doctor --json
+
+      - name: Install docs dependencies
+        run: npm --prefix docs ci
+
+      - name: Test docs
+        run: npm --prefix docs test
+
+      - name: Build docs
+        run: npm --prefix docs run build
+
+      - name: Verify tag matches package version
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          const tag = process.env.GITHUB_REF_NAME;
+          const expected = `v${pkg.version}`;
+          const semverTag = /^v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/;
+          if (!semverTag.test(tag)) {
+            console.error(`Tag ${tag} is not a semver tag like v1.2.3.`);
+            process.exit(1);
+          }
+          if (tag !== expected) {
+            console.error(`Tag ${tag} does not match package.json version ${expected}.`);
+            process.exit(1);
+          }
+          if (pkg.name !== '@jumpspace/cli') {
+            console.error(`package.json name must be @jumpspace/cli, got ${pkg.name}.`);
+            process.exit(1);
+          }
+          if (pkg.bin?.jumpspace !== './dist/cli.js') {
+            console.error('package.json must expose the jumpspace command at ./dist/cli.js.');
+            process.exit(1);
+          }
+          NODE
+
+      - name: Publish to npm
+        run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
