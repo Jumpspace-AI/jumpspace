@@ -12,7 +12,7 @@ import {
   type JumpTaskRefType,
 } from "./types.js";
 
-export type TaskLinkField = "code" | "tests" | "depends_on" | "refs" | "gaps";
+export type TaskLinkField = "code" | "test" | "depends_on" | "ref" | "gap";
 export type TaskLinkAction = "add" | "remove";
 
 export type TaskLinkUpdateInput = {
@@ -150,16 +150,16 @@ export async function planTaskLinkUpdate(
     external: task.external,
   };
 
-  applyPathOperations(metadata, operations, "add", "code", unique(input.add?.code ?? []));
-  applyPathOperations(metadata, operations, "add", "tests", unique(input.add?.tests ?? []));
-  applyPathOperations(metadata, operations, "add", "depends_on", unique(input.add?.depends_on ?? []));
-  applyPathOperations(metadata, operations, "add", "gaps", unique(input.add?.gaps ?? []));
+  applyPathOperations(metadata, operations, "add", "code", "code", unique(input.add?.code ?? []));
+  applyPathOperations(metadata, operations, "add", "tests", "test", unique(input.add?.tests ?? []));
+  applyPathOperations(metadata, operations, "add", "depends_on", "depends_on", unique(input.add?.depends_on ?? []));
+  applyPathOperations(metadata, operations, "add", "gaps", "gap", unique(input.add?.gaps ?? []));
   applyRefOperations(metadata, operations, "add", uniqueRefs(input.add?.refs ?? []));
 
-  applyPathOperations(metadata, operations, "remove", "code", unique(input.remove?.code ?? []));
-  applyPathOperations(metadata, operations, "remove", "tests", unique(input.remove?.tests ?? []));
-  applyPathOperations(metadata, operations, "remove", "depends_on", unique(input.remove?.depends_on ?? []));
-  applyPathOperations(metadata, operations, "remove", "gaps", unique(input.remove?.gaps ?? []));
+  applyPathOperations(metadata, operations, "remove", "code", "code", unique(input.remove?.code ?? []));
+  applyPathOperations(metadata, operations, "remove", "tests", "test", unique(input.remove?.tests ?? []));
+  applyPathOperations(metadata, operations, "remove", "depends_on", "depends_on", unique(input.remove?.depends_on ?? []));
+  applyPathOperations(metadata, operations, "remove", "gaps", "gap", unique(input.remove?.gaps ?? []));
   applyRefOperations(metadata, operations, "remove", uniqueRefs(input.remove?.refs ?? []));
 
   return {
@@ -259,20 +259,24 @@ function applyPathOperations(
   metadata: JumpTaskMetadata,
   operations: TaskLinkOperation[],
   action: TaskLinkAction,
-  field: "code" | "tests" | "depends_on" | "gaps",
+  metadataField: "code" | "tests" | "depends_on" | "gaps",
+  operationField: TaskLinkField,
   values: string[],
 ): void {
   for (const value of values) {
-    const existing = metadata[field].includes(value);
+    const existing = operationExists(metadata, metadataField, action, value);
     const changed = action === "add" ? !existing : existing;
     if (changed && action === "add") {
-      metadata[field] = [...metadata[field], value];
+      metadata[metadataField] = [...metadata[metadataField], value];
+    } else if (changed && metadataField === "gaps") {
+      const normalized = normalizeGap(value);
+      metadata.gaps = metadata.gaps.filter((candidate) => normalizeGap(candidate) !== normalized);
     } else if (changed) {
-      metadata[field] = metadata[field].filter((candidate) => candidate !== value);
+      metadata[metadataField] = metadata[metadataField].filter((candidate) => candidate !== value);
     }
     operations.push({
       action,
-      field,
+      field: operationField,
       value,
       changed,
       reason: action === "add" ? (existing ? "already_present" : "added") : existing ? "removed" : "not_present",
@@ -291,13 +295,30 @@ function applyRefOperations(metadata: JumpTaskMetadata, operations: TaskLinkOper
     }
     operations.push({
       action,
-      field: "refs",
+      field: "ref",
       value: `${ref.type}:${ref.id}`,
       ref,
       changed,
       reason: action === "add" ? (existing ? "already_present" : "added") : existing ? "removed" : "not_present",
     });
   }
+}
+
+function operationExists(
+  metadata: JumpTaskMetadata,
+  metadataField: "code" | "tests" | "depends_on" | "gaps",
+  action: TaskLinkAction,
+  value: string,
+): boolean {
+  if (metadataField === "gaps" && action === "remove") {
+    const normalized = normalizeGap(value);
+    return metadata.gaps.some((candidate) => normalizeGap(candidate) === normalized);
+  }
+  return metadata[metadataField].includes(value);
+}
+
+function normalizeGap(value: string): string {
+  return value.trim().replace(/\s+/g, " ");
 }
 
 type TaskLinkIntent = {

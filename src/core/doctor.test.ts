@@ -121,6 +121,47 @@ Run it again.
     expect(renderDoctorReport(report)).toContain("Semantic index: enabled at .jumpspace/semantic-index.json");
   });
 
+  it("compacts multiple task gap warnings by task", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "jumpspace-doctor-"));
+    await write(root, "docs/spec.md", "# Spec\n");
+    const report = await createDoctorReport(
+      root,
+      [
+        {
+          severity: "warning",
+          code: "TASK_HAS_GAP",
+          taskId: "JS-100",
+          message: "Task JS-100 has an explicit unresolved gap: First gap.",
+        },
+        {
+          severity: "warning",
+          code: "TASK_HAS_GAP",
+          taskId: "JS-100",
+          message: "Task JS-100 has an explicit unresolved gap: Second gap.",
+        },
+        {
+          severity: "warning",
+          code: "TASK_HAS_GAP",
+          taskId: "JS-200",
+          message: "Task JS-200 has an explicit unresolved gap: Other gap.",
+        },
+      ],
+      { docs: ["docs/**/*.md"], indexPath: ".jumpspace/index.json" },
+      undefined,
+    );
+
+    expect(report.warnings.filter((warning) => warning.code === "TASK_HAS_GAP")).toEqual([
+      expect.objectContaining({
+        taskId: "JS-100",
+        message: expect.stringContaining("2 explicit unresolved gaps"),
+      }),
+      expect.objectContaining({
+        taskId: "JS-200",
+        message: expect.stringContaining("Other gap"),
+      }),
+    ]);
+  });
+
   it("surfaces repair opportunities when given a Git baseline", async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), "jumpspace-doctor-"));
     await write(

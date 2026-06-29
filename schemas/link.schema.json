@@ -54,10 +54,10 @@
             "field": {
               "enum": [
                 "code",
-                "tests",
+                "test",
                 "depends_on",
-                "refs",
-                "gaps"
+                "ref",
+                "gap"
               ]
             },
             "value": {

@@ -125,7 +125,7 @@ Outside the task.
       plan: {
         task_id: "DOC-MON-001",
         goal: "Build approval flow.",
-        status: "planned",
+        status: "pending",
         steps: [
           {
             id: "design",

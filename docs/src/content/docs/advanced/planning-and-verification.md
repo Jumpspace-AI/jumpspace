@@ -29,6 +29,8 @@ npx @jumpspace/cli plan validate DOC-EXAMPLE-001 --json
 ```
 
 Plan validation enforces unique step IDs, valid dependencies, acyclic dependencies, and evidence requirements for completed steps.
+Top-level plan `status` and step `status` share the same enum:
+`pending`, `in_progress`, `complete`, or `blocked`.
 
 ## Next Steps
 

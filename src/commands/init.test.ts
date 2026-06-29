@@ -14,10 +14,20 @@ describe("runInit", () => {
     const config = await fs.readFile(path.join(root, ".jumpspace/config.json"), "utf8");
     const example = await fs.readFile(path.join(root, "docs/specs/example.md"), "utf8");
     const agents = await fs.readFile(path.join(root, "AGENTS.md"), "utf8");
+    const gitignore = await fs.readFile(path.join(root, ".gitignore"), "utf8");
 
     expect(config).toContain('"docs"');
     expect(example).toContain("DOC-EXAMPLE-001");
     expect(agents).toContain("Jumpspace workflow");
+    expect(gitignore).toContain("# BEGIN JUMPSPACE MANAGED: gitignore");
+    expect(gitignore).toContain(".jumpspace/locks/");
+    expect(gitignore).toContain(".jumpspace/semantic-index.json");
+    expect(gitignore).toContain(".jumpspace/semantic-lancedb/");
+    expect(gitignore).toContain("/jumpspace-bootstrap.json");
+    expect(gitignore).toContain("/jumpspace-bootstrap-context.json");
+    expect(gitignore).not.toContain(".jumpspace/index.json");
+    expect(gitignore).not.toContain(".jumpspace/mutations.jsonl");
+    expect(gitignore).not.toContain(".jumpspace/last-mutation.json");
 
     await fs.writeFile(path.join(root, "AGENTS.md"), "custom\n");
     await runInit({ root, writeLine: (line) => lines.push(line) });
@@ -25,6 +35,21 @@ describe("runInit", () => {
 
     await runInit({ root, force: true, writeLine: (line) => lines.push(line) });
     expect(await fs.readFile(path.join(root, "AGENTS.md"), "utf8")).toContain("Jumpspace workflow");
+  });
+
+  it("appends and refreshes the managed gitignore policy without replacing user rules", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "jumpspace-init-"));
+    await fs.writeFile(path.join(root, ".gitignore"), "node_modules/\n.env\n");
+
+    await runInit({ root, writeLine: () => {} });
+    await runInit({ root, writeLine: () => {} });
+
+    const gitignore = await fs.readFile(path.join(root, ".gitignore"), "utf8");
+    expect(gitignore).toContain("node_modules/");
+    expect(gitignore).toContain(".env");
+    expect(gitignore.match(/BEGIN JUMPSPACE MANAGED: gitignore/g)).toHaveLength(1);
+    expect(gitignore).toContain(".jumpspace/locks/");
+    expect(gitignore).toContain("/jumpspace-bootstrap-context.json");
   });
 
   it("uses discovered docs only when --auto is provided", async () => {

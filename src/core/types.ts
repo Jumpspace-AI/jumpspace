@@ -63,7 +63,7 @@ export type JumpTaskRef = {
   note?: string;
 };
 
-export const JUMP_PLAN_STATUSES = ["planned", "in_progress", "complete", "blocked"] as const;
+export const JUMP_PLAN_STATUSES = ["pending", "in_progress", "complete", "blocked"] as const;
 
 export type JumpPlanStatus = (typeof JUMP_PLAN_STATUSES)[number];
 
@@ -202,11 +202,15 @@ export const jumpPlanStepSchema = z
   })
   .strict();
 
+const jumpPlanStatusSchema = z
+  .union([z.enum(JUMP_PLAN_STATUSES), z.literal("planned")])
+  .transform((status): JumpPlanStatus => (status === "planned" ? "pending" : status));
+
 export const jumpPlanSchema = z
   .object({
     task_id: z.string().min(1),
     goal: z.string().min(1),
-    status: z.enum(JUMP_PLAN_STATUSES),
+    status: jumpPlanStatusSchema,
     steps: z.array(jumpPlanStepSchema).min(1),
   })
   .strict();

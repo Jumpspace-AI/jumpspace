@@ -41,7 +41,8 @@
               "enum": [
                 "pending",
                 "in_progress",
-                "complete"
+                "complete",
+                "blocked"
               ]
             },
             "depends_on": {

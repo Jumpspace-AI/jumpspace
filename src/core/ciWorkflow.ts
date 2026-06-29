@@ -88,36 +88,31 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
-
-      - name: Build package if present
-        run: npm run build --if-present
+        run: npm ci --ignore-scripts
 
       - name: Build Jumpspace PR comment
         env:
           BASE_SHA: \${{ github.event.pull_request.base.sha }}
         run: |
           set +e
-          JUMPSPACE_BIN="npx jumpspace"
-          if [ -x dist/cli.js ]; then
-            JUMPSPACE_BIN="node dist/cli.js"
-          fi
-
-          $JUMPSPACE_BIN scan
+          npx @jumpspace/cli scan
           SCAN_EXIT=$?
-          $JUMPSPACE_BIN pr comment --since "$BASE_SHA" > jumpspace-pr-comment.md
+          npx @jumpspace/cli semantic build --json > jumpspace-semantic-build.json
+          SEMANTIC_EXIT=$?
+          npx @jumpspace/cli pr comment --since "$BASE_SHA" > jumpspace-pr-comment.md
           COMMENT_EXIT=$?
-          $JUMPSPACE_BIN audit --json > jumpspace-audit.json
+          npx @jumpspace/cli audit --json > jumpspace-audit.json
           AUDIT_EXIT=$?
-          $JUMPSPACE_BIN doctor --json > jumpspace-doctor.json
+          npx @jumpspace/cli doctor --json > jumpspace-doctor.json
           DOCTOR_EXIT=$?
 
           node <<'NODE'
@@ -142,7 +137,7 @@ jobs:
           fs.writeFileSync("jumpspace-pr-summary.md", bounded(source, 60000));
           NODE
 
-          printf "%s\\n" "$SCAN_EXIT" "$COMMENT_EXIT" "$AUDIT_EXIT" "$DOCTOR_EXIT" > jumpspace-exit-codes.txt
+          printf "%s\\n" "$SCAN_EXIT" "$SEMANTIC_EXIT" "$COMMENT_EXIT" "$AUDIT_EXIT" "$DOCTOR_EXIT" > jumpspace-exit-codes.txt
           exit 0
 
       - name: Add Jumpspace summary

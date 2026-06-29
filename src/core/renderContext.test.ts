@@ -30,7 +30,7 @@ describe("renderTaskContext", () => {
       plan: {
         task_id: "JS-004",
         goal: "Render context with plans.",
-        status: "planned",
+        status: "pending",
         steps: [
           {
             id: "render",

@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { describe, expect, it } from "vitest";
-import { getChangedFiles, parseNameStatus } from "./changed.js";
+import { getChangedFiles, getWorkingTreeChangedFiles, parseNameStatus } from "./changed.js";
 
 const execFileAsync = promisify(execFile);
 
@@ -30,6 +30,18 @@ describe("getChangedFiles", () => {
     expect(files).toContainEqual(
       expect.objectContaining({ path: "rename-new.txt", old_path: "rename-old.txt", statuses: ["renamed"], sources: ["committed"] }),
     );
+    expect(files).toContainEqual(expect.objectContaining({ path: "staged.txt", sources: ["staged"] }));
+    expect(files).toContainEqual(expect.objectContaining({ path: "unstaged.txt", sources: ["unstaged"] }));
+    expect(files).toContainEqual(expect.objectContaining({ path: "untracked.txt", sources: ["untracked"] }));
+  });
+
+  it("can report only working-tree changes without a baseline ref", async () => {
+    const { root } = await createChangedRepo();
+    const result = await getWorkingTreeChangedFiles(root);
+
+    expect(result.ok).toBe(true);
+    const files = result.ok ? result.files : [];
+    expect(files).not.toContainEqual(expect.objectContaining({ path: "committed.txt", sources: ["committed"] }));
     expect(files).toContainEqual(expect.objectContaining({ path: "staged.txt", sources: ["staged"] }));
     expect(files).toContainEqual(expect.objectContaining({ path: "unstaged.txt", sources: ["unstaged"] }));
     expect(files).toContainEqual(expect.objectContaining({ path: "untracked.txt", sources: ["untracked"] }));

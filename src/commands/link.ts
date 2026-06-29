@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import { loadConfig, readIndex } from "../core/config.js";
-import { getChangedFiles } from "../core/changed.js";
+import { getChangedFiles, getWorkingTreeChangedFiles } from "../core/changed.js";
 import { commandError, errorEnvelope, type JsonCommandError } from "../core/errors.js";
 import { recordMutation } from "../core/mutations.js";
 import { refreshIndex } from "../core/refreshIndex.js";
@@ -157,13 +157,6 @@ export async function runLinkSuggest(id: string, options: LinkSuggestOptions = {
       commandError("UNKNOWN_TASK", `Unknown Jumpspace task ID "${id}". Run \`jumpspace find <query>\` to locate it.`, { taskId: id }),
     );
   }
-  if (!options.since && (!options.path || options.path.length === 0)) {
-    return writeError(
-      options,
-      commandError("MISSING_LINK_CANDIDATES", "Provide --since <ref>, --path <path>, or both to suggest task links.", { taskId: id }),
-    );
-  }
-
   const candidates = new Map<string, TaskLinkSuggestionCandidate>();
   for (const repoPath of options.path ?? []) {
     mergeCandidate(candidates, {
@@ -175,6 +168,18 @@ export async function runLinkSuggest(id: string, options: LinkSuggestOptions = {
 
   if (options.since) {
     const changed = await getChangedFiles(root, options.since);
+    if (!changed.ok) {
+      return writeError(options, changed.errors);
+    }
+    for (const file of changed.files) {
+      mergeCandidate(candidates, {
+        path: file.path,
+        statuses: file.statuses,
+        sources: file.sources,
+      });
+    }
+  } else if (!options.path || options.path.length === 0) {
+    const changed = await getWorkingTreeChangedFiles(root);
     if (!changed.ok) {
       return writeError(options, changed.errors);
     }

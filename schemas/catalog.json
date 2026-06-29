@@ -251,7 +251,7 @@
     {
       "name": "link.suggest",
       "command": "jumpspace link suggest <id> [--since <ref>] [--path <path>] --json",
-      "description": "Evidence-backed code/test link suggestions from changed files or explicit candidate paths. This command never mutates source.",
+      "description": "Evidence-backed code/test link suggestions from working-tree changes, changed files, or explicit candidate paths. This command never mutates source.",
       "file": "link.suggest.schema.json"
     },
     {

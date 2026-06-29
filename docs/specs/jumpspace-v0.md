@@ -272,6 +272,7 @@ Jumpspace task blocks support optional `module`, `space`, `keywords`, durable `p
 id: JS-006
 type: spec
 status: implemented
+space: repo
 code:
   - src/commands/init.ts
   - src/templates/example-spec.md
@@ -279,9 +280,13 @@ code:
   - src/templates/SKILL.md
   - src/templates/pull_request_template.md
   - src/templates/jumpspace.yml
+  - src/core/gitignorePolicy.ts
+  - .gitignore
 tests:
   - src/commands/init.test.ts
+gaps: []
 depends_on: []
+refs: []
 -->
 
 The `jumpspace init` command creates starter config, docs, agent instructions, and GitHub review templates without overwriting existing files unless `--force` is provided. `jumpspace init --agent codex` updates only Jumpspace-managed repo-local guidance blocks and preserves user-authored content outside those markers.
@@ -2762,6 +2767,8 @@ code:
   - src/templates/jumpspace.yml
   - src/templates/pull_request_template.md
   - src/core/agentSkills.ts
+  - docs/src/content/docs/reference/ci.md
+  - docs/src/content/docs/workflows/add-jumpspace-to-a-repo.md
 tests:
   - src/core/ciWorkflow.test.ts
   - src/commands/init.test.ts
@@ -2929,11 +2936,16 @@ code:
   - src/templates/AGENTS.md
   - src/templates/SKILL.md
   - src/core/agentSkills.ts
+  - src/core/changed.ts
+  - docs/src/content/docs/reference/cli.md
+  - docs/src/content/docs/advanced/retrieval-and-graph-queries.md
+  - docs/src/content/docs/getting-started/new-repo.md
 tests:
   - src/core/taskLinks.test.ts
   - src/cli.test.ts
   - src/sdk/contracts.test.ts
   - sdk/python/tests/test_contracts.py
+  - src/core/changed.test.ts
 gaps: []
 depends_on:
   - JS-017
@@ -3755,6 +3767,16 @@ code:
   - src/templates/AGENTS.md
   - src/templates/SKILL.md
   - src/core/agentSkills.ts
+  - src/core/types.ts
+  - src/core/plans.ts
+  - schemas/link.schema.json
+  - schemas/plan.save.schema.json
+  - schemas/plan.show.schema.json
+  - schemas/step.complete.schema.json
+  - schemas/next.schema.json
+  - schemas/handoff.schema.json
+  - docs/src/content/docs/core-concepts/plans.md
+  - docs/src/content/docs/advanced/planning-and-verification.md
 tests:
   - src/packageHygiene.test.ts
   - src/cli.test.ts
@@ -3762,6 +3784,11 @@ tests:
   - src/schemaArtifacts.test.ts
   - sdk/python/tests/test_contracts.py
   - src/core/agentSkills.test.ts
+  - src/core/plans.test.ts
+  - src/core/parseMarkdown.test.ts
+  - src/core/renderContext.test.ts
+  - src/core/validateTasks.test.ts
+  - src/core/workPacket.test.ts
 gaps: []
 depends_on:
   - JS-015

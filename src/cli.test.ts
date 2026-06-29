@@ -285,7 +285,7 @@ describe("CLI durable plans", () => {
       task: {
         id: "JS-100",
         status: "partial",
-        plan_status: "planned",
+        plan_status: "pending",
         execution_ready: true,
         pending_step_ids: ["design"],
         required_checks: ["jumpspace plan validate JS-100"],
@@ -421,7 +421,7 @@ describe("CLI durable plans", () => {
       path.join(root, "duplicate-plan.yml"),
       `task_id: JS-100
 goal: Bad plan.
-status: planned
+status: pending
 steps:
   - id: same
     outcome: First.
@@ -1078,8 +1078,8 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
       changed: true,
       operations: expect.arrayContaining([
         expect.objectContaining({ action: "add", field: "code", value: "src/durable-planning-runner.ts", changed: true }),
-        expect.objectContaining({ action: "add", field: "tests", value: "src/durable-planning-runner.test.ts", changed: true }),
-        expect.objectContaining({ action: "add", field: "gaps", value: "Review runner ownership.", changed: true }),
+        expect.objectContaining({ action: "add", field: "test", value: "src/durable-planning-runner.test.ts", changed: true }),
+        expect.objectContaining({ action: "add", field: "gap", value: "Review runner ownership.", changed: true }),
       ]),
     });
     expect(await fs.readFile(path.join(root, "docs/specs/feature.md"), "utf8")).not.toContain("durable-planning-runner");
@@ -1121,6 +1121,20 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
     expect(JSON.parse(removed.stdout)).toMatchObject({
       ok: true,
       operations: expect.arrayContaining([expect.objectContaining({ action: "remove", field: "code", changed: true })]),
+    });
+
+    const removedGap = await runCli(root, [
+      "link",
+      "update",
+      "JS-100",
+      "--remove-gap",
+      "Review  runner ownership.",
+      "--json",
+    ]);
+    expect(removedGap.code).toBe(0);
+    expect(JSON.parse(removedGap.stdout)).toMatchObject({
+      ok: true,
+      operations: expect.arrayContaining([expect.objectContaining({ action: "remove", field: "gap", changed: true })]),
     });
 
     const missingPath = await runCli(root, ["link", "update", "JS-100", "--code", "src/missing.ts", "--json"]);
@@ -1193,6 +1207,20 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
         coverage: expect.objectContaining({ matched_terms: 0 }),
       }),
     }));
+
+    const autoSuggestions = await runCli(root, ["link", "suggest", "JS-100", "--json"]);
+    expect(autoSuggestions.code).toBe(0);
+    expect(JSON.parse(autoSuggestions.stdout)).toMatchObject({
+      ok: true,
+      since: null,
+      mutated: false,
+      suggestions: expect.arrayContaining([
+        expect.objectContaining({
+          field: "code",
+          path: "src/durable-planning-worker.ts",
+        }),
+      ]),
+    });
 
     const evalJson = await runCli(root, ["link", "eval", "--json"]);
     expect(evalJson.code).toBe(0);
@@ -1585,7 +1613,8 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
 
     const planSaveSchema = await runCli(root, ["schema", "show", "plan.save", "--json"]);
     expect(planSaveSchema.code).toBe(0);
-    expect(JSON.parse(planSaveSchema.stdout)).toMatchObject({
+    const planSaveSchemaBody = JSON.parse(planSaveSchema.stdout);
+    expect(planSaveSchemaBody).toMatchObject({
       ok: true,
       schema: {
         name: "plan.save",
@@ -1594,6 +1623,22 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
         },
       },
     });
+    expect(planSaveSchemaBody.schema.schema.properties.plan.properties.status.enum).toEqual([
+      "pending",
+      "in_progress",
+      "complete",
+      "blocked",
+    ]);
+
+    const linkOperationSchema = await runCli(root, ["schema", "show", "link", "--json"]);
+    expect(linkOperationSchema.code).toBe(0);
+    expect(JSON.parse(linkOperationSchema.stdout).schema.schema.properties.operations.items.properties.field.enum).toEqual([
+      "code",
+      "test",
+      "depends_on",
+      "ref",
+      "gap",
+    ]);
 
     const stepCompleteSchema = await runCli(root, ["schema", "show", "step.complete", "--json"]);
     expect(stepCompleteSchema.code).toBe(0);
@@ -1996,7 +2041,7 @@ Implement durable planning.
     path.join(root, "plan.yml"),
     `task_id: JS-100
 goal: Implement durable planning.
-status: planned
+status: pending
 steps:
   - id: design
     outcome: Design is approved.

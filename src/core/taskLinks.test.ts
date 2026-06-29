@@ -37,10 +37,10 @@ describe("task link helpers", () => {
       changed: true,
       operations: expect.arrayContaining([
         expect.objectContaining({ action: "add", field: "code", value: "src/password.ts", changed: true }),
-        expect.objectContaining({ action: "add", field: "tests", value: "src/password.test.ts", changed: true }),
+        expect.objectContaining({ action: "add", field: "test", value: "src/password.test.ts", changed: true }),
         expect.objectContaining({ action: "add", field: "depends_on", value: "JS-DEP", changed: true }),
-        expect.objectContaining({ action: "add", field: "refs", value: "related_to:JS-DEP", changed: true }),
-        expect.objectContaining({ action: "add", field: "gaps", value: "Review auth copy.", changed: true }),
+        expect.objectContaining({ action: "add", field: "ref", value: "related_to:JS-DEP", changed: true }),
+        expect.objectContaining({ action: "add", field: "gap", value: "Review auth copy.", changed: true }),
       ]),
     });
 
@@ -69,9 +69,28 @@ describe("task link helpers", () => {
       changed: true,
       operations: expect.arrayContaining([
         expect.objectContaining({ action: "remove", field: "code", value: "src/password.ts", changed: true }),
-        expect.objectContaining({ action: "remove", field: "refs", value: "related_to:JS-DEP", changed: true }),
+        expect.objectContaining({ action: "remove", field: "ref", value: "related_to:JS-DEP", changed: true }),
       ]),
     });
+  });
+
+  it("removes gaps when only whitespace drift differs", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "jumpspace-links-"));
+    await write(root, "docs/specs/feature.md", fixtureMarkdown().replace("gaps: []", "gaps:\n  - Review   auth copy."));
+    const index = await fixtureIndex(root);
+
+    const plan = await planTaskLinkUpdate(root, index, "JS-100", {
+      remove: {
+        gaps: ["Review auth copy."],
+      },
+    });
+
+    expect(plan).toMatchObject({
+      ok: true,
+      changed: true,
+      operations: [expect.objectContaining({ action: "remove", field: "gap", value: "Review auth copy.", changed: true })],
+    });
+    expect(plan.ok ? plan.metadata.gaps : []).toEqual([]);
   });
 
   it("rejects missing paths, unknown dependencies, unknown refs, self links, and invalid ref syntax", async () => {

@@ -98,7 +98,7 @@ describe("addJumpspaceSkills", () => {
     expect(skill).toContain("jumpspace init --ci github --dry-run --json");
     expect(skill).toContain(".jumpspace/locks/mutation.lock");
     expect(skill).toContain("verify");
-    expect(skill).toContain("changed-file status is candidate context");
+    expect(skill).toContain("Changed-file status is candidate context");
     expect(skill).toContain("evidence.basename_terms");
     expect(skill).toContain("evidence.phrase_matches");
     expect(skill).toContain("jumpspace link eval --json");
@@ -119,6 +119,8 @@ describe("addJumpspaceSkills", () => {
     expect(skill).toContain("--check-registry");
     expect(skill.match(/BEGIN JUMPSPACE MANAGED: claude-skill/g)).toHaveLength(1);
     expect(handoffSkill).toContain("name: jumpspace-handoff");
+    expect(handoffSkill).toContain("Preview explicit gaps");
+    expect(handoffSkill).toContain("then rerun without `--dry-run` to persist them");
     expect(handoffSkill).toContain("jumpspace handoff --task <id> --json");
     expect(handoffSkill.match(/BEGIN JUMPSPACE MANAGED: claude-jumpspace-handoff-skill/g)).toHaveLength(1);
   });

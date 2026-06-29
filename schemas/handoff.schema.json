@@ -563,7 +563,7 @@
                 "anyOf": [
                   {
                     "enum": [
-                      "planned",
+                      "pending",
                       "in_progress",
                       "complete",
                       "blocked"
