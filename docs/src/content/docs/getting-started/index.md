@@ -18,7 +18,7 @@ Start with [Why Jumpspace?](/getting-started/why-jumpspace/) if you want the sho
 Use Jumpspace as a dev dependency:
 
 ```bash
-npm install -D jumpspace
+npm install -D @jumpspace/cli
 ```
 
 If you are testing a local checkout before publishing, run this from the Jumpspace repo:

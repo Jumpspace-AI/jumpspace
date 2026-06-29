@@ -1,47 +1,47 @@
 ---
 title: Jumpspace
-description: Repo-local implementation memory for AI coding agents.
+description: Implementation memory for AI coding agents.
 ---
 
-Jumpspace helps a repository remember why work exists, where the implementation lives, which tests protect it, and what an agent should do next.
+Jumpspace gives coding agents a source-backed map between docs, code, tests,
+acceptance criteria, verification, drift, and handoff state.
 
-It is not a hosted service and it is not a replacement for your source docs. It is a thin, source-controlled graph that connects Markdown intent to code, tests, plans, verification records, drift checks, and agent handoff packets.
+It is not generic memory. It is repo-local implementation memory: readable
+Markdown task blocks plus CLI packets that help agents understand what matters
+before they edit.
 
-## What You Can Do
+> Jumpspace is alpha software. CLI commands, JSON schemas, task metadata fields,
+> and generated agent guidance may change before a stable 1.0 release. Pin
+> versions in CI and review changelogs before upgrading.
 
-- Create source-backed task blocks in Markdown.
-- Scan those blocks into a repo-local index.
-- Ask evidence questions without treating retrieval as an oracle.
-- Give Codex, Claude Code, or another coding agent a grounded work packet.
-- Bootstrap a graph from an existing messy repo.
-- Track durable plans, next steps, and verification evidence.
-- Detect code/doc drift in CI and propose repairs.
-- Publish JSON contracts and SDK types for automation.
-
-## Five-Minute Path
+## First Useful Path
 
 ```bash
-npm install -D jumpspace
+npm install -D @jumpspace/cli
 npx jumpspace init --auto
-npx jumpspace add-skill --codex
-npx jumpspace add-skill --claude
+npx jumpspace add-skill --all
 npx jumpspace scan
-npx jumpspace find approval
-npx jumpspace ask "How does approval work?"
+npx jumpspace ask "What does this repo know?"
 ```
 
-Once a task is approved and has a durable plan, hand the work to an agent:
+If the repo already has docs but no task blocks, start with
+[Existing Repo Bootstrap](/start-here/existing-repo-bootstrap/).
 
-```bash
-npx jumpspace work DOC-EXAMPLE-001 --json
-```
+## Where To Go
 
-## How This Site Is Organized
+- [Welcome](/start-here/welcome/) explains the first win.
+- [Quickstart](/start-here/quickstart/) gives three copy-paste paths.
+- [Why Jumpspace?](/start-here/why-jumpspace/) explains the category.
+- [Agent Setup](/start-here/agent-setup/) installs guidance for coding agents.
+- [Ask Questions With Evidence](/workflows/ask-questions-with-evidence/) shows how to use retrieval honestly.
+- [Start Agent Work](/workflows/start-agent-work/) explains work packets.
+- [Verify Work](/workflows/verify-work/) records checks and acceptance coverage.
+- [Review PR Drift](/workflows/review-pr-drift/) prepares PR evidence.
+- [Jumpspace Cloud](/jumpspace-cloud/) is looking for early design partners.
+- [CLI Reference](/reference/cli/) lists supported commands and examples.
 
-Start with [Why Jumpspace?](/getting-started/why-jumpspace/) for the thesis, then [Getting Started](/getting-started/) for setup. If you are adding Jumpspace to an existing codebase, use [New Repo Use](/getting-started/new-repo/) for the clean onboarding path.
+## Agent Rule
 
-If you want Codex or Claude Code to run most of the workflow for you, read [Using With Agents](/agents/using-with-agents/). You can give the agent a plain-English request and let it use Jumpspace commands for discovery, bootstrap, planning, execution packets, verification, and handoff.
-
-Then read [Task Blocks](/getting-started/task-blocks/) to understand the source format. The advanced guides cover bootstrap, planning, verification, retrieval, drift, CI, repair, and agent skills.
-
-For scripting, use the [CLI Reference](/reference/cli/) and [JSON Contracts](/core-concepts/json-contracts/) pages before depending on a response shape.
+When using Jumpspace as an agent, treat `ask` as an evidence summary, inspect
+linked files before editing, and use `work <id>` when a task is ready for
+implementation.

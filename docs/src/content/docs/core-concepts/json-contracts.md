@@ -48,7 +48,7 @@ Use those when you need static contracts without shelling out to the CLI.
 ## TypeScript SDK
 
 ```ts
-import { assertOk, getSdkSchema, isJumpspaceErrorEnvelope } from 'jumpspace/sdk';
+import { assertOk, getSdkSchema, isJumpspaceErrorEnvelope } from '@jumpspace/cli/sdk';
 
 const workSchema = getSdkSchema('work');
 ```

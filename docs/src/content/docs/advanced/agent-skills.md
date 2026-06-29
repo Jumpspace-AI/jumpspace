@@ -11,9 +11,11 @@ Jumpspace is most useful when agents know to use it first, then fall back to cod
 npx jumpspace add-skill --codex
 npx jumpspace add-skill --claude
 npx jumpspace add-skill --all
+npx jumpspace add-skill jumpspace-work --agent claude
 ```
 
 The installer is additive and non-destructive. It creates missing files or updates clearly marked Jumpspace-managed blocks. It should not overwrite user-authored guidance outside those markers.
+Named installs add the reference workflow skill plus the selected pipeline skill.
 
 ## What The Skill Tells Agents
 

@@ -73,14 +73,21 @@ program
 program
   .command("add-skill")
   .description("Install repo-local Jumpspace skill definitions for coding agents.")
+  .argument(
+    "[skills...]",
+    "optional skill names or aliases: jumpspace-workflow, jumpspace-bootstrap, jumpspace-work, jumpspace-review, jumpspace-handoff",
+  )
+  .option("--agent <agent>", "install for one supported agent: codex or claude")
   .option("--codex", "install Codex guidance and skill definition")
   .option("--claude", "install Claude guidance and skill definition")
   .option("--all", "install every supported agent skill")
   .option("--json", "print machine-readable JSON")
-  .action((options: { codex?: boolean; claude?: boolean; all?: boolean; json?: boolean }) =>
+  .action((skills: string[], options: { agent?: string; codex?: boolean; claude?: boolean; all?: boolean; json?: boolean }) =>
     runCommand(
       () =>
         runAddSkill({
+          skills,
+          agent: options.agent,
           codex: options.codex,
           claude: options.claude,
           all: options.all,

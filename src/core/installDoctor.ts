@@ -112,6 +112,8 @@ const BINARY_NOT_FOUND: InstallDoctorBinary = {
   probe_errors: [],
 };
 
+const JUMPSPACE_PACKAGE_NAMES = new Set(["@jumpspace/cli", "jumpspace"]);
+
 export async function createInstallDoctorReport(root: string, options: InstallDoctorOptions = {}): Promise<InstallDoctorReport> {
   const checkedAt = options.checkedAt ?? new Date().toISOString();
   const exec = options.execFile ?? defaultExecFile;
@@ -193,7 +195,7 @@ async function inspectWorkspace(root: string): Promise<InstallDoctorReport["work
   const distRealpath = distStat ? await realpathOrNull(distCliPath) : null;
   return {
     root,
-    is_jumpspace_checkout: packageJson?.name === "jumpspace",
+    is_jumpspace_checkout: packageJson?.name ? JUMPSPACE_PACKAGE_NAMES.has(packageJson.name) : false,
     package_name: packageJson?.name ?? null,
     package_version: packageJson?.version ?? null,
     dist_cli_path: distCliPath,

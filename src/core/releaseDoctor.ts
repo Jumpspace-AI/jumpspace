@@ -6,6 +6,7 @@ import { promisify } from "node:util";
 import { schemaCatalog } from "./schemas.js";
 
 const execFileAsync = promisify(execFile);
+const SEMVER_PATTERN = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/;
 
 export type ReleaseDoctorIssue = {
   code: string;
@@ -285,12 +286,27 @@ async function readPackageJson(root: string): Promise<Record<string, unknown> & 
 function packageMetadataChecks(packageJson: Record<string, unknown> & { name: string; version: string }): ReleaseDoctorCheck[] {
   return [
     check("name", packageJson.name.length > 0, "package name is present", "package name is missing", "package.json", packageJson.name),
-    check("version", packageJson.version.length > 0 && packageJson.version !== "0.0.0", "package version is launch-ready", "package version is missing or still 0.0.0", "package.json", packageJson.version),
+    check(
+      "version",
+      SEMVER_PATTERN.test(packageJson.version) && packageJson.version !== "0.0.0",
+      "package version is semver and launch-ready",
+      "package version is missing, invalid, or still 0.0.0",
+      "package.json",
+      packageJson.version,
+    ),
     check("license", Boolean(stringValue(packageJson.license)), "license metadata is present", "license metadata is missing", "package.json", stringValue(packageJson.license)),
     check("repository", Boolean(packageJson.repository), "repository metadata is present", "repository metadata is missing", "package.json"),
     check("homepage", Boolean(stringValue(packageJson.homepage)), "homepage metadata is present", "homepage metadata is missing", "package.json", stringValue(packageJson.homepage)),
     check("bugs", Boolean(packageJson.bugs), "bugs metadata is present", "bugs metadata is missing", "package.json"),
     check("keywords", stringArray(packageJson.keywords).length > 0, "keywords metadata is present", "keywords metadata is missing", "package.json", stringArray(packageJson.keywords).join(",")),
+    check(
+      "publishConfig.access",
+      publishAccess(packageJson) === "public",
+      "scoped package publishes publicly",
+      "package publishConfig.access must be public for scoped npm publish",
+      "package.json",
+      publishAccess(packageJson),
+    ),
   ];
 }
 
@@ -588,6 +604,11 @@ function stringArray(value: unknown): string[] {
 
 function stringValue(value: unknown): string | undefined {
   return typeof value === "string" ? value : undefined;
+}
+
+function publishAccess(packageJson: Record<string, unknown>): string | undefined {
+  const publishConfig = packageJson.publishConfig;
+  return isRecord(publishConfig) ? stringValue(publishConfig.access) : undefined;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

@@ -1,108 +1,132 @@
 ---
 title: CLI Reference
-description: Jumpspace commands grouped by workflow.
+description: Jumpspace commands grouped by workflow with common examples.
 ---
 
-Use `--help` on any command for exact options:
+Use `--help` for exact options:
 
 ```bash
 npx jumpspace --help
-npx jumpspace plan --help
 npx jumpspace bootstrap --help
+npx jumpspace plan --help
 ```
+
+Use `--json` for agent and CI consumers. Use
+`npx jumpspace schema show <name> --json` before scripting against a stable
+shape.
 
 ## Setup
 
-| Command | Purpose |
-| --- | --- |
-| `init` | Create starter Jumpspace files. |
-| `init --auto` | Discover docs and create a better starter config. |
-| `init --ci github` | Add GitHub CI workflow support. |
-| `add-skill --codex` | Add Codex guidance. |
-| `add-skill --claude` | Add Claude Code guidance. |
-| `release doctor` | Check package release readiness. |
-| `release install-doctor` | Check which installed CLI is active. |
+| Command | Purpose | Common examples |
+| --- | --- | --- |
+| `init` | Create starter Jumpspace files. | `npx jumpspace init`, `npx jumpspace init --auto` |
+| `init --ci github` | Install GitHub CI workflow integration. | `npx jumpspace init --ci github --dry-run --json` |
+| `add-skill` | Install repo-local agent guidance and named pipeline skills. | `npx jumpspace add-skill --all`, `npx jumpspace add-skill jumpspace-work --agent claude` |
+| `doctor` | Run repo diagnostics and repair suggestions. | `npx jumpspace doctor --json`, `npx jumpspace doctor --since main` |
+| `release doctor` | Check package release readiness. | `npx jumpspace release doctor --json` |
+| `release install-doctor` | Check which CLI install is active. | `npx jumpspace release install-doctor --json` |
 
-## Index And Discovery
+## Indexing And Discovery
 
-| Command | Purpose |
-| --- | --- |
-| `scan` | Parse Markdown task blocks and write `.jumpspace/index.json`. |
-| `list` | List indexed tasks. |
-| `find <query...>` | Search indexed tasks. |
-| `context <id>` | Print task context. |
-| `ask <question...>` | Return an evidence summary for a question. |
-| `semantic build` | Build local semantic retrieval index. |
-| `semantic status` | Show semantic index readiness. |
-| `semantic search <query...>` | Search semantic task vectors. |
-| `semantic eval` | Compare retrieval modes. |
+| Command | Purpose | Common examples |
+| --- | --- | --- |
+| `scan` | Parse task blocks and write the repo-local index. | `npx jumpspace scan` |
+| `list` | List indexed tasks. | `npx jumpspace list --status approved --json` |
+| `find <query...>` | Search tasks. Defaults to all-term matching. | `npx jumpspace find invite flow`, `npx jumpspace find invite flow --mode any --json` |
+| `context <id>` | Print raw task context. | `npx jumpspace context DOC-PROJECT-001 --json` |
+| `related <id>` | Show dependencies and refs. | `npx jumpspace related DOC-PROJECT-001 --json --compact` |
+
+## Asking And Retrieval
+
+| Command | Purpose | Common examples |
+| --- | --- | --- |
+| `ask <question...>` | Return an evidence summary. | `npx jumpspace ask "Where are invites implemented?" --json` |
+| `semantic build` | Build the local semantic index. | `npx jumpspace semantic build --json` |
+| `semantic status` | Check semantic readiness and staleness. | `npx jumpspace semantic status --json` |
+| `semantic search <query...>` | Search the semantic task index. | `npx jumpspace semantic search member onboarding --json` |
+| `semantic eval` | Compare retrieval modes on fixtures. | `npx jumpspace semantic eval --json` |
+| `query` | Run deterministic graph queries. | `npx jumpspace query --depends-on-transitive ADR-001 --no-tests --json` |
+
+`ask` is not an oracle. It returns task IDs, paths, match reasons, coverage,
+unanswered terms, linked code/tests, and semantic status when available.
 
 ## Bootstrap
 
-| Command | Purpose |
-| --- | --- |
-| `bootstrap discover` | Detect docs and recommend config globs. |
-| `bootstrap context <paths...>` | Export heading context for an AI proposer. |
-| `bootstrap propose <paths...> --file <file>` | Create a proposal file. |
-| `bootstrap validate --file <file>` | Validate a proposal. |
-| `bootstrap apply --file <file>` | Apply proposed task blocks. |
-| `bootstrap apply --dry-run` | Preview Markdown changes. |
+| Command | Purpose | Common examples |
+| --- | --- | --- |
+| `bootstrap discover` | Detect Markdown roots and recommend config. | `npx jumpspace bootstrap discover --json` |
+| `bootstrap context` | Export heading context for an AI proposer. | `npx jumpspace bootstrap context README.md docs/**/*.md --json` |
+| `bootstrap propose` | Create a proposal draft. | `npx jumpspace bootstrap propose README.md docs/**/*.md --file jumpspace-bootstrap.json` |
+| `bootstrap validate` | Validate a proposal file. | `npx jumpspace bootstrap validate --file jumpspace-bootstrap.json --json` |
+| `bootstrap apply` | Apply approved task blocks. | `npx jumpspace bootstrap apply --file jumpspace-bootstrap.json --dry-run` |
 
-## Planning And Execution
+Always dry-run and review bootstrap output before mutating docs.
 
-| Command | Purpose |
-| --- | --- |
-| `plan review <id>` | Review plan state and issues. |
-| `plan save <id> --file <file>` | Persist a durable plan. |
-| `plan show <id>` | Show a task plan. |
-| `plan validate <id>` | Validate plan structure and execution state. |
-| `ready` | List approved tasks ready for execution. |
-| `execute <id>` | Print an execution packet. |
-| `work <id>` | Print the main agent start packet. |
-| `next <id>` | Show pending unblocked plan steps. |
-| `step complete <id> <step-id>` | Mark a plan step complete with evidence. |
-| `status <id> <status>` | Update non-verified task status. |
-| `verify <id>` | Run checks and record verification evidence. |
+## Task Lifecycle
 
-## Graph And Links
+| Command | Purpose | Common examples |
+| --- | --- | --- |
+| `plan review <id>` | Print a human approval packet. | `npx jumpspace plan review DOC-PROJECT-001` |
+| `plan save <id> --file <file>` | Persist a durable plan. | `npx jumpspace plan save DOC-PROJECT-001 --file plan.yml --json` |
+| `plan show <id>` | Show the stored plan. | `npx jumpspace plan show DOC-PROJECT-001 --json` |
+| `plan validate <id>` | Validate plan structure and state. | `npx jumpspace plan validate DOC-PROJECT-001 --json` |
+| `ready` | List approved dependency-unblocked tasks. | `npx jumpspace ready --include-blocked --json` |
+| `next <id>` | Show pending unblocked plan steps. | `npx jumpspace next DOC-PROJECT-001 --json` |
+| `work <id>` | Print the main agent start packet. | `npx jumpspace work DOC-PROJECT-001 --since main --json` |
+| `execute <id>` | Print a narrower execution packet. | `npx jumpspace execute DOC-PROJECT-001 --json` |
+| `step complete` | Mark a step complete with evidence. | `npx jumpspace step complete DOC-PROJECT-001 design --evidence "Plan approved."` |
+| `status <id> <status>` | Update non-verified status. | `npx jumpspace status DOC-PROJECT-001 implemented` |
+| `verify <id>` | Run checks and record verification. | `npx jumpspace verify DOC-PROJECT-001 --check "npm test" --criteria AC-1 --json` |
 
-| Command | Purpose |
-| --- | --- |
-| `related <id>` | Show dependencies and references. |
-| `query` | Run deterministic graph queries. |
-| `link suggest <id>` | Suggest code/test links. |
-| `link update <id>` | Apply code/test/dependency/ref/gap link updates. |
-| `link eval` | Run link-scorer fixtures. |
+`verified` cannot be set with `status`; it must be earned with `verify`.
 
-## Drift, CI, And Repair
+## Links
 
-| Command | Purpose |
-| --- | --- |
-| `changed --since <ref>` | List committed, staged, unstaged, untracked, renamed, and deleted paths. |
-| `drift --since <ref>` | Detect facts and warnings about task-memory drift. |
-| `ci --since <ref>` | Produce local CI/PR packet. |
-| `pr comment --since <ref>` | Generate review-only PR assistant output. |
-| `repair --since <ref>` | Preview safe task-memory repairs. |
-| `repair --apply` | Apply safe repairs. |
+| Command | Purpose | Common examples |
+| --- | --- | --- |
+| `link suggest <id>` | Suggest code/test links without mutation. | `npx jumpspace link suggest DOC-PROJECT-001 --since main --json` |
+| `link update <id>` | Add or remove links, dependencies, refs, and gaps. | `npx jumpspace link update DOC-PROJECT-001 --code src/project/invitations.ts --dry-run --json` |
+| `link eval` | Run link-scorer fixtures. | `npx jumpspace link eval --json` |
 
-## Health And Contracts
+Use `link update --dry-run --json` before applying suggestions.
 
-| Command | Purpose |
-| --- | --- |
-| `audit` | Validate task metadata and linked files. |
-| `doctor` | Run diagnostics and repair suggestions. |
-| `schema list` | List stable JSON schemas. |
-| `schema show <name>` | Show one JSON schema. |
-| `schema coverage` | Check schema catalog, artifacts, and SDK coverage. |
-| `last` | Show the most recent mutation. |
-| `history` | Show mutation history. |
-| `handoff` | Summarize state for the next agent or human. |
+## Drift And PR Review
 
-## JSON Mode
+| Command | Purpose | Common examples |
+| --- | --- | --- |
+| `changed --since <ref>` | List committed, staged, unstaged, untracked, renamed, and deleted files. | `npx jumpspace changed --since main --json` |
+| `drift --since <ref>` | Separate factual drift from heuristic warnings. | `npx jumpspace drift --since main --json` |
+| `ci --since <ref>` | Generate a local CI/PR packet. | `npx jumpspace ci --since main --json` |
+| `pr comment --since <ref>` | Render a review-only PR assistant comment. | `npx jumpspace pr comment --since main` |
+| `repair --since <ref>` | Preview safe task-memory repairs. | `npx jumpspace repair --since main --json` |
+| `repair --apply` | Apply reviewed mechanical repairs. | `npx jumpspace repair --since main --apply` |
 
-Most agent-facing commands support `--json`. Use schemas before writing scripts:
+`pr comment` does not post to GitHub. It renders text for a human or wrapper to
+post.
 
-```bash
-npx jumpspace schema list --json
-npx jumpspace schema show work --json
+## Diagnostics And Handoff
+
+| Command | Purpose | Common examples |
+| --- | --- | --- |
+| `audit` | Validate task metadata and linked files. | `npx jumpspace audit --json` |
+| `last` | Show the most recent mutation summary. | `npx jumpspace last --json` |
+| `history` | Show mutation history. | `npx jumpspace history --task DOC-PROJECT-001 --limit 10 --json` |
+| `handoff` | Summarize state for the next agent or human. | `npx jumpspace handoff --task DOC-PROJECT-001 --json` |
+
+## Schemas And SDKs
+
+| Command | Purpose | Common examples |
+| --- | --- | --- |
+| `schema list` | List stable command schemas. | `npx jumpspace schema list --json` |
+| `schema show <name>` | Show one schema. | `npx jumpspace schema show work --json` |
+| `schema coverage` | Check command/schema/artifact/SDK coverage. | `npx jumpspace schema coverage --json` |
+
+JSON failures use:
+
+```json
+{ "ok": false, "errors": [{ "code": "...", "message": "..." }] }
 ```
+
+The npm package also ships generated schema artifacts under `schemas/`, a
+TypeScript SDK at `@jumpspace/cli/sdk`, and a Python contract package under
+`sdk/python`.

@@ -1,0 +1,23 @@
+# Jumpspace Docs For Agents
+
+Jumpspace is repo-local implementation memory for AI coding agents.
+
+Use these docs when working in a repo that has Jumpspace installed:
+
+- New to the repo: /start-here/quickstart/
+- Need the product thesis: /start-here/why-jumpspace/
+- Bootstrapping existing docs: /workflows/bootstrap-existing-docs/
+- Demo flow: /workflows/canonical-demo/
+- Asking evidence questions: /workflows/ask-questions-with-evidence/
+- Starting implementation work: /workflows/start-agent-work/
+- Verifying work: /workflows/verify-work/
+- Reviewing PR drift: /workflows/review-pr-drift/
+- Handing off to another agent: /workflows/handoff-between-agents/
+- Installing agent guidance: /agent-skills/overview/
+- Jumpspace Cloud design partners: /jumpspace-cloud/
+- Command reference: /reference/cli/
+- JSON schemas and SDKs: /reference/json-schemas/ and /reference/sdks/
+- Future improvements: /contribute/future-improvements/
+
+Trust rule: treat `jumpspace ask` as an evidence summary, not an authoritative
+answer. Inspect linked docs, code, and tests before editing.

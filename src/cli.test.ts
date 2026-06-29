@@ -339,7 +339,7 @@ describe("CLI durable plans", () => {
       ok: true,
       status: "ready",
       package: {
-        name: "jumpspace",
+        name: "@jumpspace/cli",
         version: "0.1.0",
         license: "Apache-2.0",
         license_file: { exists: true },
@@ -1361,16 +1361,39 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
       ],
     });
 
+    const unknownAgent = await runCli(root, ["add-skill", "jumpspace-work", "--agent", "cursor", "--json"]);
+    expect(unknownAgent.code).toBe(1);
+    expect(JSON.parse(unknownAgent.stdout)).toMatchObject({
+      ok: false,
+      errors: [{ code: "UNKNOWN_AGENT" }],
+    });
+
+    const unknownSkill = await runCli(root, ["add-skill", "jumpspace-unknown", "--agent", "claude", "--json"]);
+    expect(unknownSkill.code).toBe(1);
+    expect(JSON.parse(unknownSkill.stdout)).toMatchObject({
+      ok: false,
+      errors: [{ code: "UNKNOWN_SKILL" }],
+    });
+
     const installed = await runCli(root, ["add-skill", "--codex", "--claude", "--json"]);
     expect(installed.code).toBe(0);
     expect(JSON.parse(installed.stdout)).toMatchObject({
       ok: true,
       agents: ["codex", "claude"],
+      skills: ["jumpspace-workflow", "jumpspace-bootstrap", "jumpspace-work", "jumpspace-review", "jumpspace-handoff"],
       files: [
         { agent: "codex", path: "AGENTS.md" },
         { agent: "codex", path: ".codex/skills/jumpspace-workflow/SKILL.md" },
+        { agent: "codex", path: ".codex/skills/jumpspace-bootstrap/SKILL.md" },
+        { agent: "codex", path: ".codex/skills/jumpspace-work/SKILL.md" },
+        { agent: "codex", path: ".codex/skills/jumpspace-review/SKILL.md" },
+        { agent: "codex", path: ".codex/skills/jumpspace-handoff/SKILL.md" },
         { agent: "claude", path: "CLAUDE.md" },
         { agent: "claude", path: ".claude/skills/jumpspace-workflow/SKILL.md" },
+        { agent: "claude", path: ".claude/skills/jumpspace-bootstrap/SKILL.md" },
+        { agent: "claude", path: ".claude/skills/jumpspace-work/SKILL.md" },
+        { agent: "claude", path: ".claude/skills/jumpspace-review/SKILL.md" },
+        { agent: "claude", path: ".claude/skills/jumpspace-handoff/SKILL.md" },
       ],
     });
 
@@ -1381,13 +1404,46 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
     const claude = await fs.readFile(path.join(root, "CLAUDE.md"), "utf8");
     const codexSkill = await fs.readFile(path.join(root, ".codex/skills/jumpspace-workflow/SKILL.md"), "utf8");
     const claudeSkill = await fs.readFile(path.join(root, ".claude/skills/jumpspace-workflow/SKILL.md"), "utf8");
+    const codexReviewSkill = await fs.readFile(path.join(root, ".codex/skills/jumpspace-review/SKILL.md"), "utf8");
+    const claudeHandoffSkill = await fs.readFile(path.join(root, ".claude/skills/jumpspace-handoff/SKILL.md"), "utf8");
 
     expect(agents).toContain("custom codex");
     expect(claude).toContain("custom claude");
     expect(agents).toContain("@.codex/skills/jumpspace-workflow/SKILL.md");
+    expect(agents).toContain("@.codex/skills/jumpspace-review/SKILL.md");
     expect(claude).toContain("@.claude/skills/jumpspace-workflow/SKILL.md");
+    expect(claude).toContain("@.claude/skills/jumpspace-handoff/SKILL.md");
     expect(codexSkill).toContain("name: jumpspace-workflow");
     expect(claudeSkill).toContain("name: jumpspace-workflow");
+    expect(codexReviewSkill).toContain("name: jumpspace-review");
+    expect(claudeHandoffSkill).toContain("name: jumpspace-handoff");
+  });
+
+  it("adds selected pipeline skills through --agent", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "jumpspace-cli-skill-"));
+
+    const installed = await runCli(root, ["add-skill", "jumpspace-work", "--agent", "claude", "--json"]);
+    expect(installed.code).toBe(0);
+    expect(JSON.parse(installed.stdout)).toMatchObject({
+      ok: true,
+      agents: ["claude"],
+      skills: ["jumpspace-workflow", "jumpspace-work"],
+      files: [
+        { agent: "claude", path: "CLAUDE.md", action: "created" },
+        { agent: "claude", path: ".claude/skills/jumpspace-workflow/SKILL.md", action: "created" },
+        { agent: "claude", path: ".claude/skills/jumpspace-work/SKILL.md", action: "created" },
+      ],
+    });
+
+    const claude = await fs.readFile(path.join(root, "CLAUDE.md"), "utf8");
+    const workSkill = await fs.readFile(path.join(root, ".claude/skills/jumpspace-work/SKILL.md"), "utf8");
+    await expect(fs.readFile(path.join(root, ".claude/skills/jumpspace-review/SKILL.md"), "utf8")).rejects.toMatchObject({
+      code: "ENOENT",
+    });
+
+    expect(claude).toContain("@.claude/skills/jumpspace-workflow/SKILL.md");
+    expect(claude).toContain("@.claude/skills/jumpspace-work/SKILL.md");
+    expect(workSkill).toContain("name: jumpspace-work");
   });
 
   it("publishes JSON schema contracts through the CLI", async () => {
@@ -1975,8 +2031,9 @@ async function createReleasePackageRepo(): Promise<string> {
     path.join(root, "package.json"),
     JSON.stringify(
       {
-        name: "jumpspace",
+        name: "@jumpspace/cli",
         version: "0.1.0",
+        publishConfig: { access: "public" },
         license: "Apache-2.0",
         repository: { type: "git", url: "https://github.com/Jumpspace-AI/jumpspace.git" },
         homepage: "https://github.com/Jumpspace-AI/jumpspace#readme",

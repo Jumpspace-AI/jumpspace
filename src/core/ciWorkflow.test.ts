@@ -29,6 +29,10 @@ describe("installCiWorkflow", () => {
     expect(workflow).toContain("# BEGIN JUMPSPACE MANAGED: github-ci");
     expect(workflow).toContain("jumpspace-pr-assistant:v1");
     expect(workflow).toContain("pr comment --since \"$BASE_SHA\"");
+    expect(workflow).toContain("jumpspace-pr-comment-bounded.md");
+    expect(workflow).toContain("jumpspace-pr-summary.md");
+    expect(workflow).toContain("bounded(source, 60000)");
+    expect(workflow).not.toContain("cat jumpspace-pr-comment.md >>");
     expect(workflow).toContain("audit --json");
     expect(workflow).toContain("doctor --json");
     expect(workflow).toContain("github.rest.issues.updateComment");

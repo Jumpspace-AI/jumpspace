@@ -1,5 +1,5 @@
 {
-  "name": "jumpspace",
+  "name": "@jumpspace/cli",
   "version": "0.1.0",
   "description": "Repo-local implementation memory for AI coding agents.",
   "license": "Apache-2.0",
@@ -42,6 +42,9 @@
   "bin": {
     "jumpspace": "./dist/cli.js"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist",
     "LICENSE",
@@ -60,7 +63,11 @@
     "copy:templates": "mkdir -p dist/templates && cp src/templates/* dist/templates/",
     "generate:schemas": "npm run build && node scripts/generate-schemas.mjs",
     "test": "vitest run",
-    "dev": "tsx src/cli.ts"
+    "dev": "tsx src/cli.ts",
+    "release:patch": "npm version patch",
+    "release:minor": "npm version minor",
+    "release:major": "npm version major",
+    "release:prerelease": "npm version prerelease --preid alpha"
   },
   "engines": {
     "node": ">=20"
