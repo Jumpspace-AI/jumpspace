@@ -38,9 +38,9 @@ For a new or clean repo:
 
 ```bash
 npm install -D @jumpspace/cli
-npx jumpspace init --auto
-npx jumpspace add-skill --all
-npx jumpspace doctor
+npx @jumpspace/cli init --auto
+npx @jumpspace/cli add-skill --all
+npx @jumpspace/cli doctor
 ```
 
 For an existing repo with useful Markdown docs, continue with

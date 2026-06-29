@@ -6,7 +6,7 @@ description: Install and verify Jumpspace guidance for Codex.
 ## Install
 
 ```bash
-npx jumpspace add-skill --codex
+npx @jumpspace/cli add-skill --codex
 ```
 
 This creates or updates:
@@ -21,14 +21,14 @@ This creates or updates:
 To install one pipeline skill plus the reference workflow:
 
 ```bash
-npx jumpspace add-skill jumpspace-work --agent codex
+npx @jumpspace/cli add-skill jumpspace-work --agent codex
 ```
 
 ## Verify
 
 ```bash
-npx jumpspace add-skill --codex --json
-npx jumpspace release install-doctor --json
+npx @jumpspace/cli add-skill --codex --json
+npx @jumpspace/cli release install-doctor --json
 ```
 
 `release install-doctor` is useful when Codex appears to be running an older

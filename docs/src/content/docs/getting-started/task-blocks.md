@@ -90,8 +90,8 @@ Good task blocks usually answer:
 Run these after editing task blocks:
 
 ```bash
-npx jumpspace scan
-npx jumpspace audit --json
+npx @jumpspace/cli scan
+npx @jumpspace/cli audit --json
 ```
 
 `scan` refreshes the index. `audit` catches broken task references, missing linked files, invalid plans, and stale semantic indexes.

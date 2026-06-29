@@ -16,11 +16,11 @@ Common statuses:
 Update non-verified statuses with:
 
 ```bash
-npx jumpspace status DOC-PROJECT-001 implemented
+npx @jumpspace/cli status DOC-PROJECT-001 implemented
 ```
 
 Earn verified status with:
 
 ```bash
-npx jumpspace verify DOC-PROJECT-001 --check "npm test" --criteria AC-1
+npx @jumpspace/cli verify DOC-PROJECT-001 --check "npm test" --criteria AC-1
 ```

@@ -14,7 +14,7 @@ npm install -D @jumpspace/cli
 ## 2. Initialize
 
 ```bash
-npx jumpspace init --auto
+npx @jumpspace/cli init --auto
 ```
 
 `--auto` discovers common docs roots and writes a starter `.jumpspace/config.json`.
@@ -23,7 +23,7 @@ Plain `init` keeps the conservative default.
 ## 3. Add Agent Guidance
 
 ```bash
-npx jumpspace add-skill --all
+npx @jumpspace/cli add-skill --all
 ```
 
 This adds repo-local guidance for supported coding agents.
@@ -31,9 +31,9 @@ This adds repo-local guidance for supported coding agents.
 ## 4. Scan And Diagnose
 
 ```bash
-npx jumpspace scan
-npx jumpspace doctor
-npx jumpspace audit
+npx @jumpspace/cli scan
+npx @jumpspace/cli doctor
+npx @jumpspace/cli audit
 ```
 
 `scan` writes the generated index. `doctor` gives operator-friendly diagnostics.
@@ -54,8 +54,8 @@ them.
 ## Optional CI Setup
 
 ```bash
-npx jumpspace init --ci github --dry-run --json
-npx jumpspace init --ci github
+npx @jumpspace/cli init --ci github --dry-run --json
+npx @jumpspace/cli init --ci github
 ```
 
 The generated workflow is local-only Jumpspace analysis. It does not require a

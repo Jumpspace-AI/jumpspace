@@ -16,7 +16,7 @@ acceptance_criteria:
 Use stable IDs because `jumpspace verify` records which criteria were covered.
 
 ```bash
-npx jumpspace verify DOC-PROJECT-001 --check "npm test" --criteria AC-1 AC-2
+npx @jumpspace/cli verify DOC-PROJECT-001 --check "npm test" --criteria AC-1 AC-2
 ```
 
 Verification fails if a provided criterion ID does not exist.

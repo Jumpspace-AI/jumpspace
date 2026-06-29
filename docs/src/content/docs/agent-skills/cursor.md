@@ -8,8 +8,8 @@ Jumpspace does not ship a dedicated Cursor installer yet.
 Use the manual path:
 
 ```bash
-npx jumpspace add-skill --all
-npx jumpspace scan
+npx @jumpspace/cli add-skill --all
+npx @jumpspace/cli scan
 ```
 
 Then point Cursor at the repo guidance and docs:

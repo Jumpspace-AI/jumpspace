@@ -56,19 +56,19 @@ manual guidance pages.
 Before editing code, run Jumpspace discovery:
 
 ```bash
-npx jumpspace scan
-npx jumpspace find <keywords> --json --compact
-npx jumpspace context <TASK_ID> --json
+npx @jumpspace/cli scan
+npx @jumpspace/cli find <keywords> --json --compact
+npx @jumpspace/cli context <TASK_ID> --json
 ```
 
 For approved implementation work, prefer:
 
 ```bash
-npx jumpspace work <TASK_ID> --json
+npx @jumpspace/cli work <TASK_ID> --json
 ```
 
 When pausing or switching agents, run:
 
 ```bash
-npx jumpspace handoff --task <TASK_ID> --json
+npx @jumpspace/cli handoff --task <TASK_ID> --json
 ```

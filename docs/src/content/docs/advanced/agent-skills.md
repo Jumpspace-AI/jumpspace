@@ -8,10 +8,10 @@ Jumpspace is most useful when agents know to use it first, then fall back to cod
 ## Install Skills
 
 ```bash
-npx jumpspace add-skill --codex
-npx jumpspace add-skill --claude
-npx jumpspace add-skill --all
-npx jumpspace add-skill jumpspace-work --agent claude
+npx @jumpspace/cli add-skill --codex
+npx @jumpspace/cli add-skill --claude
+npx @jumpspace/cli add-skill --all
+npx @jumpspace/cli add-skill jumpspace-work --agent claude
 ```
 
 The installer is additive and non-destructive. It creates missing files or updates clearly marked Jumpspace-managed blocks. It should not overwrite user-authored guidance outside those markers.
@@ -34,13 +34,13 @@ The generated guidance tells agents to:
 ## Useful Agent Commands
 
 ```bash
-npx jumpspace find "approval flow" --json --compact
-npx jumpspace context DOC-EXAMPLE-001 --json
-npx jumpspace work DOC-EXAMPLE-001 --json
-npx jumpspace next DOC-EXAMPLE-001 --json
-npx jumpspace handoff --task DOC-EXAMPLE-001 --json
-npx jumpspace last --json
-npx jumpspace history --json
+npx @jumpspace/cli find "approval flow" --json --compact
+npx @jumpspace/cli context DOC-EXAMPLE-001 --json
+npx @jumpspace/cli work DOC-EXAMPLE-001 --json
+npx @jumpspace/cli next DOC-EXAMPLE-001 --json
+npx @jumpspace/cli handoff --task DOC-EXAMPLE-001 --json
+npx @jumpspace/cli last --json
+npx @jumpspace/cli history --json
 ```
 
 ## Check The Active Install
@@ -48,7 +48,7 @@ npx jumpspace history --json
 When an agent seems to be running an old CLI, run:
 
 ```bash
-npx jumpspace release install-doctor --json
+npx @jumpspace/cli release install-doctor --json
 ```
 
 This reports the invoked binary, the first `jumpspace` found on `PATH`, package roots, versions, schema counts, workspace comparisons, stale-install warnings, and repair commands.

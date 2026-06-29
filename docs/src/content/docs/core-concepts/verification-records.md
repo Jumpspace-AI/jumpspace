@@ -19,13 +19,13 @@ They capture:
 `verified` cannot be set directly:
 
 ```bash
-npx jumpspace status DOC-PROJECT-001 verified
+npx @jumpspace/cli status DOC-PROJECT-001 verified
 ```
 
 That command is rejected. Use:
 
 ```bash
-npx jumpspace verify DOC-PROJECT-001 --check "npm test" --criteria AC-1
+npx @jumpspace/cli verify DOC-PROJECT-001 --check "npm test" --criteria AC-1
 ```
 
 Failed checks do not write verification records or mark the task verified.

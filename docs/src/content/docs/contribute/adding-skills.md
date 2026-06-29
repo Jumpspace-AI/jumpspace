@@ -17,10 +17,10 @@ Rules:
 Current supported installer flags:
 
 ```bash
-npx jumpspace add-skill --codex
-npx jumpspace add-skill --claude
-npx jumpspace add-skill --all
-npx jumpspace add-skill jumpspace-work --agent claude
+npx @jumpspace/cli add-skill --codex
+npx @jumpspace/cli add-skill --claude
+npx @jumpspace/cli add-skill --all
+npx @jumpspace/cli add-skill jumpspace-work --agent claude
 ```
 
 Named pipeline skills are current install targets. Add new skills by extending

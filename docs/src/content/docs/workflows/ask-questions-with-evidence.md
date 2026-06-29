@@ -8,8 +8,8 @@ description: Use ask, find, semantic retrieval, and context without treating ret
 ## Basic Flow
 
 ```bash
-npx jumpspace scan
-npx jumpspace ask "Where is project invitation implemented?"
+npx @jumpspace/cli scan
+npx @jumpspace/cli ask "Where is project invitation implemented?"
 ```
 
 The useful output is the evidence:
@@ -25,7 +25,7 @@ The useful output is the evidence:
 ## Broader Recall
 
 ```bash
-npx jumpspace find project invitation --mode any
+npx @jumpspace/cli find project invitation --mode any
 ```
 
 `find` defaults to strict all-term matching. Use `--mode any` when orientation
@@ -34,9 +34,9 @@ matters more than precision.
 ## Semantic Retrieval
 
 ```bash
-npx jumpspace semantic build
-npx jumpspace semantic status --json
-npx jumpspace ask "Where does the repo handle member onboarding?" --json
+npx @jumpspace/cli semantic build
+npx @jumpspace/cli semantic status --json
+npx @jumpspace/cli ask "Where does the repo handle member onboarding?" --json
 ```
 
 The default semantic backend is local and deterministic. Dense LanceDB/ONNX
@@ -45,7 +45,7 @@ retrieval is optional and falls back when dependencies are missing.
 ## Inspect The Source Task
 
 ```bash
-npx jumpspace context DOC-PROJECT-001 --json
+npx @jumpspace/cli context DOC-PROJECT-001 --json
 ```
 
 Use `context` when you need raw task metadata, plan state, links, and execution

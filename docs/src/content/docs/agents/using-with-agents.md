@@ -12,8 +12,8 @@ The CLI gives the agent a reliable spine: discover the task, gather grounded con
 Install the repo-local guidance once:
 
 ```bash
-npx jumpspace add-skill --codex
-npx jumpspace add-skill --claude
+npx @jumpspace/cli add-skill --codex
+npx @jumpspace/cli add-skill --claude
 ```
 
 After that, Jumpspace should be part of the agent's default repo workflow. You should not need to say "use Jumpspace" every time. The installed `AGENTS.md`, `CLAUDE.md`, or skill file tells the agent to start with Jumpspace for repo questions, feature work, branch review, bootstrap, and handoff.
@@ -57,20 +57,20 @@ Summarize the task you just worked on, what is complete, what evidence was recor
 The agent can translate your request into this loop:
 
 ```bash
-npx jumpspace find "task approval" --json --compact
-npx jumpspace context PM-TASK-001 --json
-npx jumpspace plan show PM-TASK-001 --json
-npx jumpspace next PM-TASK-001 --json
-npx jumpspace work PM-TASK-001 --json
+npx @jumpspace/cli find "task approval" --json --compact
+npx @jumpspace/cli context PM-TASK-001 --json
+npx @jumpspace/cli plan show PM-TASK-001 --json
+npx @jumpspace/cli next PM-TASK-001 --json
+npx @jumpspace/cli work PM-TASK-001 --json
 ```
 
 After coding:
 
 ```bash
-npx jumpspace step complete PM-TASK-001 implementation --evidence "Implemented task approval states and tests."
-npx jumpspace verify PM-TASK-001 --check "npm test" --criteria AC-1 --json
-npx jumpspace scan
-npx jumpspace audit --json
+npx @jumpspace/cli step complete PM-TASK-001 implementation --evidence "Implemented task approval states and tests."
+npx @jumpspace/cli verify PM-TASK-001 --check "npm test" --criteria AC-1 --json
+npx @jumpspace/cli scan
+npx @jumpspace/cli audit --json
 ```
 
 If the repo does not have Git available, `verify` may refuse to write a record because it cannot capture a commit SHA. That is good behavior. The agent should report the failed verification honestly instead of marking the task verified.

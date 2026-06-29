@@ -22,8 +22,8 @@ refs:
 ## Commands
 
 ```bash
-npx jumpspace related DOC-PROJECT-001
-npx jumpspace query --depends-on-transitive ADR-001 --no-tests --json
+npx @jumpspace/cli related DOC-PROJECT-001
+npx @jumpspace/cli query --depends-on-transitive ADR-001 --no-tests --json
 ```
 
 Dependencies must point at existing task IDs. Plan step dependencies must also

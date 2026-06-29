@@ -27,11 +27,11 @@ Each step can include:
 ## Commands
 
 ```bash
-npx jumpspace plan review DOC-PROJECT-001
-npx jumpspace plan save DOC-PROJECT-001 --file plan.yml
-npx jumpspace plan show DOC-PROJECT-001
-npx jumpspace plan validate DOC-PROJECT-001
-npx jumpspace next DOC-PROJECT-001
+npx @jumpspace/cli plan review DOC-PROJECT-001
+npx @jumpspace/cli plan save DOC-PROJECT-001 --file plan.yml
+npx @jumpspace/cli plan show DOC-PROJECT-001
+npx @jumpspace/cli plan validate DOC-PROJECT-001
+npx @jumpspace/cli next DOC-PROJECT-001
 ```
 
 `next` returns only pending unblocked steps.

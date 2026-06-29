@@ -18,8 +18,8 @@ Current named skills package narrower workflows:
 Install one named skill for one supported agent:
 
 ```bash
-npx jumpspace add-skill jumpspace-work --agent claude
-npx jumpspace add-skill bootstrap --agent codex
+npx @jumpspace/cli add-skill jumpspace-work --agent claude
+npx @jumpspace/cli add-skill bootstrap --agent codex
 ```
 
 Named installs always include the reference `jumpspace-workflow` skill too.
@@ -38,5 +38,5 @@ Good Jumpspace skills should:
 ## Current Command To Install Guidance
 
 ```bash
-npx jumpspace add-skill --all
+npx @jumpspace/cli add-skill --all
 ```

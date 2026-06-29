@@ -6,7 +6,7 @@ description: Install and verify Jumpspace guidance for Claude Code.
 ## Install
 
 ```bash
-npx jumpspace add-skill --claude
+npx @jumpspace/cli add-skill --claude
 ```
 
 This creates or updates:
@@ -21,14 +21,14 @@ This creates or updates:
 To install one pipeline skill plus the reference workflow:
 
 ```bash
-npx jumpspace add-skill jumpspace-work --agent claude
+npx @jumpspace/cli add-skill jumpspace-work --agent claude
 ```
 
 ## Verify
 
 ```bash
-npx jumpspace add-skill --claude --json
-npx jumpspace doctor --json
+npx @jumpspace/cli add-skill --claude --json
+npx @jumpspace/cli doctor --json
 ```
 
 The installer is safe to rerun. It updates Jumpspace-managed blocks without

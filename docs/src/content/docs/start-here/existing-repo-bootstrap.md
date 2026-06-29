@@ -10,7 +10,7 @@ yet have Jumpspace task blocks.
 
 ```bash
 npm install -D @jumpspace/cli
-npx jumpspace init --auto
+npx @jumpspace/cli init --auto
 ```
 
 `init --auto` discovers common doc roots such as `README.md`, `docs/`,
@@ -20,8 +20,8 @@ locations.
 ## 2. Preview The Docs
 
 ```bash
-npx jumpspace bootstrap discover --json
-npx jumpspace bootstrap context README.md docs/**/*.md --json
+npx @jumpspace/cli bootstrap discover --json
+npx @jumpspace/cli bootstrap context README.md docs/**/*.md --json
 ```
 
 Use `bootstrap context` when an AI agent should inspect heading structure,
@@ -31,7 +31,7 @@ blocks.
 ## 3. Propose
 
 ```bash
-npx jumpspace bootstrap propose README.md docs/**/*.md --file jumpspace-bootstrap.json
+npx @jumpspace/cli bootstrap propose README.md docs/**/*.md --file jumpspace-bootstrap.json
 ```
 
 The deterministic proposal is a draft. It should be reviewed by a human or an
@@ -40,7 +40,7 @@ agent before applying.
 ## 4. Validate
 
 ```bash
-npx jumpspace bootstrap validate --file jumpspace-bootstrap.json
+npx @jumpspace/cli bootstrap validate --file jumpspace-bootstrap.json
 ```
 
 Validation checks duplicate IDs, missing source evidence, unresolved
@@ -49,10 +49,10 @@ dependencies, and ambiguous heading references.
 ## 5. Dry Run And Apply
 
 ```bash
-npx jumpspace bootstrap apply --file jumpspace-bootstrap.json --dry-run
-npx jumpspace bootstrap apply --file jumpspace-bootstrap.json
-npx jumpspace scan
-npx jumpspace doctor
+npx @jumpspace/cli bootstrap apply --file jumpspace-bootstrap.json --dry-run
+npx @jumpspace/cli bootstrap apply --file jumpspace-bootstrap.json
+npx @jumpspace/cli scan
+npx @jumpspace/cli doctor
 ```
 
 The dry run shows planned Markdown insertions. Apply only after reviewing the

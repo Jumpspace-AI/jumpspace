@@ -65,10 +65,10 @@ const contentChecks = [
   ['src/content/docs/start-here/why-jumpspace.md', ['source-controlled graph', 'Git remembers what changed', 'Why Not Just Vector Search?', 'Why Agents Like It']],
   ['src/content/docs/start-here/faq.md', ['Merge Conflicts', 'Vector Search', 'evidence summary']],
   ['src/content/docs/workflows/bootstrap-existing-docs.md', ['bootstrap context', 'bootstrap validate', 'dry-run']],
-  ['src/content/docs/workflows/canonical-demo.md', ['bootstrap propose', 'jumpspace work', 'jumpspace verify', 'handoff']],
+  ['src/content/docs/workflows/canonical-demo.md', ['bootstrap propose', '@jumpspace/cli work', '@jumpspace/cli verify', 'handoff']],
   ['src/content/docs/workflows/ask-questions-with-evidence.md', ['evidence summary', '--mode any', 'semantic build']],
   ['src/content/docs/workflows/start-agent-work.md', ['work DOC-PROJECT-001', 'next executable steps', 'handoff']],
-  ['src/content/docs/workflows/verify-work.md', ['`verified` is protected', 'jumpspace verify', 'exit codes']],
+  ['src/content/docs/workflows/verify-work.md', ['`verified` is protected', '@jumpspace/cli verify', 'exit codes']],
   ['src/content/docs/workflows/review-pr-drift.md', ['changed --since main', 'drift --since main', 'pr comment']],
   ['src/content/docs/agent-skills/overview.md', ['--codex', '--claude', 'jumpspace-work --agent claude']],
   ['src/content/docs/agent-skills/cursor.md', ['does not ship a dedicated Cursor installer']],
@@ -77,7 +77,7 @@ const contentChecks = [
   ['src/content/docs/reference/sdks.md', ['contract helpers', 'alpha software', '@jumpspace/cli/sdk']],
   ['src/content/docs/jumpspace-cloud.md', ['early design partners', 'hi@jumpspace.ai']],
   ['src/content/docs/contribute/release-checklist.md', ['semver', '@jumpspace/cli', 'NPM_TOKEN', '--follow-tags']],
-  ['src/content/docs/contribute/future-improvements.md', ['not current commands', 'jumpspace demo', 'jumpspace onboard', 'Broader Skill Ecosystem']],
+  ['src/content/docs/contribute/future-improvements.md', ['not current commands', '@jumpspace/cli demo', '@jumpspace/cli onboard', 'Broader Skill Ecosystem']],
   ['public/llms.txt', ['Jumpspace Docs For Agents', 'Trust rule']]
 ];
 

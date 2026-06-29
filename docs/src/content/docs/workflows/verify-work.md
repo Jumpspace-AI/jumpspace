@@ -9,7 +9,7 @@ Verified status must be earned with `jumpspace verify`.
 ## Successful Verification
 
 ```bash
-npx jumpspace verify DOC-PROJECT-001 \
+npx @jumpspace/cli verify DOC-PROJECT-001 \
   --check "npm test" \
   --criteria AC-1 \
   --evidence "Focused invitation tests passed."
@@ -35,15 +35,15 @@ Failed checks do not write a verification record and do not mutate the task to
 Use normal statuses while work is in progress:
 
 ```bash
-npx jumpspace status DOC-PROJECT-001 partial
-npx jumpspace status DOC-PROJECT-001 implemented
+npx @jumpspace/cli status DOC-PROJECT-001 partial
+npx @jumpspace/cli status DOC-PROJECT-001 implemented
 ```
 
 ## Review Verification State
 
 ```bash
-npx jumpspace context DOC-PROJECT-001 --json
-npx jumpspace audit --json
+npx @jumpspace/cli context DOC-PROJECT-001 --json
+npx @jumpspace/cli audit --json
 ```
 
 `audit` detects invalid completed-step state and invalid verification metadata.

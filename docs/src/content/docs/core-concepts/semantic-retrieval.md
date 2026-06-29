@@ -7,16 +7,16 @@ Semantic retrieval helps with conceptual queries that do not share exact terms
 with the task text.
 
 ```bash
-npx jumpspace semantic build
-npx jumpspace semantic status --json
-npx jumpspace semantic search "member onboarding" --json
+npx @jumpspace/cli semantic build
+npx @jumpspace/cli semantic status --json
+npx @jumpspace/cli semantic search "member onboarding" --json
 ```
 
 The default backend is deterministic and local. Dense LanceDB/ONNX retrieval is
 optional:
 
 ```bash
-npx jumpspace semantic build --backend lancedb+onnx --model <local-model>
+npx @jumpspace/cli semantic build --backend lancedb+onnx --model <local-model>
 ```
 
 If optional dependencies are unavailable, Jumpspace records a degraded fallback

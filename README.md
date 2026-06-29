@@ -39,26 +39,26 @@ lives, what verifies it, and what the next agent should do.
 
 ```bash
 npm install -D @jumpspace/cli
-npx jumpspace init --auto
-npx jumpspace add-skill --all
-npx jumpspace scan
-npx jumpspace ask "What does this repo know?"
+npx @jumpspace/cli init --auto
+npx @jumpspace/cli add-skill --all
+npx @jumpspace/cli scan
+npx @jumpspace/cli ask "What does this repo know?"
 ```
 
 For an existing repo with Markdown docs but no Jumpspace task blocks yet:
 
 ```bash
-npx jumpspace bootstrap propose README.md docs/**/*.md --file jumpspace-bootstrap.json
-npx jumpspace bootstrap validate --file jumpspace-bootstrap.json
-npx jumpspace bootstrap apply --file jumpspace-bootstrap.json --dry-run
+npx @jumpspace/cli bootstrap propose README.md docs/**/*.md --file jumpspace-bootstrap.json
+npx @jumpspace/cli bootstrap validate --file jumpspace-bootstrap.json
+npx @jumpspace/cli bootstrap apply --file jumpspace-bootstrap.json --dry-run
 ```
 
 Review the proposal, apply it, then ask an evidence question:
 
 ```bash
-npx jumpspace bootstrap apply --file jumpspace-bootstrap.json
-npx jumpspace scan
-npx jumpspace ask "Where is this behavior implemented?"
+npx @jumpspace/cli bootstrap apply --file jumpspace-bootstrap.json
+npx @jumpspace/cli scan
+npx @jumpspace/cli ask "Where is this behavior implemented?"
 ```
 
 ## What It Does
@@ -102,8 +102,8 @@ pending, accepted, or expired.
 Then index and inspect it:
 
 ```bash
-npx jumpspace scan
-npx jumpspace context DOC-PROJECT-001
+npx @jumpspace/cli scan
+npx @jumpspace/cli context DOC-PROJECT-001
 ```
 
 ## Quick Paths
@@ -138,7 +138,7 @@ The main commands are:
 - `changed`, `drift`, `ci`, `pr comment`, `repair`
 - `schema`, `last`, `history`, `handoff`, `release doctor`
 
-Use `npx jumpspace --help` for exact options and the
+Use `npx @jumpspace/cli --help` for exact options and the
 [CLI reference](https://docs.jumpspace.ai/reference/cli/) for examples.
 
 ## Docs

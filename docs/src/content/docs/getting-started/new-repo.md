@@ -43,7 +43,7 @@ jumpspace release install-doctor --json
 ## Initialize The Repo
 
 ```bash
-npx jumpspace init --auto
+npx @jumpspace/cli init --auto
 ```
 
 `init --auto` detects common documentation locations and writes a starter config. Use plain `jumpspace init` only when you want the conservative default.
@@ -51,8 +51,8 @@ npx jumpspace init --auto
 Add agent guidance:
 
 ```bash
-npx jumpspace add-skill --codex
-npx jumpspace add-skill --claude
+npx @jumpspace/cli add-skill --codex
+npx @jumpspace/cli add-skill --claude
 ```
 
 These commands are additive. They create missing guidance files or update clearly marked Jumpspace-managed blocks.
@@ -68,19 +68,19 @@ Bootstrap this repo. Run discovery first, inspect the docs, propose a small sour
 The agent should use commands like:
 
 ```bash
-npx jumpspace bootstrap discover --json
-npx jumpspace bootstrap context README.md docs/**/*.md documentation/**/*.md --json
-npx jumpspace bootstrap propose README.md docs/**/*.md documentation/**/*.md --file jumpspace-bootstrap.json --json
-npx jumpspace bootstrap validate --file jumpspace-bootstrap.json --json
-npx jumpspace bootstrap apply --file jumpspace-bootstrap.json --dry-run --json
+npx @jumpspace/cli bootstrap discover --json
+npx @jumpspace/cli bootstrap context README.md docs/**/*.md documentation/**/*.md --json
+npx @jumpspace/cli bootstrap propose README.md docs/**/*.md documentation/**/*.md --file jumpspace-bootstrap.json --json
+npx @jumpspace/cli bootstrap validate --file jumpspace-bootstrap.json --json
+npx @jumpspace/cli bootstrap apply --file jumpspace-bootstrap.json --dry-run --json
 ```
 
 After you approve the dry run:
 
 ```bash
-npx jumpspace bootstrap apply --file jumpspace-bootstrap.json --json
-npx jumpspace scan
-npx jumpspace audit --json
+npx @jumpspace/cli bootstrap apply --file jumpspace-bootstrap.json --json
+npx @jumpspace/cli scan
+npx @jumpspace/cli audit --json
 ```
 
 ## Keep The First Graph Small
@@ -122,8 +122,8 @@ Check drift and link suggestions for this branch. Tell me what task blocks or co
 That usually maps to:
 
 ```bash
-npx jumpspace changed --since main --json
-npx jumpspace drift --since main --json
-npx jumpspace link suggest PM-TASK-001 --since main --json
-npx jumpspace audit --json
+npx @jumpspace/cli changed --since main --json
+npx @jumpspace/cli drift --since main --json
+npx @jumpspace/cli link suggest PM-TASK-001 --since main --json
+npx @jumpspace/cli audit --json
 ```

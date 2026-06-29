@@ -8,16 +8,16 @@ Jumpspace does not ship a native GitHub Copilot installer today.
 Use Jumpspace through the CLI and keep repo guidance in Markdown:
 
 ```bash
-npx jumpspace init --auto
-npx jumpspace add-skill --all
-npx jumpspace scan
+npx @jumpspace/cli init --auto
+npx @jumpspace/cli add-skill --all
+npx @jumpspace/cli scan
 ```
 
 For pull requests, use:
 
 ```bash
-npx jumpspace ci --since main --json
-npx jumpspace pr comment --since main
+npx @jumpspace/cli ci --since main --json
+npx @jumpspace/cli pr comment --since main
 ```
 
 `pr comment` renders a review-only comment. It does not post to GitHub by

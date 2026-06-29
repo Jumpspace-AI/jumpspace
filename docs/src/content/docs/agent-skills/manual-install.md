@@ -9,8 +9,8 @@ Use manual install when your agent does not have a dedicated `add-skill` target.
 
 ```bash
 npm install -D @jumpspace/cli
-npx jumpspace init --auto
-npx jumpspace add-skill --all
+npx @jumpspace/cli init --auto
+npx @jumpspace/cli add-skill --all
 ```
 
 Even if your agent is not Codex or Claude Code, the generated Markdown guidance

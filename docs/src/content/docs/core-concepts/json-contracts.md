@@ -27,11 +27,11 @@ Human-readable commands still print useful messages, but scripts should use `--j
 ## Discover Schemas
 
 ```bash
-npx jumpspace schema list --json
-npx jumpspace schema show work --json
-npx jumpspace schema show plan.save --json
-npx jumpspace schema show verify --json
-npx jumpspace schema coverage --json
+npx @jumpspace/cli schema list --json
+npx @jumpspace/cli schema show work --json
+npx @jumpspace/cli schema show plan.save --json
+npx @jumpspace/cli schema show verify --json
+npx @jumpspace/cli schema coverage --json
 ```
 
 `schema coverage` checks declared JSON commands, the schema catalog, generated schema artifacts, and SDK schema names for drift.

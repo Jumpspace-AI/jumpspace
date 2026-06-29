@@ -11,7 +11,7 @@ adoption. They are not current commands unless stated otherwise.
 Future shape:
 
 ```bash
-npx jumpspace demo
+npx @jumpspace/cli demo
 ```
 
 Could generate a tiny sample repo/doc/task so users can see useful output
@@ -22,7 +22,7 @@ immediately.
 Future shape:
 
 ```bash
-npx jumpspace onboard
+npx @jumpspace/cli onboard
 ```
 
 Could run discovery, suggest config, install skills, propose bootstrap, and
@@ -33,7 +33,7 @@ print next steps.
 Current named skill installs cover Codex and Claude Code:
 
 ```bash
-npx jumpspace add-skill jumpspace-work --agent claude
+npx @jumpspace/cli add-skill jumpspace-work --agent claude
 ```
 
 Future work could add dedicated native installers for Cursor, GitHub Copilot,

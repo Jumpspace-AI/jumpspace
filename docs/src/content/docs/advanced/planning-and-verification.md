@@ -12,20 +12,20 @@ A plan says what should happen next. A step completion records evidence that a s
 Review a plan:
 
 ```bash
-npx jumpspace plan review DOC-EXAMPLE-001 --json
-npx jumpspace plan show DOC-EXAMPLE-001
+npx @jumpspace/cli plan review DOC-EXAMPLE-001 --json
+npx @jumpspace/cli plan show DOC-EXAMPLE-001
 ```
 
 Save a plan:
 
 ```bash
-npx jumpspace plan save DOC-EXAMPLE-001 --file plan.yml --json
+npx @jumpspace/cli plan save DOC-EXAMPLE-001 --file plan.yml --json
 ```
 
 Validate it:
 
 ```bash
-npx jumpspace plan validate DOC-EXAMPLE-001 --json
+npx @jumpspace/cli plan validate DOC-EXAMPLE-001 --json
 ```
 
 Plan validation enforces unique step IDs, valid dependencies, acyclic dependencies, and evidence requirements for completed steps.
@@ -33,7 +33,7 @@ Plan validation enforces unique step IDs, valid dependencies, acyclic dependenci
 ## Next Steps
 
 ```bash
-npx jumpspace next DOC-EXAMPLE-001 --json
+npx @jumpspace/cli next DOC-EXAMPLE-001 --json
 ```
 
 `next` only returns pending, unblocked steps. A blocked dependency means the step is not ready.
@@ -41,7 +41,7 @@ npx jumpspace next DOC-EXAMPLE-001 --json
 ## Step Completion
 
 ```bash
-npx jumpspace step complete DOC-EXAMPLE-001 implementation --evidence "Added approval service and tests."
+npx @jumpspace/cli step complete DOC-EXAMPLE-001 implementation --evidence "Added approval service and tests."
 ```
 
 A step cannot be completed while dependencies are incomplete, and completed steps must have evidence.
@@ -49,13 +49,13 @@ A step cannot be completed while dependencies are incomplete, and completed step
 ## Status
 
 ```bash
-npx jumpspace status DOC-EXAMPLE-001 implemented
+npx @jumpspace/cli status DOC-EXAMPLE-001 implemented
 ```
 
 `verified` is protected. This is rejected:
 
 ```bash
-npx jumpspace status DOC-EXAMPLE-001 verified
+npx @jumpspace/cli status DOC-EXAMPLE-001 verified
 ```
 
 Use `verify` instead.
@@ -63,7 +63,7 @@ Use `verify` instead.
 ## Verification
 
 ```bash
-npx jumpspace verify DOC-EXAMPLE-001 --check "npm test" --criteria AC-1 --evidence "Focused tests passed." --json
+npx @jumpspace/cli verify DOC-EXAMPLE-001 --check "npm test" --criteria AC-1 --evidence "Focused tests passed." --json
 ```
 
 Verification runs checks itself and records:
@@ -83,8 +83,8 @@ Failed checks do not write a verification record and do not set the task to `ver
 Use `work` when an agent should begin implementation:
 
 ```bash
-npx jumpspace work DOC-EXAMPLE-001 --json
-npx jumpspace work DOC-EXAMPLE-001 --since main --json
+npx @jumpspace/cli work DOC-EXAMPLE-001 --json
+npx @jumpspace/cli work DOC-EXAMPLE-001 --since main --json
 ```
 
 With `--since`, the packet also includes drift facts and warnings.

@@ -11,17 +11,17 @@ repo-local implementation state so another agent can resume.
 Run the checks that match the work:
 
 ```bash
-npx jumpspace scan
-npx jumpspace audit --json
-npx jumpspace doctor --json
-npx jumpspace plan validate DOC-PROJECT-001 --json
-npx jumpspace handoff --task DOC-PROJECT-001 --json
+npx @jumpspace/cli scan
+npx @jumpspace/cli audit --json
+npx @jumpspace/cli doctor --json
+npx @jumpspace/cli plan validate DOC-PROJECT-001 --json
+npx @jumpspace/cli handoff --task DOC-PROJECT-001 --json
 ```
 
 If a Git baseline exists:
 
 ```bash
-npx jumpspace ci --since main --json
+npx @jumpspace/cli ci --since main --json
 ```
 
 ## What To Record
@@ -37,8 +37,8 @@ Record durable state in the task block, not only in chat:
 ## Mutation History
 
 ```bash
-npx jumpspace last --json
-npx jumpspace history --task DOC-PROJECT-001 --json
+npx @jumpspace/cli last --json
+npx @jumpspace/cli history --task DOC-PROJECT-001 --json
 ```
 
 Use history when the next agent needs to know what Jumpspace changed during the
@@ -54,6 +54,6 @@ linked files, and do not rely on prior chat history as the source of truth.
 The next agent should then run:
 
 ```bash
-npx jumpspace handoff --task DOC-PROJECT-001 --json
-npx jumpspace work DOC-PROJECT-001 --json
+npx @jumpspace/cli handoff --task DOC-PROJECT-001 --json
+npx @jumpspace/cli work DOC-PROJECT-001 --json
 ```

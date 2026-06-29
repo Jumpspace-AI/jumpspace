@@ -18,10 +18,10 @@ before they edit.
 
 ```bash
 npm install -D @jumpspace/cli
-npx jumpspace init --auto
-npx jumpspace add-skill --all
-npx jumpspace scan
-npx jumpspace ask "What does this repo know?"
+npx @jumpspace/cli init --auto
+npx @jumpspace/cli add-skill --all
+npx @jumpspace/cli scan
+npx @jumpspace/cli ask "What does this repo know?"
 ```
 
 If the repo already has docs but no task blocks, start with

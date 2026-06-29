@@ -10,7 +10,7 @@ The goal is not to let a parser invent your architecture. The goal is to give an
 ## Discover Docs
 
 ```bash
-npx jumpspace bootstrap discover --json
+npx @jumpspace/cli bootstrap discover --json
 ```
 
 Discovery looks for common Markdown locations such as README, PRODUCT, docs, documentation, ADRs, architecture docs, app README files, infrastructure docs, and skills. It reports recommended globs, detected files, profile hints, and ignored generated paths.
@@ -18,7 +18,7 @@ Discovery looks for common Markdown locations such as README, PRODUCT, docs, doc
 ## Export Context For An Agent
 
 ```bash
-npx jumpspace bootstrap context README.md documentation/**/*.md --json
+npx @jumpspace/cli bootstrap context README.md documentation/**/*.md --json
 ```
 
 The context packet includes headings, source line numbers, parent heading chains, excerpts, existing task IDs, suggested IDs, linked file hints, and proposal instructions.
@@ -28,10 +28,10 @@ Use this packet with an AI agent to draft task blocks. The agent should reason a
 ## Propose, Validate, Apply
 
 ```bash
-npx jumpspace bootstrap propose README.md documentation/**/*.md --file jumpspace-bootstrap.json --json
-npx jumpspace bootstrap validate --file jumpspace-bootstrap.json --json
-npx jumpspace bootstrap apply --file jumpspace-bootstrap.json --dry-run --json
-npx jumpspace bootstrap apply --file jumpspace-bootstrap.json --json
+npx @jumpspace/cli bootstrap propose README.md documentation/**/*.md --file jumpspace-bootstrap.json --json
+npx @jumpspace/cli bootstrap validate --file jumpspace-bootstrap.json --json
+npx @jumpspace/cli bootstrap apply --file jumpspace-bootstrap.json --dry-run --json
+npx @jumpspace/cli bootstrap apply --file jumpspace-bootstrap.json --json
 ```
 
 Always inspect the dry run before applying.
@@ -45,9 +45,9 @@ Always inspect the dry run before applying.
 - Run `scan`, `audit`, and `doctor` after apply.
 
 ```bash
-npx jumpspace scan
-npx jumpspace audit --json
-npx jumpspace doctor --json
+npx @jumpspace/cli scan
+npx @jumpspace/cli audit --json
+npx @jumpspace/cli doctor --json
 ```
 
 ## After Bootstrap

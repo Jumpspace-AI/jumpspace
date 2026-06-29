@@ -7,24 +7,24 @@ implementation memory instead of relying on chat history.
 
 | Skill | Type | Use when | Install |
 | --- | --- | --- | --- |
-| `jumpspace-workflow` | Reference | You want agents to understand Jumpspace concepts, commands, safety rules, and command selection. | `npx jumpspace add-skill --all` |
-| `jumpspace-bootstrap` | Pipeline | You want an agent to build the first graph from existing docs with human approval. | `npx jumpspace add-skill jumpspace-bootstrap --agent claude` |
-| `jumpspace-work` | Pipeline | You want an agent to start from an approved task packet and record evidence. | `npx jumpspace add-skill jumpspace-work --agent codex` |
-| `jumpspace-review` | Pipeline | You want an agent to review drift, changed files, link suggestions, and PR evidence. | `npx jumpspace add-skill jumpspace-review --agent claude` |
-| `jumpspace-handoff` | Pipeline | You want an agent to preserve source-backed handoff state before pausing or switching agents. | `npx jumpspace add-skill jumpspace-handoff --agent codex` |
-| Codex guidance | Reference | You use Codex in the repo. | `npx jumpspace add-skill --codex` |
-| Claude Code guidance | Reference | You use Claude Code in the repo. | `npx jumpspace add-skill --claude` |
+| `jumpspace-workflow` | Reference | You want agents to understand Jumpspace concepts, commands, safety rules, and command selection. | `npx @jumpspace/cli add-skill --all` |
+| `jumpspace-bootstrap` | Pipeline | You want an agent to build the first graph from existing docs with human approval. | `npx @jumpspace/cli add-skill jumpspace-bootstrap --agent claude` |
+| `jumpspace-work` | Pipeline | You want an agent to start from an approved task packet and record evidence. | `npx @jumpspace/cli add-skill jumpspace-work --agent codex` |
+| `jumpspace-review` | Pipeline | You want an agent to review drift, changed files, link suggestions, and PR evidence. | `npx @jumpspace/cli add-skill jumpspace-review --agent claude` |
+| `jumpspace-handoff` | Pipeline | You want an agent to preserve source-backed handoff state before pausing or switching agents. | `npx @jumpspace/cli add-skill jumpspace-handoff --agent codex` |
+| Codex guidance | Reference | You use Codex in the repo. | `npx @jumpspace/cli add-skill --codex` |
+| Claude Code guidance | Reference | You use Claude Code in the repo. | `npx @jumpspace/cli add-skill --claude` |
 
 Use short aliases when you prefer them:
 
 ```bash
-npx jumpspace add-skill work --agent claude
-npx jumpspace add-skill review --agent codex
+npx @jumpspace/cli add-skill work --agent claude
+npx @jumpspace/cli add-skill review --agent codex
 ```
 
 ## What Gets Installed
 
-`npx jumpspace add-skill --codex` creates or updates:
+`npx @jumpspace/cli add-skill --codex` creates or updates:
 
 - `AGENTS.md`
 - `.codex/skills/jumpspace-workflow/SKILL.md`
@@ -33,7 +33,7 @@ npx jumpspace add-skill review --agent codex
 - `.codex/skills/jumpspace-review/SKILL.md`
 - `.codex/skills/jumpspace-handoff/SKILL.md`
 
-`npx jumpspace add-skill --claude` creates or updates:
+`npx @jumpspace/cli add-skill --claude` creates or updates:
 
 - `CLAUDE.md`
 - `.claude/skills/jumpspace-workflow/SKILL.md`
@@ -42,7 +42,7 @@ npx jumpspace add-skill review --agent codex
 - `.claude/skills/jumpspace-review/SKILL.md`
 - `.claude/skills/jumpspace-handoff/SKILL.md`
 
-`npx jumpspace add-skill --all` installs every supported agent target.
+`npx @jumpspace/cli add-skill --all` installs every supported agent target.
 Passing a skill name narrows the install to that pipeline skill plus the
 reference workflow skill.
 
@@ -55,7 +55,7 @@ Jumpspace-managed blocks.
 Run with `--json` when another tool needs to inspect changed files:
 
 ```bash
-npx jumpspace add-skill --all --json
+npx @jumpspace/cli add-skill --all --json
 ```
 
 ## First Prompt

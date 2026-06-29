@@ -11,9 +11,9 @@ Use schemas before scripting against command output.
 > changelogs before upgrading.
 
 ```bash
-npx jumpspace schema list --json
-npx jumpspace schema show work --json
-npx jumpspace schema coverage --json
+npx @jumpspace/cli schema list --json
+npx @jumpspace/cli schema show work --json
+npx @jumpspace/cli schema coverage --json
 ```
 
 JSON failures use the standard envelope:

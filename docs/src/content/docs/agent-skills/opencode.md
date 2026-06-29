@@ -8,9 +8,9 @@ Jumpspace does not ship a dedicated OpenCode installer today.
 Use the manual path:
 
 ```bash
-npx jumpspace init --auto
-npx jumpspace add-skill --all
-npx jumpspace scan
+npx @jumpspace/cli init --auto
+npx @jumpspace/cli add-skill --all
+npx @jumpspace/cli scan
 ```
 
 Then configure OpenCode to read the repo guidance files that exist in your
@@ -28,9 +28,9 @@ code. Start from work packets when a task ID is available.
 Ask the agent to finish with:
 
 ```bash
-npx jumpspace audit --json
-npx jumpspace doctor --json
-npx jumpspace handoff --json
+npx @jumpspace/cli audit --json
+npx @jumpspace/cli doctor --json
+npx @jumpspace/cli handoff --json
 ```
 
 ## Roadmap

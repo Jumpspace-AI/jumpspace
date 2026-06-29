@@ -13,9 +13,9 @@ This page gives you the shortest useful path. Use the
 
 ```bash
 npm install -D @jumpspace/cli
-npx jumpspace init --auto
-npx jumpspace add-skill --all
-npx jumpspace doctor
+npx @jumpspace/cli init --auto
+npx @jumpspace/cli add-skill --all
+npx @jumpspace/cli doctor
 ```
 
 Add a small task block to a Markdown spec:
@@ -42,8 +42,8 @@ acceptance_criteria:
 Then index and inspect it:
 
 ```bash
-npx jumpspace scan
-npx jumpspace context DOC-PROJECT-001
+npx @jumpspace/cli scan
+npx @jumpspace/cli context DOC-PROJECT-001
 ```
 
 ## Path 2: Existing Repo Bootstrap
@@ -51,18 +51,18 @@ npx jumpspace context DOC-PROJECT-001
 Use this when the repo already has Markdown docs but no Jumpspace task blocks.
 
 ```bash
-npx jumpspace init --auto
-npx jumpspace bootstrap propose README.md docs/**/*.md --file jumpspace-bootstrap.json
-npx jumpspace bootstrap validate --file jumpspace-bootstrap.json
-npx jumpspace bootstrap apply --file jumpspace-bootstrap.json --dry-run
+npx @jumpspace/cli init --auto
+npx @jumpspace/cli bootstrap propose README.md docs/**/*.md --file jumpspace-bootstrap.json
+npx @jumpspace/cli bootstrap validate --file jumpspace-bootstrap.json
+npx @jumpspace/cli bootstrap apply --file jumpspace-bootstrap.json --dry-run
 ```
 
 Review the proposed task blocks. If they are useful:
 
 ```bash
-npx jumpspace bootstrap apply --file jumpspace-bootstrap.json
-npx jumpspace scan
-npx jumpspace doctor
+npx @jumpspace/cli bootstrap apply --file jumpspace-bootstrap.json
+npx @jumpspace/cli scan
+npx @jumpspace/cli doctor
 ```
 
 Use `bootstrap context README.md docs/**/*.md --json` when you want an AI agent
@@ -71,9 +71,9 @@ to reason about headings and propose a better graph before applying anything.
 ## Path 3: Agent Setup
 
 ```bash
-npx jumpspace add-skill --all
-npx jumpspace scan
-npx jumpspace ask "What does this repo know?"
+npx @jumpspace/cli add-skill --all
+npx @jumpspace/cli scan
+npx @jumpspace/cli ask "What does this repo know?"
 ```
 
 Then ask your agent:
@@ -91,7 +91,7 @@ map of task IDs, paths, match reasons, coverage, and unanswered terms.
 Run this whenever setup feels uncertain:
 
 ```bash
-npx jumpspace doctor --json
-npx jumpspace audit --json
-npx jumpspace release install-doctor --json
+npx @jumpspace/cli doctor --json
+npx @jumpspace/cli audit --json
+npx @jumpspace/cli release install-doctor --json
 ```

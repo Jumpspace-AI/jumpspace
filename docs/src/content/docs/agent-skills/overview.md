@@ -17,7 +17,7 @@ They tell the agent how to:
 ## Install
 
 ```bash
-npx jumpspace add-skill --all
+npx @jumpspace/cli add-skill --all
 ```
 
 Supported targets today:
@@ -43,8 +43,8 @@ Install the full bundle with `add-skill --all`, or install one pipeline skill
 plus the reference workflow:
 
 ```bash
-npx jumpspace add-skill jumpspace-work --agent claude
-npx jumpspace add-skill review --agent codex
+npx @jumpspace/cli add-skill jumpspace-work --agent claude
+npx @jumpspace/cli add-skill review --agent codex
 ```
 
 ## Where Files Go
