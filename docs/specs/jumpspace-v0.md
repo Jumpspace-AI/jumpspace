@@ -2590,9 +2590,13 @@ code:
   - src/templates/AGENTS.md
   - src/templates/SKILL.md
   - src/core/agentSkills.ts
+  - src/core/ciWorkflow.ts
+  - .github/workflows/jumpspace.yml
+  - src/templates/jumpspace.yml
   - docs/specs/jumpspace-v0.md
 tests:
   - src/core/prAssistant.test.ts
+  - src/core/ciWorkflow.test.ts
   - src/cli.test.ts
   - src/sdk/contracts.test.ts
   - src/schemaArtifacts.test.ts
@@ -6337,7 +6341,6 @@ code:
   - .github/dependabot.yml
   - docs/astro.config.mjs
   - docs/src/content/docs/jumpspace-cloud.md
-  - launch/jumpspace-launch-readiness.md
 tests:
   - src/packageHygiene.test.ts
   - src/core/releaseDoctor.test.ts
@@ -6416,8 +6419,6 @@ plan:
       depends_on:
         - local-oss-hygiene
       source_files:
-        - launch/jumpspace-launch-readiness.md
-        - launch/jumpspace_oss_launch_plan.xlsx
         - docs/specs/jumpspace-v0.md
       tests: []
       checks:
@@ -6508,7 +6509,6 @@ code:
   - package-lock.json
   - src/core/releaseDoctor.ts
   - docs/specs/jumpspace-v0.md
-  - launch/jumpspace-launch-readiness.md
 tests:
   - src/packageHygiene.test.ts
   - src/core/releaseDoctor.test.ts
@@ -6569,8 +6569,6 @@ plan:
         - package-metadata
       source_files:
         - docs/specs/jumpspace-v0.md
-        - launch/jumpspace-launch-readiness.md
-        - launch/jumpspace_oss_launch_plan.xlsx
       tests: []
       checks:
         - node dist/cli.js scan

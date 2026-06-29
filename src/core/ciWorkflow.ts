@@ -120,11 +120,33 @@ jobs:
           $JUMPSPACE_BIN doctor --json > jumpspace-doctor.json
           DOCTOR_EXIT=$?
 
+          node <<'NODE'
+          const fs = require("fs");
+          const marker = "<!-- jumpspace-pr-assistant:v1 -->";
+          const footer = "\\n\\n---\\n\\nOutput truncated to stay within GitHub limits. Run jumpspace pr comment --since <base-sha> locally for the full packet.\\n";
+          const source = fs.readFileSync("jumpspace-pr-comment.md", "utf8");
+
+          function bounded(value, maxChars) {
+            if (value.length <= maxChars) {
+              return value;
+            }
+            const budget = Math.max(0, maxChars - footer.length);
+            return value.slice(0, budget).replace(/\\s+$/u, "") + footer;
+          }
+
+          let comment = bounded(source, 60000);
+          if (!comment.includes(marker)) {
+            comment = marker + "\\n" + comment;
+          }
+          fs.writeFileSync("jumpspace-pr-comment-bounded.md", comment);
+          fs.writeFileSync("jumpspace-pr-summary.md", bounded(source, 60000));
+          NODE
+
           printf "%s\\n" "$SCAN_EXIT" "$COMMENT_EXIT" "$AUDIT_EXIT" "$DOCTOR_EXIT" > jumpspace-exit-codes.txt
           exit 0
 
       - name: Add Jumpspace summary
-        run: cat jumpspace-pr-comment.md >> "$GITHUB_STEP_SUMMARY"
+        run: cat jumpspace-pr-summary.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upsert Jumpspace PR comment
         uses: actions/github-script@v7
@@ -132,7 +154,7 @@ jobs:
           script: |
             const fs = require("fs");
             const marker = "<!-- jumpspace-pr-assistant:v1 -->";
-            const body = fs.readFileSync("jumpspace-pr-comment.md", "utf8");
+            const body = fs.readFileSync("jumpspace-pr-comment-bounded.md", "utf8");
             const { owner, repo } = context.repo;
             const issue_number = context.issue.number;
             const comments = await github.paginate(github.rest.issues.listComments, {

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-06-29T14:54:01.819Z",
+  "generatedAt": "2026-06-29T15:13:24.310Z",
   "tasks": [
     {
       "id": "JS-001",
@@ -3625,10 +3625,14 @@
         "src/templates/AGENTS.md",
         "src/templates/SKILL.md",
         "src/core/agentSkills.ts",
+        "src/core/ciWorkflow.ts",
+        ".github/workflows/jumpspace.yml",
+        "src/templates/jumpspace.yml",
         "docs/specs/jumpspace-v0.md"
       ],
       "tests": [
         "src/core/prAssistant.test.ts",
+        "src/core/ciWorkflow.test.ts",
         "src/cli.test.ts",
         "src/sdk/contracts.test.ts",
         "src/schemaArtifacts.test.ts",
@@ -3832,7 +3836,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "CI workflow installer",
-        "line": 2731,
+        "line": 2735,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -4067,7 +4071,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Link suggestion ergonomics",
-        "line": 2903,
+        "line": 2907,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -4293,7 +4297,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Task lifecycle and orphan handling",
-        "line": 3066,
+        "line": 3070,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -4516,7 +4520,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Generated schema packages",
-        "line": 3226,
+        "line": 3230,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -4742,7 +4746,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Pluggable local embeddings",
-        "line": 3391,
+        "line": 3395,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -4972,7 +4976,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Serialized metadata mutations",
-        "line": 3561,
+        "line": 3565,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -5200,7 +5204,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "OSS launch hygiene and write-side schemas",
-        "line": 3728,
+        "line": 3732,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -5433,7 +5437,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Evidence-ranked link suggestions",
-        "line": 3900,
+        "line": 3904,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -5622,7 +5626,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Mutation history command",
-        "line": 4033,
+        "line": 4037,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -5861,7 +5865,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "CLI version source of truth",
-        "line": 4210,
+        "line": 4214,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -5997,7 +6001,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Work packet task history",
-        "line": 4300,
+        "line": 4304,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -6209,7 +6213,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "PR task-block candidate ranking",
-        "line": 4456,
+        "line": 4460,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -6399,7 +6403,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Compact agent JSON output",
-        "line": 4590,
+        "line": 4594,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -6614,7 +6618,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Weighted source-evidence ranking",
-        "line": 4749,
+        "line": 4753,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -6812,7 +6816,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Link suggestion ranking eval",
-        "line": 4891,
+        "line": 4895,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -7019,7 +7023,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Release readiness doctor",
-        "line": 5044,
+        "line": 5048,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -7232,7 +7236,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Real-repo link ranking fixtures",
-        "line": 5203,
+        "line": 5207,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -7441,7 +7445,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Schema coverage gate",
-        "line": 5358,
+        "line": 5362,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -7647,7 +7651,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Source-evidence PR link ranking",
-        "line": 5510,
+        "line": 5514,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -7862,7 +7866,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Agent handoff recap packet",
-        "line": 5668,
+        "line": 5672,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -8086,7 +8090,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Messy-repo PR scorer regression",
-        "line": 5834,
+        "line": 5838,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -8287,7 +8291,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Installed CLI freshness doctor",
-        "line": 5981,
+        "line": 5985,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -8504,7 +8508,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Astro Starlight documentation site",
-        "line": 6144,
+        "line": 6148,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -8722,7 +8726,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "OSS launch readiness",
-        "line": 6305,
+        "line": 6309,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -8750,8 +8754,7 @@
         ".github/workflows/publish.yml",
         ".github/dependabot.yml",
         "docs/astro.config.mjs",
-        "docs/src/content/docs/jumpspace-cloud.md",
-        "launch/jumpspace-launch-readiness.md"
+        "docs/src/content/docs/jumpspace-cloud.md"
       ],
       "tests": [
         "src/packageHygiene.test.ts",
@@ -8852,8 +8855,6 @@
               "local-oss-hygiene"
             ],
             "source_files": [
-              "launch/jumpspace-launch-readiness.md",
-              "launch/jumpspace_oss_launch_plan.xlsx",
               "docs/specs/jumpspace-v0.md"
             ],
             "tests": [],
@@ -8970,7 +8971,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Apache core license and trademark policy",
-        "line": 6489,
+        "line": 6490,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -8986,8 +8987,7 @@
         "package.json",
         "package-lock.json",
         "src/core/releaseDoctor.ts",
-        "docs/specs/jumpspace-v0.md",
-        "launch/jumpspace-launch-readiness.md"
+        "docs/specs/jumpspace-v0.md"
       ],
       "tests": [
         "src/packageHygiene.test.ts",
@@ -9069,9 +9069,7 @@
               "package-metadata"
             ],
             "source_files": [
-              "docs/specs/jumpspace-v0.md",
-              "launch/jumpspace-launch-readiness.md",
-              "launch/jumpspace_oss_launch_plan.xlsx"
+              "docs/specs/jumpspace-v0.md"
             ],
             "tests": [],
             "checks": [
@@ -9125,7 +9123,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "First-contact docs and agent skills experience",
-        "line": 6596,
+        "line": 6594,
         "level": 3,
         "parent_headings": [
           "Jumpspace v0",
@@ -9374,7 +9372,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Named pipeline agent skills",
-        "line": 6784,
+        "line": 6782,
         "level": 2,
         "parent_headings": [
           "Jumpspace v0"
@@ -9605,7 +9603,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Jumpspace Cloud docs page",
-        "line": 6944,
+        "line": 6942,
         "level": 2,
         "parent_headings": [
           "Jumpspace v0"
@@ -9789,7 +9787,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Alpha release stability notice",
-        "line": 7068,
+        "line": 7066,
         "level": 2,
         "parent_headings": [
           "Jumpspace v0"
@@ -9976,7 +9974,7 @@
       "doc": {
         "path": "docs/specs/jumpspace-v0.md",
         "heading": "Scoped npm package and tag publish workflow",
-        "line": 7196,
+        "line": 7194,
         "level": 2,
         "parent_headings": [
           "Jumpspace v0"
