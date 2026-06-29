@@ -38,28 +38,32 @@ export async function getChangedFiles(root: string, since: string): Promise<Chan
     };
   }
 
-  const commands: Array<{ source: ChangeSource; args: string[]; parser: (stdout: string) => ParsedChange[] }> = [
+  return collectChangedFiles(root, since, [
     {
       source: "committed",
       args: ["diff", "--name-status", "--find-renames", `${since}...HEAD`],
       parser: parseNameStatus,
     },
-    {
-      source: "staged",
-      args: ["diff", "--cached", "--name-status", "--find-renames"],
-      parser: parseNameStatus,
-    },
-    {
-      source: "unstaged",
-      args: ["diff", "--name-status", "--find-renames"],
-      parser: parseNameStatus,
-    },
-    {
-      source: "untracked",
-      args: ["ls-files", "--others", "--exclude-standard"],
-      parser: parseUntracked,
-    },
-  ];
+    ...workingTreeCommands(),
+  ]);
+}
+
+export async function getWorkingTreeChangedFiles(root: string): Promise<ChangedFilesResult> {
+  if (!(await isGitRepo(root))) {
+    return {
+      ok: false,
+      errors: [commandError("NOT_GIT_REPOSITORY", "Automatic link suggestions require a Git repository.", { path: root })],
+    };
+  }
+
+  return collectChangedFiles(root, "working-tree", workingTreeCommands());
+}
+
+async function collectChangedFiles(
+  root: string,
+  since: string,
+  commands: Array<{ source: ChangeSource; args: string[]; parser: (stdout: string) => ParsedChange[] }>,
+): Promise<ChangedFilesResult> {
 
   const merged = new Map<string, ChangedFile>();
   for (const command of commands) {
@@ -77,6 +81,26 @@ export async function getChangedFiles(root: string, since: string): Promise<Chan
     since,
     files: [...merged.values()].sort((left, right) => left.path.localeCompare(right.path)),
   };
+}
+
+function workingTreeCommands(): Array<{ source: ChangeSource; args: string[]; parser: (stdout: string) => ParsedChange[] }> {
+  return [
+    {
+      source: "staged",
+      args: ["diff", "--cached", "--name-status", "--find-renames"],
+      parser: parseNameStatus,
+    },
+    {
+      source: "unstaged",
+      args: ["diff", "--name-status", "--find-renames"],
+      parser: parseNameStatus,
+    },
+    {
+      source: "untracked",
+      args: ["ls-files", "--others", "--exclude-standard"],
+      parser: parseUntracked,
+    },
+  ];
 }
 
 export function parseNameStatus(stdout: string): ParsedChange[] {

@@ -120,7 +120,7 @@ describe("validateTasks", () => {
         plan: {
           task_id: "JS-010",
           goal: "Ship durable plans.",
-          status: "planned",
+          status: "pending",
           steps: [
             {
               id: "one",

@@ -83,6 +83,9 @@ npx @jumpspace/cli scan
 npx @jumpspace/cli audit --json
 ```
 
+Use `link suggest <id> --json` without `--since` when you only want current
+working-tree candidates.
+
 ## Keep The First Graph Small
 
 The first graph should not index every heading. Prefer task blocks for:

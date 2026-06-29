@@ -59,11 +59,15 @@ Use graph queries for questions like:
 ## Link Suggestions
 
 ```bash
+npx @jumpspace/cli link suggest DOC-EXAMPLE-001 --json
 npx @jumpspace/cli link suggest DOC-EXAMPLE-001 --since main --json
 npx @jumpspace/cli link update DOC-EXAMPLE-001 --code src/foo.ts --test src/foo.test.ts --dry-run --json
 ```
 
-Changed-file status is context, not enough evidence by itself. Link suggestions should rank candidates by task-intent terms found in paths, basenames, identifiers, phrases, and bounded file content.
+Without `--since` or `--path`, `link suggest` uses current working-tree
+candidates. Changed-file status is context, not enough evidence by itself. Link
+suggestions should rank candidates by task-intent terms found in paths,
+basenames, identifiers, phrases, and bounded file content.
 
 ## Compact Mode
 

@@ -62,7 +62,8 @@ map to inspect, not an oracle.
 ## What Should Be Committed?
 
 Commit source docs, task blocks, config, schemas, templates, and CI files that
-the team should share.
+the team should share. Commit the managed `.gitignore` block from `init` when
+it is added.
 
-Generated indexes such as semantic stores can be ignored unless your team
-deliberately wants to version them.
+Generated semantic indexes, dense-vector stores, runtime locks, and bootstrap
+scratch files are ignored by default because they can be rebuilt.

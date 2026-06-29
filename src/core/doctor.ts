@@ -40,13 +40,13 @@ export async function createDoctorReport(
   options: { since?: string } = {},
 ): Promise<DoctorReport> {
   const repairCheck = options.since ? await planRepairForDoctor(root, options.since) : { report: null, errors: [] };
-  const doctorWarnings = [
+  const doctorWarnings = compactTaskGapWarnings([
     ...issues.filter((issue) => issue.severity === "warning"),
     ...(await configWarnings(root, config)),
     ...(await duplicateHeadingWarnings(root, config)),
     ...repairWarningsAsIssues(repairCheck.report),
     ...repairCheck.errors,
-  ];
+  ]);
   const errors = issues.filter((issue) => issue.severity === "error");
   const suggestions = uniqueSuggestions([
     ...suggestionsForIssues([...errors, ...doctorWarnings]),
@@ -70,6 +70,41 @@ export async function createDoctorReport(
     last_mutation: lastMutation ?? null,
     repair: repairCheck.report,
   };
+}
+
+function compactTaskGapWarnings(issues: JumpIssue[]): JumpIssue[] {
+  const counts = new Map<string, number>();
+  for (const issue of issues) {
+    if (issue.code === "TASK_HAS_GAP" && issue.taskId) {
+      counts.set(issue.taskId, (counts.get(issue.taskId) ?? 0) + 1);
+    }
+  }
+
+  const emittedTasks = new Set<string>();
+  const compacted: JumpIssue[] = [];
+  for (const issue of issues) {
+    if (issue.code !== "TASK_HAS_GAP" || !issue.taskId) {
+      compacted.push(issue);
+      continue;
+    }
+
+    if (emittedTasks.has(issue.taskId)) {
+      continue;
+    }
+    emittedTasks.add(issue.taskId);
+
+    const count = counts.get(issue.taskId) ?? 1;
+    compacted.push(
+      count === 1
+        ? issue
+        : {
+            ...issue,
+            message: `Task ${issue.taskId} has ${count} explicit unresolved gaps. Run \`jumpspace audit --json\` or \`jumpspace context ${issue.taskId} --json\` for details.`,
+          },
+    );
+  }
+
+  return compacted;
 }
 
 export function renderDoctorReport(report: DoctorReport): string {

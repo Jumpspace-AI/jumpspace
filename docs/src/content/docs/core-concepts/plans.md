@@ -13,6 +13,9 @@ Plans include:
 - status
 - ordered steps
 
+Top-level plan `status` and each step `status` use the same values:
+`pending`, `in_progress`, `complete`, or `blocked`.
+
 Each step can include:
 
 - stable step ID

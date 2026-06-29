@@ -10,6 +10,10 @@ npx @jumpspace/cli init --ci github --dry-run --json
 npx @jumpspace/cli init --ci github
 ```
 
+The generated workflow runs `scan`, refreshes the semantic index with
+`semantic build --json`, renders the PR comment packet, and then runs
+`audit --json` and `doctor --json`.
+
 Run locally:
 
 ```bash

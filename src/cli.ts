@@ -604,7 +604,7 @@ linkCommand
 
 linkCommand
   .command("suggest")
-  .description("Suggest code/test links from changed files or explicit candidate paths without mutating source.")
+  .description("Suggest code/test links from working-tree changes, changed files, or explicit candidate paths without mutating source.")
   .argument("<id>", "Jumpspace task ID")
   .option("--since <ref>", "Git ref to compare against for changed-file candidates")
   .option("--path <path>", "candidate path to score; repeat for multiple paths", collect, [])

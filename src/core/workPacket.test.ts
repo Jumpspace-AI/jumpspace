@@ -3,7 +3,7 @@ import { buildWorkPacket, renderWorkPacket } from "./workPacket.js";
 import type { JumpIndex, JumpTask } from "./types.js";
 
 describe("work packets", () => {
-  it("builds a complete agent start packet for a ready planned task", () => {
+  it("builds a complete agent start packet for a ready pending task", () => {
     const dependency = makeTask({
       id: "JS-DEP",
       title: "Dependency",
@@ -137,7 +137,7 @@ describe("work packets", () => {
       plan: {
         task_id: "JS-100",
         goal: "Invalid.",
-        status: "planned",
+        status: "pending",
         steps: [
           {
             id: "done",
@@ -207,7 +207,7 @@ function makeTask(overrides: Partial<JumpTask> = {}): JumpTask {
     plan: {
       task_id: "JS-100",
       goal: "Ship the work packet.",
-      status: "planned",
+      status: "pending",
       steps: [
         {
           id: "implement",

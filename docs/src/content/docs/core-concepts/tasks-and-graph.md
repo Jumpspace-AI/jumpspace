@@ -30,7 +30,10 @@ Markdown task blocks are source of truth. `.jumpspace/index.json` is generated b
 npx @jumpspace/cli scan
 ```
 
-Commit the source docs. Treat generated indexes according to your team's preference. If you use semantic retrieval, `.jumpspace/semantic-index.json` is generated and can be rebuilt.
+Commit the source docs. Treat `.jumpspace/index.json` and mutation logs
+according to your team's repo policy. The managed `.gitignore` block created by
+`init` ignores runtime locks, semantic retrieval caches, and one-shot bootstrap
+proposal files because they can be rebuilt.
 
 ## Relationships
 

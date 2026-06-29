@@ -125,7 +125,9 @@ npm install -D @jumpspace/cli
 
 The npm package is `@jumpspace/cli`; the installed command remains
 `jumpspace`. Jumpspace writes source-controlled Markdown metadata and a
-generated `.jumpspace/index.json` index inside your repo.
+generated `.jumpspace/index.json` index inside your repo. `init` also adds a
+managed `.gitignore` block for runtime locks, semantic caches, and one-shot
+bootstrap proposal files.
 
 ## Current Command Surface
 

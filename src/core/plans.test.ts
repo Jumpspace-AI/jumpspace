@@ -31,7 +31,7 @@ function taskWithPlan(overrides: Partial<JumpTask["plan"]> = {}): JumpTask {
     plan: {
       task_id: "JS-100",
       goal: "Ship durable planning.",
-      status: "planned",
+      status: "pending",
       steps: [
         {
           id: "design",

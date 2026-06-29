@@ -8,6 +8,7 @@ import { installCiWorkflow, type CiWorkflowProvider } from "../core/ciWorkflow.j
 import { DEFAULT_CONFIG, emptyIndex, ensureParentDir, pathExists, resolveRepoPath } from "../core/config.js";
 import { discoverDocs } from "../core/discovery.js";
 import { commandError, errorEnvelope } from "../core/errors.js";
+import { installGitignorePolicy } from "../core/gitignorePolicy.js";
 import { recordMutation } from "../core/mutations.js";
 
 export type InitOptions = {
@@ -75,6 +76,9 @@ export async function runInit(options: InitOptions = {}): Promise<number> {
     await atomicWriteFile(targetPath, file.content ?? (await readTemplate(file.source ?? "")));
     writeLine(`${exists ? "updated" : "created"} ${file.target}`);
   }
+
+  const gitignore = await installGitignorePolicy(root);
+  writeLine(`${gitignore.action === "unchanged" ? "skipped" : gitignore.action} ${gitignore.path}`);
 
   return 0;
 }

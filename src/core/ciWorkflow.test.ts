@@ -28,7 +28,17 @@ describe("installCiWorkflow", () => {
     const workflow = await readWorkflow(root);
     expect(workflow).toContain("# BEGIN JUMPSPACE MANAGED: github-ci");
     expect(workflow).toContain("jumpspace-pr-assistant:v1");
+    expect(workflow).toContain("persist-credentials: false");
+    expect(workflow).toContain("node-version: 22");
+    expect(workflow).toContain("cache: npm");
+    expect(workflow).toContain("npm ci --ignore-scripts");
+    expect(workflow).toContain("npx @jumpspace/cli scan");
+    expect(workflow).toContain("npx @jumpspace/cli semantic build --json > jumpspace-semantic-build.json");
+    expect(workflow).toContain('"$SCAN_EXIT" "$SEMANTIC_EXIT" "$COMMENT_EXIT" "$AUDIT_EXIT" "$DOCTOR_EXIT"');
     expect(workflow).toContain("pr comment --since \"$BASE_SHA\"");
+    expect(workflow).not.toContain("npm run build");
+    expect(workflow).not.toContain("node dist/cli.js");
+    expect(workflow).not.toContain("JUMPSPACE_BIN");
     expect(workflow).toContain("jumpspace-pr-comment-bounded.md");
     expect(workflow).toContain("jumpspace-pr-summary.md");
     expect(workflow).toContain("bounded(source, 60000)");
@@ -51,6 +61,12 @@ describe("installCiWorkflow", () => {
         reason: "already_current",
       }),
     ]);
+  });
+
+  it("keeps the packaged starter workflow in sync with the managed generator", async () => {
+    const template = await fs.readFile(path.join(process.cwd(), "src/templates/jumpspace.yml"), "utf8");
+
+    expect(template).toBe(githubWorkflowTemplate());
   });
 
   it("updates the legacy Jumpspace audit starter workflow", async () => {

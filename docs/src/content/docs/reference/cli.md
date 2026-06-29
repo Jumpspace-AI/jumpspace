@@ -84,7 +84,7 @@ Always dry-run and review bootstrap output before mutating docs.
 
 | Command | Purpose | Common examples |
 | --- | --- | --- |
-| `link suggest <id>` | Suggest code/test links without mutation. | `npx @jumpspace/cli link suggest DOC-PROJECT-001 --since main --json` |
+| `link suggest <id>` | Suggest code/test links without mutation. | `npx @jumpspace/cli link suggest DOC-PROJECT-001 --json` |
 | `link update <id>` | Add or remove links, dependencies, refs, and gaps. | `npx @jumpspace/cli link update DOC-PROJECT-001 --code src/project/invitations.ts --dry-run --json` |
 | `link eval` | Run link-scorer fixtures. | `npx @jumpspace/cli link eval --json` |
 

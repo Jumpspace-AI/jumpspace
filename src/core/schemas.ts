@@ -57,7 +57,7 @@ export const jsonCommandContracts: JsonCommandContractDeclaration[] = [
   { name: "pr.comment", command: "jumpspace pr comment --since <ref> --json", description: "Idempotent, review-only PR assistant comment packet built from the local CI report." },
   { name: "repair", command: "jumpspace repair --since <ref> [--apply] --json", description: "Dry-run or applied task-memory repairs for Git path drift. Renames are mechanical fixes; missing/deleted linked files become explicit gaps." },
   { name: "link", command: "jumpspace link update <id> [link options] --json", description: "Dry-run or applied task metadata link updates for code, tests, dependencies, refs, and gaps." },
-  { name: "link.suggest", command: "jumpspace link suggest <id> [--since <ref>] [--path <path>] --json", description: "Evidence-backed code/test link suggestions from changed files or explicit candidate paths. This command never mutates source." },
+  { name: "link.suggest", command: "jumpspace link suggest <id> [--since <ref>] [--path <path>] --json", description: "Evidence-backed code/test link suggestions from working-tree changes, changed files, or explicit candidate paths. This command never mutates source." },
   { name: "link.eval", command: "jumpspace link eval [--file <fixture-file>] --json", description: "Built-in or file-based ranking quality evaluation for link suggestion fixtures." },
   { name: "bootstrap.context", command: "jumpspace bootstrap context [paths...] --json", description: "Markdown heading context packet for AI-assisted graph bootstrap proposals." },
   { name: "bootstrap.discover", command: "jumpspace bootstrap discover --json", description: "Discovers common Markdown docs, recommended config globs, profile hints, and ignored noisy paths." },
@@ -318,7 +318,7 @@ const planStepSchema = {
   properties: {
     id: { type: "string" },
     outcome: { type: "string" },
-    status: { enum: ["pending", "in_progress", "complete"] },
+    status: { enum: ["pending", "in_progress", "complete", "blocked"] },
     depends_on: { type: "array", items: { type: "string" } },
     source_files: { type: "array", items: { type: "string" } },
     tests: { type: "array", items: { type: "string" } },
@@ -334,7 +334,7 @@ const planSchema = {
   properties: {
     task_id: { type: "string" },
     goal: { type: "string" },
-    status: { enum: ["pending", "in_progress", "complete"] },
+    status: { enum: ["pending", "in_progress", "complete", "blocked"] },
     steps: { type: "array", items: planStepSchema },
   },
 };
@@ -418,7 +418,7 @@ const handoffTaskStateSchema = {
         parent_headings: { type: "array", items: { type: "string" } },
       },
     },
-    plan_status: { anyOf: [{ enum: ["planned", "in_progress", "complete", "blocked"] }, { type: "null" }] },
+    plan_status: { anyOf: [{ enum: ["pending", "in_progress", "complete", "blocked"] }, { type: "null" }] },
     execution_ready: { type: "boolean" },
     blockers: { type: "array", items: executionBlockerSchema },
     pending_step_ids: { type: "array", items: { type: "string" } },
@@ -518,7 +518,7 @@ const linkOperationSchema = {
   additionalProperties: false,
   properties: {
     action: { enum: ["add", "remove"] },
-    field: { enum: ["code", "tests", "depends_on", "refs", "gaps"] },
+    field: { enum: ["code", "test", "depends_on", "ref", "gap"] },
     value: { type: "string" },
     changed: { type: "boolean" },
     reason: { enum: ["added", "removed", "already_present", "not_present"] },
@@ -2434,7 +2434,7 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
   {
     name: "link.suggest",
     command: "jumpspace link suggest <id> [--since <ref>] [--path <path>] --json",
-    description: "Evidence-backed code/test link suggestions from changed files or explicit candidate paths. This command never mutates source.",
+    description: "Evidence-backed code/test link suggestions from working-tree changes, changed files, or explicit candidate paths. This command never mutates source.",
     schema: {
       $schema: schemaVersion,
       type: "object",

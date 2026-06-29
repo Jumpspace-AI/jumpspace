@@ -181,3 +181,10 @@
 {"version":1,"command":"verify","recorded_at":"2026-06-29T14:53:45.541Z","touched_files":["docs/specs/jumpspace-v0.md",".jumpspace/index.json"],"task_ids":["JS-056"],"config_changes":[],"index_changed":true,"warnings":[]}
 {"version":1,"command":"semantic build","recorded_at":"2026-06-29T14:54:08.387Z","touched_files":[".jumpspace/semantic-index.json"],"task_ids":[],"config_changes":[],"index_changed":false,"warnings":[]}
 {"version":1,"command":"semantic build","recorded_at":"2026-06-29T15:13:03.265Z","touched_files":[".jumpspace/semantic-index.json"],"task_ids":[],"config_changes":[],"index_changed":false,"warnings":[]}
+{"version":1,"command":"link update","recorded_at":"2026-06-29T18:34:09.380Z","touched_files":["docs/specs/jumpspace-v0.md",".jumpspace/index.json"],"task_ids":["JS-006"],"config_changes":[],"index_changed":true,"warnings":[]}
+{"version":1,"command":"link update","recorded_at":"2026-06-29T18:34:09.686Z","touched_files":["docs/specs/jumpspace-v0.md",".jumpspace/index.json"],"task_ids":["JS-031"],"config_changes":[],"index_changed":true,"warnings":[]}
+{"version":1,"command":"semantic build","recorded_at":"2026-06-29T18:36:06.478Z","touched_files":[".jumpspace/semantic-index.json"],"task_ids":[],"config_changes":[],"index_changed":false,"warnings":[]}
+{"version":1,"command":"semantic build","recorded_at":"2026-06-29T18:37:27.549Z","touched_files":[".jumpspace/semantic-index.json"],"task_ids":[],"config_changes":[],"index_changed":false,"warnings":[]}
+{"version":1,"command":"link update","recorded_at":"2026-06-29T19:41:02.730Z","touched_files":["docs/specs/jumpspace-v0.md",".jumpspace/index.json"],"task_ids":["JS-033"],"config_changes":[],"index_changed":true,"warnings":[]}
+{"version":1,"command":"link update","recorded_at":"2026-06-29T19:41:02.967Z","touched_files":["docs/specs/jumpspace-v0.md",".jumpspace/index.json"],"task_ids":["JS-027"],"config_changes":[],"index_changed":true,"warnings":[]}
+{"version":1,"command":"semantic build","recorded_at":"2026-06-29T19:45:05.848Z","touched_files":[".jumpspace/semantic-index.json"],"task_ids":[],"config_changes":[],"index_changed":false,"warnings":[]}
