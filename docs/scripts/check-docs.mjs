@@ -82,7 +82,7 @@ const contentChecks = [
   ['src/content/docs/reference/json-schemas.md', ['ok": false', 'schema show task.work', 'alpha software']],
   ['src/content/docs/reference/sdks.md', ['contract helpers', 'alpha software', '@jumpspace/cli/sdk']],
   ['src/content/docs/jumpspace-cloud.md', ['early design partners', 'hi@jumpspace.ai']],
-  ['src/content/docs/contribute/release-checklist.md', ['semver', '@jumpspace/cli', 'NPM_TOKEN', '--follow-tags']],
+  ['src/content/docs/contribute/release-checklist.md', ['semver', '@jumpspace/cli', 'Trusted Publishing', '--follow-tags']],
   ['src/content/docs/contribute/future-improvements.md', ['not current commands', '@jumpspace/cli demo', '@jumpspace/cli onboard', 'Broader Skill Ecosystem']],
   ['public/llms.txt', ['Jumpspace Docs For Agents', 'Trust rule']]
 ];

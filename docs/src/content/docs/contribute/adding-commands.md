@@ -19,5 +19,5 @@ After implementation:
 npm test
 npm run build
 node dist/cli.js schema coverage --json
-node dist/cli.js audit --json
+node dist/cli.js task audit --json
 ```
