@@ -32,7 +32,7 @@ npm --prefix docs run dev
 Use the repo against itself:
 
 ```bash
-node dist/cli.js scan
-node dist/cli.js audit --json
-node dist/cli.js doctor --json
+node dist/cli.js task scan
+node dist/cli.js task audit --json
+node dist/cli.js task doctor --json
 ```

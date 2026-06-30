@@ -47,9 +47,9 @@ jobs:
 
       - name: Verify Jumpspace graph
         run: |
-          node dist/cli.js scan
-          node dist/cli.js audit --json
-          node dist/cli.js doctor --json
+          node dist/cli.js task scan
+          node dist/cli.js task audit --json
+          node dist/cli.js task doctor --json
 
       - name: Verify package dry-run
         run: npm pack --dry-run --json

@@ -6,9 +6,9 @@
 
 - Task ID(s):
 - Commands used for orientation:
-  - `node dist/cli.js scan`
-  - `node dist/cli.js find "<topic>" --mode any --json --compact`
-  - `node dist/cli.js context <task-id> --json`
+  - `node dist/cli.js task scan`
+  - `node dist/cli.js task find "<topic>" --mode any --json --compact`
+  - `node dist/cli.js task context <task-id> --json`
 
 ## Verification
 
@@ -18,8 +18,8 @@
 - [ ] `npm run build`
 - [ ] `npm --prefix docs test`
 - [ ] `npm --prefix docs run build`
-- [ ] `node dist/cli.js audit --json`
-- [ ] `node dist/cli.js doctor --json`
+- [ ] `node dist/cli.js task audit --json`
+- [ ] `node dist/cli.js task doctor --json`
 - [ ] `node dist/cli.js release doctor --json`
 
 ## Notes

@@ -32,7 +32,7 @@ git push origin main --follow-tags
 
 The `Publish` GitHub Actions workflow runs on semver tags, verifies the tag
 matches `package.json`, and publishes `@jumpspace/cli` to npm with public
-access. The workflow requires the `NPM_TOKEN` repository secret.
+access through npm Trusted Publishing.
 
 Run local checks:
 
@@ -41,7 +41,7 @@ npm test
 npm run build
 node dist/cli.js release doctor --json
 node dist/cli.js release install-doctor --json
-node dist/cli.js audit --json
+node dist/cli.js task audit --json
 npm pack --dry-run --json
 ```
 
