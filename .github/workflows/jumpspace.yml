@@ -27,20 +27,25 @@ jobs:
       - name: Install dependencies
         run: npm ci --ignore-scripts
 
+      - name: Build package
+        run: npm run build
+
       - name: Build Jumpspace PR comment
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           set +e
-          npx @jumpspace/cli task scan
+          JUMPSPACE_BIN=(node dist/cli.js)
+
+          "${JUMPSPACE_BIN[@]}" task scan
           SCAN_EXIT=$?
-          npx @jumpspace/cli task semantic build --json > jumpspace-semantic-build.json
+          "${JUMPSPACE_BIN[@]}" task semantic build --json > jumpspace-semantic-build.json
           SEMANTIC_EXIT=$?
-          npx @jumpspace/cli task pr comment --since "$BASE_SHA" > jumpspace-pr-comment.md
+          "${JUMPSPACE_BIN[@]}" task pr comment --since "$BASE_SHA" > jumpspace-pr-comment.md
           COMMENT_EXIT=$?
-          npx @jumpspace/cli task audit --json > jumpspace-audit.json
+          "${JUMPSPACE_BIN[@]}" task audit --json > jumpspace-audit.json
           AUDIT_EXIT=$?
-          npx @jumpspace/cli task doctor --json > jumpspace-doctor.json
+          "${JUMPSPACE_BIN[@]}" task doctor --json > jumpspace-doctor.json
           DOCTOR_EXIT=$?
 
           node <<'NODE'
@@ -65,7 +70,13 @@ jobs:
           fs.writeFileSync("jumpspace-pr-summary.md", bounded(source, 60000));
           NODE
 
-          printf "%s\n" "$SCAN_EXIT" "$SEMANTIC_EXIT" "$COMMENT_EXIT" "$AUDIT_EXIT" "$DOCTOR_EXIT" > jumpspace-exit-codes.txt
+          {
+            printf "scan=%s\n" "$SCAN_EXIT"
+            printf "semantic=%s\n" "$SEMANTIC_EXIT"
+            printf "comment=%s\n" "$COMMENT_EXIT"
+            printf "audit=%s\n" "$AUDIT_EXIT"
+            printf "doctor=%s\n" "$DOCTOR_EXIT"
+          } > jumpspace-exit-codes.txt
           exit 0
 
       - name: Add Jumpspace summary
@@ -95,8 +106,9 @@ jobs:
 
       - name: Fail if Jumpspace checks failed
         run: |
-          while read -r code; do
+          while IFS='=' read -r check code; do
             if [ "$code" != "0" ]; then
+              echo "::error title=Jumpspace check failed::$check exited with $code"
               exit "$code"
             fi
           done < jumpspace-exit-codes.txt
