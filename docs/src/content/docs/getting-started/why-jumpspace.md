@@ -5,6 +5,10 @@ description: Understand the problem Jumpspace solves before adding it to a repo.
 
 Modern coding agents are good at reading files, but they still need a reliable map of the work.
 
+For the current product framing, see [Why Jumpspace?](/start-here/why-jumpspace/).
+Jumpspace is now intent-memory-first by default; this older page describes the
+advanced task graph model.
+
 Most repos already have pieces of that map spread across specs, runbooks, architecture notes, issue threads, PRs, and code comments. Jumpspace turns the durable parts into a small source-controlled graph that an agent can read before it starts guessing.
 
 Agents can have memory, but that memory usually belongs to one product, one account, one machine, or one conversation. It is not portable repo state. When another agent picks up the work, the feature intent often has to be rediscovered from scratch unless the repo itself carries it.
@@ -73,18 +77,18 @@ Vectors can improve recall. The task graph makes the result actionable.
 Jumpspace gives agents a repeatable loop:
 
 ```bash
-jumpspace scan
-jumpspace find "approval workflow" --json --compact
-jumpspace context PM-TASK-001 --json
-jumpspace work PM-TASK-001 --json
+jumpspace task scan
+jumpspace task find "approval workflow" --json --compact
+jumpspace task context PM-TASK-001 --json
+jumpspace task work PM-TASK-001 --json
 ```
 
 That loop lets the agent begin with approved intent, linked files, next steps, schemas, and guardrails before editing. After the change, the agent can record evidence and hand work back:
 
 ```bash
-jumpspace step complete PM-TASK-001 implementation --evidence "Implemented approval state transitions and tests."
-jumpspace verify PM-TASK-001 --check "npm test" --criteria AC-1 --json
-jumpspace handoff --task PM-TASK-001 --json
+jumpspace task step complete PM-TASK-001 implementation --evidence "Implemented approval state transitions and tests."
+jumpspace task verify PM-TASK-001 --check "npm test" --criteria AC-1 --json
+jumpspace task handoff --task PM-TASK-001 --json
 ```
 
 ## Why Humans Like It

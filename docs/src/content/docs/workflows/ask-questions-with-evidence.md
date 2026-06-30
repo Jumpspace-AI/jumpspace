@@ -3,13 +3,13 @@ title: Ask Questions With Evidence
 description: Use ask, find, semantic retrieval, and context without treating retrieval as an oracle.
 ---
 
-`jumpspace ask` returns an evidence summary, not an authoritative answer.
+`jumpspace task ask` returns an evidence summary, not an authoritative answer.
 
 ## Basic Flow
 
 ```bash
-npx @jumpspace/cli scan
-npx @jumpspace/cli ask "Where is project invitation implemented?"
+npx @jumpspace/cli task scan
+npx @jumpspace/cli task ask "Where is project invitation implemented?"
 ```
 
 The useful output is the evidence:
@@ -25,7 +25,7 @@ The useful output is the evidence:
 ## Broader Recall
 
 ```bash
-npx @jumpspace/cli find project invitation --mode any
+npx @jumpspace/cli task find project invitation --mode any
 ```
 
 `find` defaults to strict all-term matching. Use `--mode any` when orientation
@@ -34,9 +34,9 @@ matters more than precision.
 ## Semantic Retrieval
 
 ```bash
-npx @jumpspace/cli semantic build
-npx @jumpspace/cli semantic status --json
-npx @jumpspace/cli ask "Where does the repo handle member onboarding?" --json
+npx @jumpspace/cli task semantic build
+npx @jumpspace/cli task semantic status --json
+npx @jumpspace/cli task ask "Where does the repo handle member onboarding?" --json
 ```
 
 The default semantic backend is local and deterministic. Dense LanceDB/ONNX
@@ -45,7 +45,7 @@ retrieval is optional and falls back when dependencies are missing.
 ## Inspect The Source Task
 
 ```bash
-npx @jumpspace/cli context DOC-PROJECT-001 --json
+npx @jumpspace/cli task context DOC-PROJECT-001 --json
 ```
 
 Use `context` when you need raw task metadata, plan state, links, and execution

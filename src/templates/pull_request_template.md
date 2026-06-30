@@ -13,8 +13,8 @@ Related task IDs:
 
 ## Checklist
 
-- [ ] I ran `jumpspace scan`
-- [ ] I ran `jumpspace audit`
-- [ ] I ran `jumpspace pr comment --since <base-ref>` or have the Jumpspace PR workflow installed
+- [ ] I ran `jumpspace task scan`
+- [ ] I ran `jumpspace task audit`
+- [ ] I ran `jumpspace task pr comment --since <base-ref>` or have the Jumpspace PR workflow installed
 - [ ] Code refs are updated
 - [ ] Test refs are updated

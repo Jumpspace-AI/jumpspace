@@ -25,7 +25,7 @@ describe("work packets", () => {
             depends_on: [],
             source_files: ["docs/specs/feature.md"],
             tests: [],
-            checks: ["jumpspace context JS-100 --json"],
+            checks: ["jumpspace task context JS-100 --json"],
             evidence: ["Read task context."],
           },
           {
@@ -71,12 +71,19 @@ describe("work packets", () => {
         entries: [],
       },
       drift: { requested: false, since: null, facts: [], warnings: [] },
-      schemas: { packet: "work", failures: "error", context: "context", audit: "audit", drift: "drift", history: "history" },
+      schemas: {
+        packet: "task.work",
+        failures: "error",
+        context: "task.context",
+        audit: "task.audit",
+        drift: "task.drift",
+        history: "task.history",
+      },
       next_action: "Work on pending unblocked step: implement.",
     });
 
     if (packet.ok) {
-      expect(packet.guardrails.join("\n")).toContain("jumpspace verify");
+      expect(packet.guardrails.join("\n")).toContain("jumpspace task verify");
       expect(renderWorkPacket(packet)).toContain("# Jumpspace Work Packet");
       expect(renderWorkPacket(packet)).toContain("Work on pending unblocked step: implement.");
       expect(renderWorkPacket(packet)).toContain("## Recent History");

@@ -24,7 +24,7 @@ class PythonSdkContractsTest(unittest.TestCase):
         self.assertEqual(CONTRACT_VERSION, 1)
         self.assertEqual(list(SCHEMA_NAMES), [schema["name"] for schema in catalog["schemas"]])
         self.assertEqual(list(SCHEMA_NAMES), [schema["name"] for schema in generated_catalog["schemas"]])
-        self.assertTrue(is_schema_name("bootstrap.propose"))
+        self.assertTrue(is_schema_name("task.bootstrap.propose"))
         self.assertFalse(is_schema_name("missing"))
 
         for schema_name in SCHEMA_NAMES:

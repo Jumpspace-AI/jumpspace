@@ -8,8 +8,8 @@ Jumpspace works best when the human approves intent in docs, then the agent exec
 ## 1. Find The Task
 
 ```bash
-npx @jumpspace/cli find "approval flow" --json --compact
-npx @jumpspace/cli context DOC-EXAMPLE-001 --json
+npx @jumpspace/cli task find "approval flow" --json --compact
+npx @jumpspace/cli task context DOC-EXAMPLE-001 --json
 ```
 
 Use compact results for cheap orientation, then pull full context for the task you actually plan to work on.
@@ -19,15 +19,15 @@ Use compact results for cheap orientation, then pull full context for the task y
 Review the current plan:
 
 ```bash
-npx @jumpspace/cli plan review DOC-EXAMPLE-001 --json
-npx @jumpspace/cli plan show DOC-EXAMPLE-001
+npx @jumpspace/cli task plan review DOC-EXAMPLE-001 --json
+npx @jumpspace/cli task plan show DOC-EXAMPLE-001
 ```
 
 Save an approved plan:
 
 ```bash
-npx @jumpspace/cli plan save DOC-EXAMPLE-001 --file plan.yml --json
-npx @jumpspace/cli plan validate DOC-EXAMPLE-001 --json
+npx @jumpspace/cli task plan save DOC-EXAMPLE-001 --file plan.yml --json
+npx @jumpspace/cli task plan validate DOC-EXAMPLE-001 --json
 ```
 
 A useful plan step has:
@@ -43,7 +43,7 @@ A useful plan step has:
 ## 3. Ask For The Next Step
 
 ```bash
-npx @jumpspace/cli next DOC-EXAMPLE-001 --json
+npx @jumpspace/cli task next DOC-EXAMPLE-001 --json
 ```
 
 `next` returns pending steps whose dependencies are complete. It does not return blocked steps.
@@ -51,7 +51,7 @@ npx @jumpspace/cli next DOC-EXAMPLE-001 --json
 ## 4. Start Work From A Packet
 
 ```bash
-npx @jumpspace/cli work DOC-EXAMPLE-001 --json
+npx @jumpspace/cli task work DOC-EXAMPLE-001 --json
 ```
 
 Use `work` when you want the full agent start packet. It gates on task approval, dependency state, audit health, and plan validity.
@@ -61,7 +61,7 @@ Use `work` when you want the full agent start packet. It gates on task approval,
 After the implementation step is done, record evidence:
 
 ```bash
-npx @jumpspace/cli step complete DOC-EXAMPLE-001 design --evidence "Human approved the UI states."
+npx @jumpspace/cli task step complete DOC-EXAMPLE-001 design --evidence "Human approved the interaction states."
 ```
 
 Step completion is not a substitute for verification. It records progress in the durable plan.
@@ -69,7 +69,7 @@ Step completion is not a substitute for verification. It records progress in the
 ## 6. Verify The Task
 
 ```bash
-npx @jumpspace/cli verify DOC-EXAMPLE-001 --check "npm test" --criteria AC-1 --evidence "Focused test suite passed." --json
+npx @jumpspace/cli task verify DOC-EXAMPLE-001 --check "npm test" --criteria AC-1 --evidence "Focused test suite passed." --json
 ```
 
 `verify` runs the checks itself, records exit codes, commit SHA, timestamp, criteria coverage, and evidence, and only sets `verified` when the checks pass and criteria IDs exist.
@@ -77,7 +77,7 @@ npx @jumpspace/cli verify DOC-EXAMPLE-001 --check "npm test" --criteria AC-1 --e
 ## 7. Hand Off
 
 ```bash
-npx @jumpspace/cli handoff --task DOC-EXAMPLE-001 --json
+npx @jumpspace/cli task handoff --task DOC-EXAMPLE-001 --json
 ```
 
 The handoff packet gives the next agent or human a concise state summary, recent mutations, health signals, and next useful commands.

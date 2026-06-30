@@ -1,0 +1,75 @@
+{
+  "contract_version": 1,
+  "name": "task.bootstrap.discover",
+  "command": "jumpspace task bootstrap discover --json",
+  "description": "Discovers common Markdown docs, recommended config globs, profile hints, and ignored noisy paths.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "recommended_docs",
+      "profile_hints",
+      "candidates",
+      "ignored_patterns"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "const": true
+      },
+      "recommended_docs": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "profile_hints": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "candidates": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "pattern",
+            "reason",
+            "files",
+            "sample_paths",
+            "recommended"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "pattern": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string"
+            },
+            "files": {
+              "type": "number"
+            },
+            "sample_paths": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "recommended": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "ignored_patterns": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

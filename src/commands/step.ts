@@ -20,7 +20,7 @@ export async function runStepComplete(taskId: string, stepId: string, options: S
   const task = index.tasks.find((candidate) => candidate.id === taskId);
 
   if (!task) {
-    return writeError(options, "UNKNOWN_TASK", `Unknown Jumpspace task ID "${taskId}". Run \`jumpspace find <query>\` to locate it.`);
+    return writeError(options, "UNKNOWN_TASK", `Unknown Jumpspace task ID "${taskId}". Run \`jumpspace task find <query>\` to locate it.`);
   }
 
   const result = completePlanStep(task, stepId, options.evidence);
@@ -39,7 +39,7 @@ export async function runStepComplete(taskId: string, stepId: string, options: S
   await refreshIndex(root);
   const config = await loadConfig(root);
   await recordMutation(root, {
-    command: "step complete",
+    command: "task step complete",
     touched_files: [task.doc.path, config.indexPath],
     task_ids: [taskId],
     index_changed: true,

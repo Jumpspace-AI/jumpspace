@@ -67,9 +67,9 @@ export async function createBootstrapProposalDraft(root: string, options: Bootst
     proposal,
     validation,
     next_commands: {
-      validate: "jumpspace bootstrap validate --file <proposal-file> --json",
-      dry_run: "jumpspace bootstrap apply --file <proposal-file> --dry-run --json",
-      apply_after_approval: "jumpspace bootstrap apply --file <proposal-file>",
+      validate: "jumpspace task bootstrap validate --file <proposal-file> --json",
+      dry_run: "jumpspace task bootstrap apply --file <proposal-file> --dry-run --json",
+      apply_after_approval: "jumpspace task bootstrap apply --file <proposal-file>",
     },
     notes: [
       "This proposal is deterministic extraction, not agent reasoning.",

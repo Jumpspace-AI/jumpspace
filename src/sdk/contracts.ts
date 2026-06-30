@@ -11,6 +11,8 @@ import type { JsonCommandError } from "../core/errors.js";
 import type { GraphQueryReport } from "../core/graphQuery.js";
 import type { HandoffPacket } from "../core/handoff.js";
 import type { InstallDoctorReport } from "../core/installDoctor.js";
+import type { IntentListResult, IntentValidateResult } from "../commands/intent.js";
+import type { IntentCheckResult, IntentVerifyResult } from "../core/intents.js";
 import type { PrAssistantReport } from "../core/prAssistant.js";
 import type { ReleaseDoctorReport } from "../core/releaseDoctor.js";
 import type { DriftRepairReport } from "../core/repair.js";
@@ -32,50 +34,54 @@ export const JUMPSPACE_SCHEMA_NAMES = [
   "schema.list",
   "schema.show",
   "schema.coverage",
-  "list",
-  "find",
-  "find.compact",
-  "audit",
-  "last",
-  "history",
-  "handoff",
+  "task.list",
+  "task.find",
+  "task.find.compact",
+  "task.audit",
+  "task.last",
+  "task.history",
+  "task.handoff",
   "init.ci",
-  "doctor",
+  "task.doctor",
   "release.doctor",
   "release.install-doctor",
-  "context",
-  "related",
-  "related.compact",
-  "plan.review",
-  "plan.save",
-  "plan.show",
-  "plan.validate",
-  "ready",
-  "execute",
-  "next",
-  "step.complete",
-  "status",
-  "verify",
-  "work",
-  "ask",
-  "ask.compact",
-  "semantic.build",
-  "semantic.status",
-  "semantic.search",
-  "semantic.eval",
-  "query",
-  "drift",
-  "ci",
-  "pr.comment",
-  "repair",
-  "link",
-  "link.suggest",
-  "link.eval",
-  "bootstrap.context",
-  "bootstrap.discover",
-  "bootstrap.propose",
-  "bootstrap.validate",
-  "bootstrap.apply",
+  "task.context",
+  "task.related",
+  "task.related.compact",
+  "task.plan.review",
+  "task.plan.save",
+  "task.plan.show",
+  "task.plan.validate",
+  "task.ready",
+  "task.execute",
+  "task.next",
+  "task.step.complete",
+  "task.status",
+  "task.verify",
+  "task.work",
+  "task.ask",
+  "task.ask.compact",
+  "task.semantic.build",
+  "task.semantic.status",
+  "task.semantic.search",
+  "task.semantic.eval",
+  "task.query",
+  "task.drift",
+  "task.ci",
+  "task.pr.comment",
+  "intent.list",
+  "intent.check",
+  "intent.validate",
+  "intent.verify",
+  "task.repair",
+  "task.link",
+  "task.link.suggest",
+  "task.link.eval",
+  "task.bootstrap.context",
+  "task.bootstrap.discover",
+  "task.bootstrap.propose",
+  "task.bootstrap.validate",
+  "task.bootstrap.apply",
 ] as const;
 
 export type JumpspaceSchemaName = (typeof JUMPSPACE_SCHEMA_NAMES)[number];
@@ -193,6 +199,10 @@ export type QueryCommandResult = GraphQueryReport;
 export type WorkCommandResult = WorkPacket;
 export type CiCommandResult = CiReport;
 export type PrCommentCommandResult = PrAssistantReport;
+export type IntentListCommandResult = IntentListResult;
+export type IntentCheckCommandResult = IntentCheckResult;
+export type IntentValidateCommandResult = IntentValidateResult;
+export type IntentVerifyCommandResult = IntentVerifyResult;
 export type BootstrapContextCommandResult = BootstrapContext;
 export type BootstrapProposeCommandResult = BootstrapProposeResult & {
   proposal_file?: string;

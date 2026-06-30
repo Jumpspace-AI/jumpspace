@@ -17,8 +17,8 @@ defaults.
 After changing config, run:
 
 ```bash
-npx @jumpspace/cli scan
-npx @jumpspace/cli doctor
+npx @jumpspace/cli task scan
+npx @jumpspace/cli task doctor
 ```
 
 Generated indexes are local implementation state. Decide as a team which

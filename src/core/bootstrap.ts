@@ -142,8 +142,8 @@ export async function createBootstrapContext(root: string, patterns: string[]): 
       version: 1,
       required_task_fields: ["id", "title", "source.path", "source.heading", "evidence", "confidence"],
       commands: {
-        validate: "jumpspace bootstrap validate --file <proposal-file> --json",
-        apply: "jumpspace bootstrap apply --file <proposal-file>",
+        validate: "jumpspace task bootstrap validate --file <proposal-file> --json",
+        apply: "jumpspace task bootstrap apply --file <proposal-file>",
       },
     },
     instructions: [

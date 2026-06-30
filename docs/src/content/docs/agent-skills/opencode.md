@@ -10,7 +10,7 @@ Use the manual path:
 ```bash
 npx @jumpspace/cli init --auto
 npx @jumpspace/cli add-skill --all
-npx @jumpspace/cli scan
+npx @jumpspace/cli task scan
 ```
 
 Then configure OpenCode to read the repo guidance files that exist in your
@@ -28,9 +28,9 @@ code. Start from work packets when a task ID is available.
 Ask the agent to finish with:
 
 ```bash
-npx @jumpspace/cli audit --json
-npx @jumpspace/cli doctor --json
-npx @jumpspace/cli handoff --json
+npx @jumpspace/cli task audit --json
+npx @jumpspace/cli task doctor --json
+npx @jumpspace/cli task handoff --json
 ```
 
 ## Roadmap

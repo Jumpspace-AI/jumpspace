@@ -28,19 +28,19 @@ describe("CLI durable plans", () => {
   it("saves, loads, validates, advances, and completes task-plan steps", async () => {
     const root = await createFixtureRepo();
 
-    expect((await runCli(root, ["scan"])).code).toBe(0);
+    expect((await runCli(root, ["task", "scan"])).code).toBe(0);
 
-    const saved = await runCli(root, ["plan", "save", "JS-100", "--file", "plan.yml"]);
+    const saved = await runCli(root, ["task", "plan", "save", "JS-100", "--file", "plan.yml"]);
     expect(saved).toMatchObject({
       code: 0,
     });
     expect(saved.stdout).toContain("Saved plan for JS-100.");
 
-    const showHuman = await runCli(root, ["plan", "show", "JS-100"]);
+    const showHuman = await runCli(root, ["task", "plan", "show", "JS-100"]);
     expect(showHuman.stdout).toContain("# Jumpspace Plan for JS-100");
     expect(showHuman.stdout).toContain("Outcome: Implementation exists.");
 
-    const showJson = await runCli(root, ["plan", "show", "JS-100", "--json"]);
+    const showJson = await runCli(root, ["task", "plan", "show", "JS-100", "--json"]);
     expect(JSON.parse(showJson.stdout)).toMatchObject({
       task_id: "JS-100",
       plan: {
@@ -48,14 +48,14 @@ describe("CLI durable plans", () => {
       },
     });
 
-    const validation = await runCli(root, ["plan", "validate", "JS-100", "--json"]);
+    const validation = await runCli(root, ["task", "plan", "validate", "JS-100", "--json"]);
     expect(JSON.parse(validation.stdout)).toMatchObject({
       task_id: "JS-100",
       ok: true,
       issues: [],
     });
 
-    const unknownTask = await runCli(root, ["plan", "show", "NOPE", "--json"]);
+    const unknownTask = await runCli(root, ["task", "plan", "show", "NOPE", "--json"]);
     expect(unknownTask.code).toBe(1);
     expect(JSON.parse(unknownTask.stdout)).toMatchObject({
       ok: false,
@@ -66,10 +66,11 @@ describe("CLI durable plans", () => {
       ],
     });
 
-    const nextBefore = await runCli(root, ["next", "JS-100", "--json"]);
+    const nextBefore = await runCli(root, ["task", "next", "JS-100", "--json"]);
     expect(JSON.parse(nextBefore.stdout).steps.map((step: { id: string }) => step.id)).toEqual(["design"]);
 
     const blocked = await runCli(root, [
+      "task",
       "step",
       "complete",
       "JS-100",
@@ -87,6 +88,7 @@ describe("CLI durable plans", () => {
     );
 
     const completedDesign = await runCli(root, [
+      "task",
       "step",
       "complete",
       "JS-100",
@@ -104,10 +106,11 @@ describe("CLI durable plans", () => {
       },
     });
 
-    const nextAfter = await runCli(root, ["next", "JS-100", "--json"]);
+    const nextAfter = await runCli(root, ["task", "next", "JS-100", "--json"]);
     expect(JSON.parse(nextAfter.stdout).steps.map((step: { id: string }) => step.id)).toEqual(["implement"]);
 
     const completedImplement = await runCli(root, [
+      "task",
       "step",
       "complete",
       "JS-100",
@@ -128,10 +131,10 @@ describe("CLI durable plans", () => {
   it("prints work packets for ready planned tasks with optional drift", async () => {
     const root = await createFixtureRepo();
 
-    expect((await runCli(root, ["scan"])).code).toBe(0);
-    expect((await runCli(root, ["plan", "save", "JS-100", "--file", "plan.yml"])).code).toBe(0);
+    expect((await runCli(root, ["task", "scan"])).code).toBe(0);
+    expect((await runCli(root, ["task", "plan", "save", "JS-100", "--file", "plan.yml"])).code).toBe(0);
 
-    const packet = await runCli(root, ["work", "JS-100", "--json"]);
+    const packet = await runCli(root, ["task", "work", "JS-100", "--json"]);
     expect(packet.code).toBe(0);
     expect(JSON.parse(packet.stdout)).toMatchObject({
       ok: true,
@@ -139,26 +142,33 @@ describe("CLI durable plans", () => {
       task: { id: "JS-100" },
       plan: { goal: "Implement durable planning." },
       next_steps: [{ id: "design" }],
-      required_checks: ["jumpspace plan validate JS-100"],
+      required_checks: ["jumpspace task plan validate JS-100"],
       drift: { requested: false, since: null, facts: [], warnings: [] },
       mutation_history: {
         total: 1,
         returned: 1,
         filters: { task_id: "JS-100", limit: 5 },
-        entries: [{ command: "plan save", task_ids: ["JS-100"] }],
+        entries: [{ command: "task plan save", task_ids: ["JS-100"] }],
       },
-      schemas: { packet: "work", failures: "error", context: "context", audit: "audit", drift: "drift", history: "history" },
+      schemas: {
+        packet: "task.work",
+        failures: "error",
+        context: "task.context",
+        audit: "task.audit",
+        drift: "task.drift",
+        history: "task.history",
+      },
       next_action: "Work on pending unblocked step: design.",
     });
 
-    const human = await runCli(root, ["work", "JS-100"]);
+    const human = await runCli(root, ["task", "work", "JS-100"]);
     expect(human.code).toBe(0);
     expect(human.stdout).toContain("# Jumpspace Work Packet");
     expect(human.stdout).toContain("Work on pending unblocked step: design.");
     expect(human.stdout).toContain("## Recent History");
     expect(human.stdout).toContain("plan save");
 
-    const unknown = await runCli(root, ["work", "NOPE", "--json"]);
+    const unknown = await runCli(root, ["task", "work", "NOPE", "--json"]);
     expect(unknown.code).toBe(1);
     expect(JSON.parse(unknown.stdout)).toMatchObject({
       ok: false,
@@ -169,7 +179,7 @@ describe("CLI durable plans", () => {
     const base = (await execFileAsync("git", ["rev-parse", "HEAD"], { cwd: root })).stdout.trim();
     await fs.writeFile(path.join(root, "src", "feature.ts"), "changed\n");
 
-    const packetWithDrift = await runCli(root, ["work", "JS-100", "--since", base, "--json"]);
+    const packetWithDrift = await runCli(root, ["task", "work", "JS-100", "--since", base, "--json"]);
     expect(packetWithDrift.code).toBe(0);
     expect(JSON.parse(packetWithDrift.stdout)).toMatchObject({
       ok: true,
@@ -184,14 +194,14 @@ describe("CLI durable plans", () => {
   it("records mutation summaries and exposes last and doctor commands", async () => {
     const root = await createFixtureRepo();
 
-    const missingLast = await runCli(root, ["last", "--json"]);
+    const missingLast = await runCli(root, ["task", "last", "--json"]);
     expect(missingLast.code).toBe(1);
     expect(JSON.parse(missingLast.stdout)).toMatchObject({
       ok: false,
       errors: [{ code: "NO_LAST_MUTATION" }],
     });
 
-    const emptyHistory = await runCli(root, ["history", "--json"]);
+    const emptyHistory = await runCli(root, ["task", "history", "--json"]);
     expect(emptyHistory.code).toBe(0);
     expect(JSON.parse(emptyHistory.stdout)).toMatchObject({
       ok: true,
@@ -201,34 +211,34 @@ describe("CLI durable plans", () => {
       entries: [],
     });
 
-    expect((await runCli(root, ["scan"])).code).toBe(0);
-    expect((await runCli(root, ["plan", "save", "JS-100", "--file", "plan.yml"])).code).toBe(0);
+    expect((await runCli(root, ["task", "scan"])).code).toBe(0);
+    expect((await runCli(root, ["task", "plan", "save", "JS-100", "--file", "plan.yml"])).code).toBe(0);
 
-    const last = await runCli(root, ["last", "--json"]);
+    const last = await runCli(root, ["task", "last", "--json"]);
     expect(last.code).toBe(0);
     expect(JSON.parse(last.stdout)).toMatchObject({
       ok: true,
       summary: {
         version: 1,
-        command: "plan save",
+        command: "task plan save",
         touched_files: expect.arrayContaining(["docs/specs/feature.md", ".jumpspace/index.json"]),
         task_ids: ["JS-100"],
         index_changed: true,
       },
     });
 
-    const lastHuman = await runCli(root, ["last"]);
+    const lastHuman = await runCli(root, ["task", "last"]);
     expect(lastHuman.code).toBe(0);
     expect(lastHuman.stdout).toContain("# Jumpspace Last Mutation");
-    expect(lastHuman.stdout).toContain("Command: plan save");
+    expect(lastHuman.stdout).toContain("Command: task plan save");
 
-    const doctor = await runCli(root, ["doctor", "--json"]);
+    const doctor = await runCli(root, ["task", "doctor", "--json"]);
     expect(doctor.code).toBe(0);
     expect(JSON.parse(doctor.stdout)).toMatchObject({
       ok: true,
       errors: [],
       last_mutation: {
-        command: "plan save",
+        command: "task plan save",
         task_ids: ["JS-100"],
       },
       checked: {
@@ -236,16 +246,16 @@ describe("CLI durable plans", () => {
       },
     });
 
-    const updated = await runCli(root, ["status", "JS-100", "partial", "--json"]);
+    const updated = await runCli(root, ["task", "status", "JS-100", "partial", "--json"]);
     expect(updated.code).toBe(0);
-    expect(JSON.parse((await runCli(root, ["last", "--json"])).stdout)).toMatchObject({
+    expect(JSON.parse((await runCli(root, ["task", "last", "--json"])).stdout)).toMatchObject({
       summary: {
-        command: "status",
+        command: "task status",
         task_ids: ["JS-100"],
       },
     });
 
-    const history = await runCli(root, ["history", "--task", "JS-100", "--limit", "1", "--json"]);
+    const history = await runCli(root, ["task", "history", "--task", "JS-100", "--limit", "1", "--json"]);
     expect(history.code).toBe(0);
     expect(JSON.parse(history.stdout)).toMatchObject({
       ok: true,
@@ -255,20 +265,20 @@ describe("CLI durable plans", () => {
       filters: { task_id: "JS-100", limit: 1 },
       entries: [
         {
-          command: "status",
+          command: "task status",
           task_ids: ["JS-100"],
         },
       ],
     });
 
-    const historyHuman = await runCli(root, ["history", "--task", "JS-100"]);
+    const historyHuman = await runCli(root, ["task", "history", "--task", "JS-100"]);
     expect(historyHuman.code).toBe(0);
     expect(historyHuman.stdout).toContain("# Jumpspace Mutation History");
     expect(historyHuman.stdout).toContain("Filters: task=JS-100, limit=20");
     expect(historyHuman.stdout).toContain("status");
     expect(historyHuman.stdout).toContain("plan save");
 
-    const handoff = await runCli(root, ["handoff", "--task", "JS-100", "--limit", "2", "--json"]);
+    const handoff = await runCli(root, ["task", "handoff", "--task", "JS-100", "--limit", "2", "--json"]);
     expect(handoff.code, handoff.stdout || handoff.stderr).toBe(0);
     expect(JSON.parse(handoff.stdout)).toMatchObject({
       ok: true,
@@ -288,41 +298,41 @@ describe("CLI durable plans", () => {
         plan_status: "pending",
         execution_ready: true,
         pending_step_ids: ["design"],
-        required_checks: ["jumpspace plan validate JS-100"],
+        required_checks: ["jumpspace task plan validate JS-100"],
       },
       suggested_commands: expect.arrayContaining([
-        "jumpspace scan",
-        "jumpspace audit --json",
-        "jumpspace doctor --json",
+        "jumpspace task scan",
+        "jumpspace task audit --json",
+        "jumpspace task doctor --json",
         "jumpspace schema coverage --json",
-        "jumpspace context JS-100 --json",
-        "jumpspace plan validate JS-100 --json",
-        "jumpspace next JS-100 --json",
+        "jumpspace task context JS-100 --json",
+        "jumpspace task plan validate JS-100 --json",
+        "jumpspace task next JS-100 --json",
       ]),
-      schemas: { packet: "handoff", failures: "error" },
+      schemas: { packet: "task.handoff", failures: "error" },
     });
 
-    const handoffHuman = await runCli(root, ["handoff", "--task", "JS-100"]);
+    const handoffHuman = await runCli(root, ["task", "handoff", "--task", "JS-100"]);
     expect(handoffHuman.code).toBe(0);
     expect(handoffHuman.stdout).toContain("# Jumpspace Handoff");
     expect(handoffHuman.stdout).toContain("Task: JS-100 Durable planning");
-    expect(handoffHuman.stdout).toContain("jumpspace context JS-100 --json");
+    expect(handoffHuman.stdout).toContain("jumpspace task context JS-100 --json");
 
-    const unknownHandoffTask = await runCli(root, ["handoff", "--task", "NOPE", "--json"]);
+    const unknownHandoffTask = await runCli(root, ["task", "handoff", "--task", "NOPE", "--json"]);
     expect(unknownHandoffTask.code).toBe(1);
     expect(JSON.parse(unknownHandoffTask.stdout)).toMatchObject({
       ok: false,
       errors: [{ code: "UNKNOWN_TASK", taskId: "NOPE" }],
     });
 
-    const invalidHistoryLimit = await runCli(root, ["history", "--limit", "nope", "--json"]);
+    const invalidHistoryLimit = await runCli(root, ["task", "history", "--limit", "nope", "--json"]);
     expect(invalidHistoryLimit.code).toBe(1);
     expect(JSON.parse(invalidHistoryLimit.stdout)).toMatchObject({
       ok: false,
       errors: [{ code: "INVALID_LIMIT" }],
     });
 
-    const invalidHandoffLimit = await runCli(root, ["handoff", "--limit", "nope", "--json"]);
+    const invalidHandoffLimit = await runCli(root, ["task", "handoff", "--limit", "nope", "--json"]);
     expect(invalidHandoffLimit.code).toBe(1);
     expect(JSON.parse(invalidHandoffLimit.stdout)).toMatchObject({
       ok: false,
@@ -432,9 +442,9 @@ steps:
 `,
     );
 
-    expect((await runCli(root, ["scan"])).code).toBe(0);
+    expect((await runCli(root, ["task", "scan"])).code).toBe(0);
 
-    const rejected = await runCli(root, ["plan", "save", "JS-100", "--file", "duplicate-plan.yml", "--json"]);
+    const rejected = await runCli(root, ["task", "plan", "save", "JS-100", "--file", "duplicate-plan.yml", "--json"]);
 
     expect(rejected.code).toBe(1);
     expect(JSON.parse(rejected.stdout).errors).toContainEqual(
@@ -447,9 +457,9 @@ steps:
   it("rejects status verified and lets verify earn verified with structured records", async () => {
     const root = await createFixtureRepo();
     await initGitRepo(root);
-    expect((await runCli(root, ["scan"])).code).toBe(0);
+    expect((await runCli(root, ["task", "scan"])).code).toBe(0);
 
-    const rejected = await runCli(root, ["status", "JS-100", "verified", "--json"]);
+    const rejected = await runCli(root, ["task", "status", "JS-100", "verified", "--json"]);
     expect(rejected.code).toBe(1);
     expect(JSON.parse(rejected.stdout)).toMatchObject({
       ok: false,
@@ -462,6 +472,7 @@ steps:
     });
 
     const verified = await runCli(root, [
+      "task",
       "verify",
       "JS-100",
       "--check",
@@ -489,14 +500,14 @@ steps:
       },
     });
 
-    const context = JSON.parse((await runCli(root, ["context", "JS-100", "--json"])).stdout);
+    const context = JSON.parse((await runCli(root, ["task", "context", "JS-100", "--json"])).stdout);
     expect(context.task.status).toBe("verified");
     expect(context.task.verification_records).toHaveLength(1);
   });
 
   it("returns a structured JSON error when a metadata mutation lock times out", async () => {
     const root = await createFixtureRepo();
-    expect((await runCli(root, ["scan"])).code).toBe(0);
+    expect((await runCli(root, ["task", "scan"])).code).toBe(0);
     const lockPath = path.join(root, MUTATION_LOCK_PATH);
     await fs.mkdir(path.dirname(lockPath), { recursive: true });
     await fs.writeFile(
@@ -511,7 +522,7 @@ steps:
 
     const result = await runCli(
       root,
-      ["status", "JS-100", "partial", "--json"],
+      ["task", "status", "JS-100", "partial", "--json"],
       {
         env: {
           JUMPSPACE_MUTATION_LOCK_TIMEOUT_MS: "0",
@@ -535,12 +546,12 @@ steps:
 
   it("keeps find strict by default and supports forgiving find/ask evidence summaries", async () => {
     const root = await createFixtureRepo();
-    expect((await runCli(root, ["scan"])).code).toBe(0);
+    expect((await runCli(root, ["task", "scan"])).code).toBe(0);
 
-    const strict = await runCli(root, ["find", "durable", "unmatched", "--json"]);
+    const strict = await runCli(root, ["task", "find", "durable", "unmatched", "--json"]);
     expect(JSON.parse(strict.stdout).results).toEqual([]);
 
-    const any = await runCli(root, ["find", "durable", "unmatched", "--mode", "any", "--json"]);
+    const any = await runCli(root, ["task", "find", "durable", "unmatched", "--mode", "any", "--json"]);
     expect(JSON.parse(any.stdout)).toMatchObject({
       mode: "any",
       results: [
@@ -554,8 +565,8 @@ steps:
       ],
     });
 
-    expect((await runCli(root, ["plan", "save", "JS-100", "--file", "plan.yml"])).code).toBe(0);
-    const compactFind = JSON.parse((await runCli(root, ["find", "durable", "--mode", "any", "--json", "--compact"])).stdout);
+    expect((await runCli(root, ["task", "plan", "save", "JS-100", "--file", "plan.yml"])).code).toBe(0);
+    const compactFind = JSON.parse((await runCli(root, ["task", "find", "durable", "--mode", "any", "--json", "--compact"])).stdout);
     expect(compactFind).toMatchObject({
       ok: true,
       compact: true,
@@ -580,7 +591,7 @@ steps:
     expect(compactFind.results[0].task.plan).toBeUndefined();
     expect(compactFind.results[0].task.acceptance_criteria).toBeUndefined();
 
-    const asked = JSON.parse((await runCli(root, ["ask", "How", "does", "durable", "planning", "work?", "--json"])).stdout);
+    const asked = JSON.parse((await runCli(root, ["task", "ask", "How", "does", "durable", "planning", "work?", "--json"])).stdout);
     expect(asked).toMatchObject({
       ok: true,
       retrieval_mode: "any",
@@ -593,7 +604,7 @@ steps:
     });
     expect(asked.coverage.matched_terms).toEqual(expect.arrayContaining(["durable", "planning"]));
 
-    const compactAsk = JSON.parse((await runCli(root, ["ask", "How", "does", "durable", "planning", "work?", "--json", "--compact"])).stdout);
+    const compactAsk = JSON.parse((await runCli(root, ["task", "ask", "How", "does", "durable", "planning", "work?", "--json", "--compact"])).stdout);
     expect(compactAsk).toMatchObject({
       ok: true,
       compact: true,
@@ -616,16 +627,16 @@ steps:
 
   it("builds, inspects, and searches the optional semantic index through the CLI", async () => {
     const root = await createSemanticGraphRepo();
-    expect((await runCli(root, ["scan"])).code).toBe(0);
+    expect((await runCli(root, ["task", "scan"])).code).toBe(0);
 
-    const unavailable = await runCli(root, ["semantic", "search", "task", "vector", "graph", "--json"]);
+    const unavailable = await runCli(root, ["task", "semantic", "search", "task", "vector", "graph", "--json"]);
     expect(unavailable.code).toBe(1);
     expect(JSON.parse(unavailable.stdout)).toMatchObject({
       ok: false,
       errors: [{ code: "SEMANTIC_INDEX_UNAVAILABLE" }],
     });
 
-    const built = await runCli(root, ["semantic", "build", "--json"]);
+    const built = await runCli(root, ["task", "semantic", "build", "--json"]);
     expect(built.code).toBe(0);
     expect(JSON.parse(built.stdout)).toMatchObject({
       ok: true,
@@ -650,7 +661,7 @@ steps:
       path: ".jumpspace/semantic-index.json",
     });
 
-    const status = await runCli(root, ["semantic", "status", "--json"]);
+    const status = await runCli(root, ["task", "semantic", "status", "--json"]);
     expect(status.code).toBe(0);
     expect(JSON.parse(status.stdout)).toMatchObject({
       ok: true,
@@ -661,7 +672,7 @@ steps:
       document_count: 3,
     });
 
-    const search = await runCli(root, ["semantic", "search", "task", "vector", "graph", "--json"]);
+    const search = await runCli(root, ["task", "semantic", "search", "task", "vector", "graph", "--json"]);
     expect(search.code).toBe(0);
     const searchJson = JSON.parse(search.stdout);
     expect(searchJson).toMatchObject({ ok: true });
@@ -678,7 +689,7 @@ steps:
       ]),
     });
 
-    const evalResult = await runCli(root, ["semantic", "eval", "--json"]);
+    const evalResult = await runCli(root, ["task", "semantic", "eval", "--json"]);
     expect(evalResult.code).toBe(0);
     expect(JSON.parse(evalResult.stdout)).toMatchObject({
       ok: true,
@@ -697,7 +708,7 @@ steps:
       ]),
     });
 
-    const asked = await runCli(root, ["ask", "task", "vector", "graph", "--json"]);
+    const asked = await runCli(root, ["task", "ask", "task", "vector", "graph", "--json"]);
     expect(asked.code).toBe(0);
     const askedJson = JSON.parse(asked.stdout);
     expect(askedJson).toMatchObject({
@@ -723,9 +734,9 @@ steps:
 
   it("runs deterministic graph queries with matched paths and structured errors", async () => {
     const root = await createGraphQueryRepo();
-    expect((await runCli(root, ["scan"])).code).toBe(0);
+    expect((await runCli(root, ["task", "scan"])).code).toBe(0);
 
-    const queried = await runCli(root, ["query", "--depends-on-transitive", "ADR-0017", "--no-tests", "--json"]);
+    const queried = await runCli(root, ["task", "query", "--depends-on-transitive", "ADR-0017", "--no-tests", "--json"]);
     expect(queried.code).toBe(0);
     expect(JSON.parse(queried.stdout)).toMatchObject({
       ok: true,
@@ -751,12 +762,12 @@ steps:
       ],
     });
 
-    const human = await runCli(root, ["query", "--where", "module=metrics", "--where", "tests=none"]);
+    const human = await runCli(root, ["task", "query", "--where", "module=metrics", "--where", "tests=none"]);
     expect(human.code).toBe(0);
     expect(human.stdout).toContain("# Jumpspace Query");
     expect(human.stdout).toContain("MET-001");
 
-    const related = await runCli(root, ["related", "MET-001", "--json", "--compact"]);
+    const related = await runCli(root, ["task", "related", "MET-001", "--json", "--compact"]);
     expect(related.code).toBe(0);
     const relatedBody = JSON.parse(related.stdout);
     expect(relatedBody).toMatchObject({
@@ -778,7 +789,7 @@ steps:
     expect(relatedBody.task.spec).toBeUndefined();
     expect(relatedBody.task.verification_records).toBeUndefined();
 
-    const invalid = await runCli(root, ["query", "--where", "unknown=value", "--ref", "nope:ADR-0017", "--json"]);
+    const invalid = await runCli(root, ["task", "query", "--where", "unknown=value", "--ref", "nope:ADR-0017", "--json"]);
     expect(invalid.code).toBe(1);
     expect(JSON.parse(invalid.stdout)).toMatchObject({
       ok: false,
@@ -814,7 +825,7 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
     await write(root, "src/quarterly-metrics.test.ts", "export const quarterlyMetricsTest = true;\n");
     await write(root, "src/unrelated-worker.ts", "export const unrelated = true;\n");
 
-    const report = await runCli(root, ["ci", "--since", base, "--json"]);
+    const report = await runCli(root, ["task", "ci", "--since", base, "--json"]);
 
     expect(report.code).toBe(0);
     const reportBody = JSON.parse(report.stdout);
@@ -897,12 +908,12 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
     )).toBe(true);
     expect(reportBody.pr_comment).toContain("# Jumpspace CI Report");
 
-    const human = await runCli(root, ["ci", "--since", base]);
+    const human = await runCli(root, ["task", "ci", "--since", base]);
     expect(human.code).toBe(0);
     expect(human.stdout).toContain("# Jumpspace CI Report");
     expect(human.stdout).toContain("Suggested Task Blocks");
 
-    const prJson = await runCli(root, ["pr", "comment", "--since", base, "--json"]);
+    const prJson = await runCli(root, ["task", "pr", "comment", "--since", base, "--json"]);
     expect(prJson.code).toBe(0);
     const prPacket = JSON.parse(prJson.stdout);
     expect(prPacket).toMatchObject({
@@ -917,11 +928,11 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
       mutation_policy: {
         mutates: false,
         requires_human_approval: true,
-        allowed_follow_up_commands: expect.arrayContaining([`jumpspace repair --since ${base} --apply`]),
+        allowed_follow_up_commands: expect.arrayContaining([`jumpspace task repair --since ${base} --apply`]),
       },
       schemas: {
-        packet: "pr.comment",
-        ci: "ci",
+        packet: "task.pr.comment",
+        ci: "task.ci",
         errors: "error",
       },
       review_items: expect.arrayContaining([
@@ -962,12 +973,12 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
     expect(prPacket.review_comment).toContain("useful_candidate: code src/quarterly-metrics.ts");
     expect(prPacket.review_comment).toContain("rejected_candidate: code src/unrelated-worker.ts reason=NO_SOURCE_EVIDENCE");
 
-    const prHuman = await runCli(root, ["pr", "comment", "--since", base]);
+    const prHuman = await runCli(root, ["task", "pr", "comment", "--since", base]);
     expect(prHuman.code).toBe(0);
     expect(prHuman.stdout).toContain("# Jumpspace PR Assistant");
     expect(prHuman.stdout).toContain("Apply suggestions only after human review.");
 
-    const prFailure = await runCli(root, ["pr", "comment", "--since", "missing-ref", "--json"]);
+    const prFailure = await runCli(root, ["task", "pr", "comment", "--since", "missing-ref", "--json"]);
     expect(prFailure.code).toBe(1);
     expect(JSON.parse(prFailure.stdout)).toMatchObject({
       ok: false,
@@ -977,7 +988,7 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
 
   it("reports changed and drift JSON in a temp git repo", async () => {
     const root = await createFixtureRepo();
-    expect((await runCli(root, ["scan"])).code).toBe(0);
+    expect((await runCli(root, ["task", "scan"])).code).toBe(0);
     await initGitRepo(root);
     const base = (await execFileAsync("git", ["rev-parse", "HEAD"], { cwd: root })).stdout.trim();
     await fs.writeFile(path.join(root, "src", "feature.ts"), "changed\n");
@@ -987,7 +998,7 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
     expect(changed.files).toContainEqual(expect.objectContaining({ path: "src/feature.ts", sources: ["unstaged"] }));
     expect(changed.files).toContainEqual(expect.objectContaining({ path: "unmapped.txt", sources: ["untracked"] }));
 
-    const drift = JSON.parse((await runCli(root, ["drift", "--since", base, "--json"])).stdout);
+    const drift = JSON.parse((await runCli(root, ["task", "drift", "--since", base, "--json"])).stdout);
     expect(drift.facts).toContainEqual(expect.objectContaining({ code: "LINKED_CODE_CHANGED", taskId: "JS-100" }));
     expect(drift.facts).toContainEqual(expect.objectContaining({ code: "UNMAPPED_CHANGED_FILE", path: "unmapped.txt" }));
     expect(drift.warnings).toContainEqual(expect.objectContaining({ code: "DOCS_MAY_NEED_UPDATING", taskId: "JS-100" }));
@@ -995,12 +1006,12 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
 
   it("previews and applies repair opportunities through the CLI", async () => {
     const root = await createFixtureRepo();
-    expect((await runCli(root, ["scan"])).code).toBe(0);
+    expect((await runCli(root, ["task", "scan"])).code).toBe(0);
     await initGitRepo(root);
     const base = (await execFileAsync("git", ["rev-parse", "HEAD"], { cwd: root })).stdout.trim();
     await execFileAsync("git", ["mv", "src/feature.ts", "src/renamed-feature.ts"], { cwd: root });
 
-    const dryRun = await runCli(root, ["repair", "--since", base, "--json"]);
+    const dryRun = await runCli(root, ["task", "repair", "--since", base, "--json"]);
     expect(dryRun.code).toBe(0);
     expect(JSON.parse(dryRun.stdout)).toMatchObject({
       ok: true,
@@ -1017,7 +1028,7 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
       touched_files: [],
     });
 
-    const doctor = await runCli(root, ["doctor", "--since", base, "--json"]);
+    const doctor = await runCli(root, ["task", "doctor", "--since", base, "--json"]);
     expect(doctor.code).toBe(0);
     expect(JSON.parse(doctor.stdout)).toMatchObject({
       repair: {
@@ -1031,7 +1042,7 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
       suggestions: expect.arrayContaining([expect.objectContaining({ code: "RUN_REPAIR" })]),
     });
 
-    const applied = await runCli(root, ["repair", "--since", base, "--apply", "--json"]);
+    const applied = await runCli(root, ["task", "repair", "--since", base, "--apply", "--json"]);
     expect(applied.code).toBe(0);
     expect(JSON.parse(applied.stdout)).toMatchObject({
       ok: true,
@@ -1040,11 +1051,11 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
       touched_files: expect.arrayContaining(["docs/specs/feature.md", ".jumpspace/index.json"]),
     });
 
-    const context = JSON.parse((await runCli(root, ["context", "JS-100", "--json"])).stdout);
+    const context = JSON.parse((await runCli(root, ["task", "context", "JS-100", "--json"])).stdout);
     expect(context.task.code).toEqual(["src/renamed-feature.ts"]);
-    expect(JSON.parse((await runCli(root, ["last", "--json"])).stdout)).toMatchObject({
+    expect(JSON.parse((await runCli(root, ["task", "last", "--json"])).stdout)).toMatchObject({
       summary: {
-        command: "repair",
+        command: "task repair",
         task_ids: ["JS-100"],
       },
     });
@@ -1054,9 +1065,10 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
     const root = await createFixtureRepo();
     await write(root, "src/durable-planning-runner.ts", "export const runner = true;\n");
     await write(root, "src/durable-planning-runner.test.ts", "export const runnerTest = true;\n");
-    expect((await runCli(root, ["scan"])).code).toBe(0);
+    expect((await runCli(root, ["task", "scan"])).code).toBe(0);
 
     const dryRun = await runCli(root, [
+      "task",
       "link",
       "update",
       "JS-100",
@@ -1085,6 +1097,7 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
     expect(await fs.readFile(path.join(root, "docs/specs/feature.md"), "utf8")).not.toContain("durable-planning-runner");
 
     const applied = await runCli(root, [
+      "task",
       "link",
       "update",
       "JS-100",
@@ -1103,11 +1116,12 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
       touched_files: expect.arrayContaining(["docs/specs/feature.md", ".jumpspace/index.json"]),
     });
     expect(await fs.readFile(path.join(root, "docs/specs/feature.md"), "utf8")).toContain("durable-planning-runner");
-    expect(JSON.parse((await runCli(root, ["last", "--json"])).stdout)).toMatchObject({
-      summary: { command: "link update", task_ids: ["JS-100"] },
+    expect(JSON.parse((await runCli(root, ["task", "last", "--json"])).stdout)).toMatchObject({
+      summary: { command: "task link update", task_ids: ["JS-100"] },
     });
 
     const removed = await runCli(root, [
+      "task",
       "link",
       "update",
       "JS-100",
@@ -1124,6 +1138,7 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
     });
 
     const removedGap = await runCli(root, [
+      "task",
       "link",
       "update",
       "JS-100",
@@ -1137,14 +1152,14 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
       operations: expect.arrayContaining([expect.objectContaining({ action: "remove", field: "gap", changed: true })]),
     });
 
-    const missingPath = await runCli(root, ["link", "update", "JS-100", "--code", "src/missing.ts", "--json"]);
+    const missingPath = await runCli(root, ["task", "link", "update", "JS-100", "--code", "src/missing.ts", "--json"]);
     expect(missingPath.code).toBe(1);
     expect(JSON.parse(missingPath.stdout)).toMatchObject({
       ok: false,
       errors: [expect.objectContaining({ code: "MISSING_LINK_PATH", path: "src/missing.ts" })],
     });
 
-    const badRef = await runCli(root, ["link", "update", "JS-100", "--ref", "bad-ref", "--json"]);
+    const badRef = await runCli(root, ["task", "link", "update", "JS-100", "--ref", "bad-ref", "--json"]);
     expect(badRef.code).toBe(1);
     expect(JSON.parse(badRef.stdout)).toMatchObject({
       ok: false,
@@ -1152,6 +1167,7 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
     });
 
     const explicitSuggestions = await runCli(root, [
+      "task",
       "link",
       "suggest",
       "JS-100",
@@ -1175,7 +1191,7 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
     await write(root, "src/durable-planning-worker.ts", "export const worker = true;\n");
     await write(root, "src/worker.ts", "export const durablePlanningWorker = true;\n");
     await write(root, "src/unrelated-worker.ts", "export const billing = true;\n");
-    const changedSuggestions = await runCli(root, ["link", "suggest", "JS-100", "--since", base, "--json"]);
+    const changedSuggestions = await runCli(root, ["task", "link", "suggest", "JS-100", "--since", base, "--json"]);
     expect(changedSuggestions.code).toBe(0);
     const changedSuggestionBody = JSON.parse(changedSuggestions.stdout);
     expect(changedSuggestionBody).toMatchObject({
@@ -1208,7 +1224,7 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
       }),
     }));
 
-    const autoSuggestions = await runCli(root, ["link", "suggest", "JS-100", "--json"]);
+    const autoSuggestions = await runCli(root, ["task", "link", "suggest", "JS-100", "--json"]);
     expect(autoSuggestions.code).toBe(0);
     expect(JSON.parse(autoSuggestions.stdout)).toMatchObject({
       ok: true,
@@ -1222,7 +1238,7 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
       ]),
     });
 
-    const evalJson = await runCli(root, ["link", "eval", "--json"]);
+    const evalJson = await runCli(root, ["task", "link", "eval", "--json"]);
     expect(evalJson.code).toBe(0);
     expect(JSON.parse(evalJson.stdout)).toMatchObject({
       ok: true,
@@ -1244,7 +1260,7 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
       ]),
     });
 
-    const evalHuman = await runCli(root, ["link", "eval"]);
+    const evalHuman = await runCli(root, ["task", "link", "eval"]);
     expect(evalHuman.code).toBe(0);
     expect(evalHuman.stdout).toContain("# Jumpspace Link Suggestion Eval");
     expect(evalHuman.stdout).toContain("Fixture: built-in");
@@ -1298,7 +1314,7 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
         2,
       ),
     );
-    const evalFileJson = await runCli(root, ["link", "eval", "--file", "link-fixture.json", "--json"]);
+    const evalFileJson = await runCli(root, ["task", "link", "eval", "--file", "link-fixture.json", "--json"]);
     expect(evalFileJson.code).toBe(0);
     expect(JSON.parse(evalFileJson.stdout)).toMatchObject({
       ok: true,
@@ -1316,11 +1332,126 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
     });
 
     await fs.writeFile(path.join(root, "bad-link-fixture.json"), JSON.stringify({ cases: [] }));
-    const badEvalFile = await runCli(root, ["link", "eval", "--file", "bad-link-fixture.json", "--json"]);
+    const badEvalFile = await runCli(root, ["task", "link", "eval", "--file", "bad-link-fixture.json", "--json"]);
     expect(badEvalFile.code).toBe(1);
     expect(JSON.parse(badEvalFile.stdout)).toMatchObject({
       ok: false,
       errors: [{ code: "INVALID_LINK_EVAL_FIXTURE", path: "bad-link-fixture.json" }],
+    });
+  });
+
+  it("lists, checks, validates, and verifies repo-local intents through the CLI", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "jumpspace-cli-intents-"));
+    await write(
+      root,
+      "documentation/intents/env-tests.md",
+      `---
+id: env-tests
+status: active
+scope: src/**/*.test.ts
+---
+
+# Tests seed env before dynamic import
+
+## Decision
+Env-validating modules load after test env seeding.
+
+## Why
+Top-level imports validate too early.
+
+## Alternatives rejected
+- **Use top-level imports.** They fail before seeding.
+`,
+    );
+
+    const listed = await runCli(root, ["intent", "list", "--json"]);
+    expect(listed.code).toBe(0);
+    expect(JSON.parse(listed.stdout)).toMatchObject({
+      ok: true,
+      count: 1,
+      intents: [expect.objectContaining({ id: "env-tests", status: "active" })],
+    });
+
+    const checked = await runCli(root, ["intent", "check", "--for", "src/foo.test.ts", "--for", "src/foo.ts", "--json"]);
+    expect(checked.code).toBe(0);
+    const checkedJson = JSON.parse(checked.stdout);
+    expect(checkedJson.matches[0].intent).toMatchObject({
+      id: "env-tests",
+      decision: "Env-validating modules load after test env seeding.",
+      alternatives_rejected: "- **Use top-level imports.** They fail before seeding.",
+    });
+    expect(checkedJson.matches[0].intent).not.toHaveProperty("body");
+    expect(checkedJson.matches[0].intent).not.toHaveProperty("frontmatter");
+    expect(checkedJson).toMatchObject({
+      ok: true,
+      matched_intent_count: 1,
+      matches: [
+        expect.objectContaining({
+          intent: expect.objectContaining({ id: "env-tests" }),
+          matched_paths: ["src/foo.test.ts"],
+        }),
+      ],
+      unmatched_paths: ["src/foo.ts"],
+    });
+
+    const validated = await runCli(root, ["intent", "validate", "--json"]);
+    expect(validated.code).toBe(0);
+    expect(JSON.parse(validated.stdout)).toMatchObject({
+      ok: true,
+      errors: [],
+      warnings: [],
+    });
+
+    await initGitRepo(root);
+    const base = (await execFileAsync("git", ["rev-parse", "HEAD"], { cwd: root })).stdout.trim();
+    for (let index = 1; index <= 4; index += 1) {
+      await write(
+        root,
+        `documentation/intents/new-${index}.md`,
+        `---
+id: new-${index}
+status: active
+scope: src/new-${index}.ts
+---
+
+# New intent ${index}
+
+## Decision
+Decision ${index}.
+
+## Why
+Reason ${index}.
+
+## Alternatives rejected
+- **Skip it.** This fixture needs a valid active intent.
+`,
+      );
+    }
+
+    const guardedValidation = await runCli(root, ["intent", "validate", "--since", base, "--max-new", "3", "--json"]);
+    expect(guardedValidation.code).toBe(0);
+    expect(JSON.parse(guardedValidation.stdout)).toMatchObject({
+      ok: true,
+      since: base,
+      max_new_active_intents: 3,
+      new_active_intent_count: 4,
+      warnings: [expect.objectContaining({ code: "INTENT_NEW_ACTIVE_LIMIT_EXCEEDED" })],
+    });
+
+    const verified = await runCli(root, ["intent", "verify", "--for", "src/foo.test.ts", "--for", "src/foo.ts", "--json"]);
+    expect(verified.code).toBe(0);
+    expect(JSON.parse(verified.stdout)).toMatchObject({
+      ok: true,
+      summary: {
+        consistent: 0,
+        possible_violation: 0,
+        unknown: 1,
+        not_applicable: 1,
+      },
+      results: [
+        expect.objectContaining({ status: "unknown", intent: expect.objectContaining({ id: "env-tests" }) }),
+        expect.objectContaining({ status: "not_applicable", paths: ["src/foo.ts"] }),
+      ],
     });
   });
 
@@ -1358,7 +1489,7 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
     const workflow = await fs.readFile(path.join(root, ".github/workflows/jumpspace.yml"), "utf8");
     expect(workflow).toContain("Jumpspace PR Assistant");
     expect(workflow).toContain("jumpspace-pr-assistant:v1");
-    expect(JSON.parse((await runCli(root, ["last", "--json"])).stdout)).toMatchObject({
+    expect(JSON.parse((await runCli(root, ["task", "last", "--json"])).stdout)).toMatchObject({
       summary: {
         command: "init --ci github",
         touched_files: [".github/workflows/jumpspace.yml"],
@@ -1408,19 +1539,28 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
     expect(JSON.parse(installed.stdout)).toMatchObject({
       ok: true,
       agents: ["codex", "claude"],
-      skills: ["jumpspace-workflow", "jumpspace-bootstrap", "jumpspace-work", "jumpspace-review", "jumpspace-handoff"],
+      skills: [
+        "jumpspace-workflow",
+        "jumpspace-bootstrap",
+        "jumpspace-work",
+        "jumpspace-review",
+        "jumpspace-intent-review",
+        "jumpspace-handoff",
+      ],
       files: [
         { agent: "codex", path: "AGENTS.md" },
         { agent: "codex", path: ".codex/skills/jumpspace-workflow/SKILL.md" },
         { agent: "codex", path: ".codex/skills/jumpspace-bootstrap/SKILL.md" },
         { agent: "codex", path: ".codex/skills/jumpspace-work/SKILL.md" },
         { agent: "codex", path: ".codex/skills/jumpspace-review/SKILL.md" },
+        { agent: "codex", path: ".codex/skills/jumpspace-intent-review/SKILL.md" },
         { agent: "codex", path: ".codex/skills/jumpspace-handoff/SKILL.md" },
         { agent: "claude", path: "CLAUDE.md" },
         { agent: "claude", path: ".claude/skills/jumpspace-workflow/SKILL.md" },
         { agent: "claude", path: ".claude/skills/jumpspace-bootstrap/SKILL.md" },
         { agent: "claude", path: ".claude/skills/jumpspace-work/SKILL.md" },
         { agent: "claude", path: ".claude/skills/jumpspace-review/SKILL.md" },
+        { agent: "claude", path: ".claude/skills/jumpspace-intent-review/SKILL.md" },
         { agent: "claude", path: ".claude/skills/jumpspace-handoff/SKILL.md" },
       ],
     });
@@ -1433,17 +1573,24 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
     const codexSkill = await fs.readFile(path.join(root, ".codex/skills/jumpspace-workflow/SKILL.md"), "utf8");
     const claudeSkill = await fs.readFile(path.join(root, ".claude/skills/jumpspace-workflow/SKILL.md"), "utf8");
     const codexReviewSkill = await fs.readFile(path.join(root, ".codex/skills/jumpspace-review/SKILL.md"), "utf8");
+    const codexIntentReviewSkill = await fs.readFile(
+      path.join(root, ".codex/skills/jumpspace-intent-review/SKILL.md"),
+      "utf8",
+    );
     const claudeHandoffSkill = await fs.readFile(path.join(root, ".claude/skills/jumpspace-handoff/SKILL.md"), "utf8");
 
     expect(agents).toContain("custom codex");
     expect(claude).toContain("custom claude");
     expect(agents).toContain("@.codex/skills/jumpspace-workflow/SKILL.md");
     expect(agents).toContain("@.codex/skills/jumpspace-review/SKILL.md");
+    expect(agents).toContain("@.codex/skills/jumpspace-intent-review/SKILL.md");
     expect(claude).toContain("@.claude/skills/jumpspace-workflow/SKILL.md");
     expect(claude).toContain("@.claude/skills/jumpspace-handoff/SKILL.md");
     expect(codexSkill).toContain("name: jumpspace-workflow");
     expect(claudeSkill).toContain("name: jumpspace-workflow");
     expect(codexReviewSkill).toContain("name: jumpspace-review");
+    expect(codexIntentReviewSkill).toContain("name: jumpspace-intent-review");
+    expect(codexIntentReviewSkill).toContain("jumpspace intent verify --since <ref> --json");
     expect(claudeHandoffSkill).toContain("name: jumpspace-handoff");
   });
 
@@ -1474,6 +1621,32 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
     expect(workSkill).toContain("name: jumpspace-work");
   });
 
+  it("adds the intent-review skill through the CLI alias", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "jumpspace-cli-skill-"));
+
+    const installed = await runCli(root, ["add-skill", "intent-review", "--agent", "codex", "--json"]);
+    expect(installed.code).toBe(0);
+    expect(JSON.parse(installed.stdout)).toMatchObject({
+      ok: true,
+      agents: ["codex"],
+      skills: ["jumpspace-workflow", "jumpspace-intent-review"],
+      files: [
+        { agent: "codex", path: "AGENTS.md", action: "created" },
+        { agent: "codex", path: ".codex/skills/jumpspace-workflow/SKILL.md", action: "created" },
+        { agent: "codex", path: ".codex/skills/jumpspace-intent-review/SKILL.md", action: "created" },
+      ],
+    });
+
+    const agents = await fs.readFile(path.join(root, "AGENTS.md"), "utf8");
+    const intentReviewSkill = await fs.readFile(path.join(root, ".codex/skills/jumpspace-intent-review/SKILL.md"), "utf8");
+    await expect(fs.readFile(path.join(root, ".codex/skills/jumpspace-review/SKILL.md"), "utf8")).rejects.toMatchObject({
+      code: "ENOENT",
+    });
+
+    expect(agents).toContain("@.codex/skills/jumpspace-intent-review/SKILL.md");
+    expect(intentReviewSkill).toContain("Do not claim a violation from path overlap alone.");
+  });
+
   it("publishes JSON schema contracts through the CLI", async () => {
     const root = await createFixtureRepo();
 
@@ -1485,50 +1658,50 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
       schemas: expect.arrayContaining([
         expect.objectContaining({ name: "error" }),
         expect.objectContaining({ name: "schema.coverage" }),
-        expect.objectContaining({ name: "find" }),
-        expect.objectContaining({ name: "find.compact" }),
-        expect.objectContaining({ name: "query" }),
+        expect.objectContaining({ name: "task.find" }),
+        expect.objectContaining({ name: "task.find.compact" }),
+        expect.objectContaining({ name: "task.query" }),
         expect.objectContaining({ name: "init.ci" }),
-        expect.objectContaining({ name: "semantic.build" }),
-        expect.objectContaining({ name: "semantic.status" }),
-        expect.objectContaining({ name: "semantic.search" }),
-        expect.objectContaining({ name: "semantic.eval" }),
-        expect.objectContaining({ name: "work" }),
-        expect.objectContaining({ name: "ask.compact" }),
-        expect.objectContaining({ name: "last" }),
-        expect.objectContaining({ name: "history" }),
-        expect.objectContaining({ name: "doctor" }),
+        expect.objectContaining({ name: "task.semantic.build" }),
+        expect.objectContaining({ name: "task.semantic.status" }),
+        expect.objectContaining({ name: "task.semantic.search" }),
+        expect.objectContaining({ name: "task.semantic.eval" }),
+        expect.objectContaining({ name: "task.work" }),
+        expect.objectContaining({ name: "task.ask.compact" }),
+        expect.objectContaining({ name: "task.last" }),
+        expect.objectContaining({ name: "task.history" }),
+        expect.objectContaining({ name: "task.doctor" }),
         expect.objectContaining({ name: "release.install-doctor" }),
-        expect.objectContaining({ name: "related" }),
-        expect.objectContaining({ name: "related.compact" }),
-        expect.objectContaining({ name: "plan.review" }),
-        expect.objectContaining({ name: "plan.save" }),
-        expect.objectContaining({ name: "plan.show" }),
-        expect.objectContaining({ name: "plan.validate" }),
-        expect.objectContaining({ name: "ready" }),
-        expect.objectContaining({ name: "execute" }),
-        expect.objectContaining({ name: "next" }),
-        expect.objectContaining({ name: "step.complete" }),
-        expect.objectContaining({ name: "status" }),
-        expect.objectContaining({ name: "verify" }),
-        expect.objectContaining({ name: "drift" }),
-        expect.objectContaining({ name: "ci" }),
-        expect.objectContaining({ name: "pr.comment" }),
-        expect.objectContaining({ name: "repair" }),
-        expect.objectContaining({ name: "link" }),
-        expect.objectContaining({ name: "link.suggest" }),
-        expect.objectContaining({ name: "bootstrap.discover" }),
-        expect.objectContaining({ name: "bootstrap.propose" }),
-        expect.objectContaining({ name: "bootstrap.apply" }),
+        expect.objectContaining({ name: "task.related" }),
+        expect.objectContaining({ name: "task.related.compact" }),
+        expect.objectContaining({ name: "task.plan.review" }),
+        expect.objectContaining({ name: "task.plan.save" }),
+        expect.objectContaining({ name: "task.plan.show" }),
+        expect.objectContaining({ name: "task.plan.validate" }),
+        expect.objectContaining({ name: "task.ready" }),
+        expect.objectContaining({ name: "task.execute" }),
+        expect.objectContaining({ name: "task.next" }),
+        expect.objectContaining({ name: "task.step.complete" }),
+        expect.objectContaining({ name: "task.status" }),
+        expect.objectContaining({ name: "task.verify" }),
+        expect.objectContaining({ name: "task.drift" }),
+        expect.objectContaining({ name: "task.ci" }),
+        expect.objectContaining({ name: "task.pr.comment" }),
+        expect.objectContaining({ name: "task.repair" }),
+        expect.objectContaining({ name: "task.link" }),
+        expect.objectContaining({ name: "task.link.suggest" }),
+        expect.objectContaining({ name: "task.bootstrap.discover" }),
+        expect.objectContaining({ name: "task.bootstrap.propose" }),
+        expect.objectContaining({ name: "task.bootstrap.apply" }),
       ]),
     });
 
-    const shown = await runCli(root, ["schema", "show", "find", "--json"]);
+    const shown = await runCli(root, ["schema", "show", "task.find", "--json"]);
     expect(shown.code).toBe(0);
     expect(JSON.parse(shown.stdout)).toMatchObject({
       ok: true,
       schema: {
-        name: "find",
+        name: "task.find",
         schema: {
           required: ["query", "mode", "results"],
         },
@@ -1551,48 +1724,48 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
     expect(coverageHuman.code).toBe(0);
     expect(coverageHuman.stdout).toContain("Schema coverage: ok");
 
-    const compactFindSchema = await runCli(root, ["schema", "show", "find.compact", "--json"]);
+    const compactFindSchema = await runCli(root, ["schema", "show", "task.find.compact", "--json"]);
     expect(compactFindSchema.code).toBe(0);
     expect(JSON.parse(compactFindSchema.stdout)).toMatchObject({
       ok: true,
       schema: {
-        name: "find.compact",
+        name: "task.find.compact",
         schema: {
           required: expect.arrayContaining(["ok", "compact", "query", "mode", "results"]),
         },
       },
     });
 
-    const compactRelatedSchema = await runCli(root, ["schema", "show", "related.compact", "--json"]);
+    const compactRelatedSchema = await runCli(root, ["schema", "show", "task.related.compact", "--json"]);
     expect(compactRelatedSchema.code).toBe(0);
     expect(JSON.parse(compactRelatedSchema.stdout)).toMatchObject({
       ok: true,
       schema: {
-        name: "related.compact",
+        name: "task.related.compact",
         schema: {
           required: expect.arrayContaining(["ok", "compact", "task", "dependencies", "dependents"]),
         },
       },
     });
 
-    const compactAskSchema = await runCli(root, ["schema", "show", "ask.compact", "--json"]);
+    const compactAskSchema = await runCli(root, ["schema", "show", "task.ask.compact", "--json"]);
     expect(compactAskSchema.code).toBe(0);
     expect(JSON.parse(compactAskSchema.stdout)).toMatchObject({
       ok: true,
       schema: {
-        name: "ask.compact",
+        name: "task.ask.compact",
         schema: {
           required: expect.arrayContaining(["ok", "compact", "question", "evidence", "coverage"]),
         },
       },
     });
 
-    const workSchema = await runCli(root, ["schema", "show", "work", "--json"]);
+    const workSchema = await runCli(root, ["schema", "show", "task.work", "--json"]);
     expect(workSchema.code).toBe(0);
     expect(JSON.parse(workSchema.stdout)).toMatchObject({
       ok: true,
       schema: {
-        name: "work",
+        name: "task.work",
         schema: {
           required: expect.arrayContaining(["ok", "packet_version", "task", "plan", "next_steps", "mutation_history", "schemas", "next_action"]),
         },
@@ -1611,13 +1784,13 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
       },
     });
 
-    const planSaveSchema = await runCli(root, ["schema", "show", "plan.save", "--json"]);
+    const planSaveSchema = await runCli(root, ["schema", "show", "task.plan.save", "--json"]);
     expect(planSaveSchema.code).toBe(0);
     const planSaveSchemaBody = JSON.parse(planSaveSchema.stdout);
     expect(planSaveSchemaBody).toMatchObject({
       ok: true,
       schema: {
-        name: "plan.save",
+        name: "task.plan.save",
         schema: {
           required: expect.arrayContaining(["ok", "task_id", "plan"]),
         },
@@ -1630,7 +1803,7 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
       "blocked",
     ]);
 
-    const linkOperationSchema = await runCli(root, ["schema", "show", "link", "--json"]);
+    const linkOperationSchema = await runCli(root, ["schema", "show", "task.link", "--json"]);
     expect(linkOperationSchema.code).toBe(0);
     expect(JSON.parse(linkOperationSchema.stdout).schema.schema.properties.operations.items.properties.field.enum).toEqual([
       "code",
@@ -1640,84 +1813,84 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
       "gap",
     ]);
 
-    const stepCompleteSchema = await runCli(root, ["schema", "show", "step.complete", "--json"]);
+    const stepCompleteSchema = await runCli(root, ["schema", "show", "task.step.complete", "--json"]);
     expect(stepCompleteSchema.code).toBe(0);
     expect(JSON.parse(stepCompleteSchema.stdout)).toMatchObject({
       ok: true,
       schema: {
-        name: "step.complete",
+        name: "task.step.complete",
         schema: {
           required: expect.arrayContaining(["ok", "task_id", "step", "plan"]),
         },
       },
     });
 
-    const verifySchema = await runCli(root, ["schema", "show", "verify", "--json"]);
+    const verifySchema = await runCli(root, ["schema", "show", "task.verify", "--json"]);
     expect(verifySchema.code).toBe(0);
     expect(JSON.parse(verifySchema.stdout)).toMatchObject({
       ok: true,
       schema: {
-        name: "verify",
+        name: "task.verify",
         schema: {
           required: expect.arrayContaining(["ok", "task_id", "status", "record"]),
         },
       },
     });
 
-    const statusSchema = await runCli(root, ["schema", "show", "status", "--json"]);
+    const statusSchema = await runCli(root, ["schema", "show", "task.status", "--json"]);
     expect(statusSchema.code).toBe(0);
     expect(JSON.parse(statusSchema.stdout)).toMatchObject({
       ok: true,
       schema: {
-        name: "status",
+        name: "task.status",
         schema: {
           required: expect.arrayContaining(["ok", "task_id", "status"]),
         },
       },
     });
 
-    const historySchema = await runCli(root, ["schema", "show", "history", "--json"]);
+    const historySchema = await runCli(root, ["schema", "show", "task.history", "--json"]);
     expect(historySchema.code).toBe(0);
     expect(JSON.parse(historySchema.stdout)).toMatchObject({
       ok: true,
       schema: {
-        name: "history",
+        name: "task.history",
         schema: {
           required: expect.arrayContaining(["ok", "history_path", "total", "returned", "filters", "entries"]),
         },
       },
     });
 
-    const querySchema = await runCli(root, ["schema", "show", "query", "--json"]);
+    const querySchema = await runCli(root, ["schema", "show", "task.query", "--json"]);
     expect(querySchema.code).toBe(0);
     expect(JSON.parse(querySchema.stdout)).toMatchObject({
       ok: true,
       schema: {
-        name: "query",
+        name: "task.query",
         schema: {
           required: expect.arrayContaining(["ok", "query", "results", "unanswered_constraints"]),
         },
       },
     });
 
-    const semanticBuildSchema = await runCli(root, ["schema", "show", "semantic.build", "--json"]);
+    const semanticBuildSchema = await runCli(root, ["schema", "show", "task.semantic.build", "--json"]);
     expect(semanticBuildSchema.code).toBe(0);
     expect(JSON.parse(semanticBuildSchema.stdout)).toMatchObject({
       ok: true,
       schema: {
-        name: "semantic.build",
+        name: "task.semantic.build",
         schema: {
           required: expect.arrayContaining(["ok", "index_path", "backend", "source_index"]),
         },
       },
     });
 
-    const semanticSearchSchema = await runCli(root, ["schema", "show", "semantic.search", "--json"]);
+    const semanticSearchSchema = await runCli(root, ["schema", "show", "task.semantic.search", "--json"]);
     expect(semanticSearchSchema.code).toBe(0);
     expect(JSON.parse(semanticSearchSchema.stdout)).toMatchObject({
       ok: true,
       schema: {
-        name: "semantic.search",
+        name: "task.semantic.search",
         schema: {
           properties: {
             results: {
@@ -1730,36 +1903,36 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
       },
     });
 
-    const semanticEvalSchema = await runCli(root, ["schema", "show", "semantic.eval", "--json"]);
+    const semanticEvalSchema = await runCli(root, ["schema", "show", "task.semantic.eval", "--json"]);
     expect(semanticEvalSchema.code).toBe(0);
     expect(JSON.parse(semanticEvalSchema.stdout)).toMatchObject({
       ok: true,
       schema: {
-        name: "semantic.eval",
+        name: "task.semantic.eval",
         schema: {
           required: expect.arrayContaining(["ok", "query_count", "summary", "active_backend", "results"]),
         },
       },
     });
 
-    const ciSchema = await runCli(root, ["schema", "show", "ci", "--json"]);
+    const ciSchema = await runCli(root, ["schema", "show", "task.ci", "--json"]);
     expect(ciSchema.code).toBe(0);
     expect(JSON.parse(ciSchema.stdout)).toMatchObject({
       ok: true,
       schema: {
-        name: "ci",
+        name: "task.ci",
         schema: {
           required: expect.arrayContaining(["ok", "since", "scan", "drift", "repair", "suggestions", "summary", "pr_comment"]),
         },
       },
     });
 
-    const prCommentSchema = await runCli(root, ["schema", "show", "pr.comment", "--json"]);
+    const prCommentSchema = await runCli(root, ["schema", "show", "task.pr.comment", "--json"]);
     expect(prCommentSchema.code).toBe(0);
     expect(JSON.parse(prCommentSchema.stdout)).toMatchObject({
       ok: true,
       schema: {
-        name: "pr.comment",
+        name: "task.pr.comment",
         schema: {
           required: expect.arrayContaining(["ok", "assistant_version", "idempotency", "mutation_policy", "review_items", "review_comment"]),
           properties: {
@@ -1790,12 +1963,12 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
       },
     });
 
-    const doctorSchema = await runCli(root, ["schema", "show", "doctor", "--json"]);
+    const doctorSchema = await runCli(root, ["schema", "show", "task.doctor", "--json"]);
     expect(doctorSchema.code).toBe(0);
     expect(JSON.parse(doctorSchema.stdout)).toMatchObject({
       ok: true,
       schema: {
-        name: "doctor",
+        name: "task.doctor",
         schema: {
           required: expect.arrayContaining(["ok", "errors", "warnings", "suggestions", "last_mutation"]),
         },
@@ -1814,48 +1987,48 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
       },
     });
 
-    const repairSchema = await runCli(root, ["schema", "show", "repair", "--json"]);
+    const repairSchema = await runCli(root, ["schema", "show", "task.repair", "--json"]);
     expect(repairSchema.code).toBe(0);
     expect(JSON.parse(repairSchema.stdout)).toMatchObject({
       ok: true,
       schema: {
-        name: "repair",
+        name: "task.repair",
         schema: {
           required: expect.arrayContaining(["ok", "since", "mode", "mechanical_fixes", "gaps"]),
         },
       },
     });
 
-    const linkSchema = await runCli(root, ["schema", "show", "link", "--json"]);
+    const linkSchema = await runCli(root, ["schema", "show", "task.link", "--json"]);
     expect(linkSchema.code).toBe(0);
     expect(JSON.parse(linkSchema.stdout)).toMatchObject({
       ok: true,
       schema: {
-        name: "link",
+        name: "task.link",
         schema: {
           required: expect.arrayContaining(["ok", "task_id", "operations", "touched_files"]),
         },
       },
     });
 
-    const linkSuggestSchema = await runCli(root, ["schema", "show", "link.suggest", "--json"]);
+    const linkSuggestSchema = await runCli(root, ["schema", "show", "task.link.suggest", "--json"]);
     expect(linkSuggestSchema.code).toBe(0);
     expect(JSON.parse(linkSuggestSchema.stdout)).toMatchObject({
       ok: true,
       schema: {
-        name: "link.suggest",
+        name: "task.link.suggest",
         schema: {
           required: expect.arrayContaining(["ok", "task_id", "suggestions", "rejected_candidates", "mutated"]),
         },
       },
     });
 
-    const proposeSchema = await runCli(root, ["schema", "show", "bootstrap.propose", "--json"]);
+    const proposeSchema = await runCli(root, ["schema", "show", "task.bootstrap.propose", "--json"]);
     expect(proposeSchema.code).toBe(0);
     expect(JSON.parse(proposeSchema.stdout)).toMatchObject({
       ok: true,
       schema: {
-        name: "bootstrap.propose",
+        name: "task.bootstrap.propose",
         schema: {
           required: expect.arrayContaining(["ok", "propose_version", "mode", "proposal", "validation", "next_commands"]),
         },
@@ -1876,7 +2049,7 @@ The quarterly metrics implementation changed near src/quarterly-metrics.ts.
     await write(root, "documentation/specs/feature.md", "# Feature\n");
     await write(root, "apps/workers/example/README.md", "# Worker\n");
 
-    const discovered = await runCli(root, ["bootstrap", "discover", "--json"]);
+    const discovered = await runCli(root, ["task", "bootstrap", "discover", "--json"]);
     expect(discovered.code).toBe(0);
     expect(JSON.parse(discovered.stdout)).toMatchObject({
       ok: true,
@@ -1905,7 +2078,7 @@ The implementation lives in src/auth/password.ts.
     await fs.mkdir(path.join(root, "src/auth"), { recursive: true });
     await fs.writeFile(path.join(root, "src/auth/password.ts"), "export const ok = true;\n");
 
-    const context = await runCli(root, ["bootstrap", "context", "README.md", "--json"]);
+    const context = await runCli(root, ["task", "bootstrap", "context", "README.md", "--json"]);
     expect(context.code).toBe(0);
     expect(JSON.parse(context.stdout)).toMatchObject({
       ok: true,
@@ -1915,7 +2088,7 @@ The implementation lives in src/auth/password.ts.
       ],
     });
 
-    const proposed = await runCli(root, ["bootstrap", "propose", "README.md", "--file", "draft-proposal.json", "--json"]);
+    const proposed = await runCli(root, ["task", "bootstrap", "propose", "README.md", "--file", "draft-proposal.json", "--json"]);
     expect(proposed.code).toBe(0);
     expect(JSON.parse(proposed.stdout)).toMatchObject({
       ok: true,
@@ -1935,7 +2108,7 @@ The implementation lives in src/auth/password.ts.
       validation: { ok: true },
     });
 
-    const proposedValidation = await runCli(root, ["bootstrap", "validate", "--file", "draft-proposal.json", "--json"]);
+    const proposedValidation = await runCli(root, ["task", "bootstrap", "validate", "--file", "draft-proposal.json", "--json"]);
     expect(proposedValidation.code).toBe(0);
     expect(JSON.parse(proposedValidation.stdout)).toMatchObject({ ok: true, errors: [] });
 
@@ -1969,7 +2142,7 @@ The implementation lives in src/auth/password.ts.
       ),
     );
 
-    const validated = await runCli(root, ["bootstrap", "validate", "--file", "proposal.json", "--json"]);
+    const validated = await runCli(root, ["task", "bootstrap", "validate", "--file", "proposal.json", "--json"]);
     expect(validated.code).toBe(0);
     expect(JSON.parse(validated.stdout)).toMatchObject({
       ok: true,
@@ -1977,7 +2150,7 @@ The implementation lives in src/auth/password.ts.
     });
 
     const beforeApply = await fs.readFile(path.join(root, "README.md"), "utf8");
-    const preview = await runCli(root, ["bootstrap", "apply", "--file", "proposal.json", "--dry-run", "--json"]);
+    const preview = await runCli(root, ["task", "bootstrap", "apply", "--file", "proposal.json", "--dry-run", "--json"]);
     expect(preview.code).toBe(0);
     expect(JSON.parse(preview.stdout)).toMatchObject({
       ok: true,
@@ -1987,7 +2160,7 @@ The implementation lives in src/auth/password.ts.
     });
     await expect(fs.readFile(path.join(root, "README.md"), "utf8")).resolves.toBe(beforeApply);
 
-    const applied = await runCli(root, ["bootstrap", "apply", "--file", "proposal.json", "--json"]);
+    const applied = await runCli(root, ["task", "bootstrap", "apply", "--file", "proposal.json", "--json"]);
     expect(applied.code).toBe(0);
     expect(JSON.parse(applied.stdout)).toMatchObject({
       ok: true,
@@ -1996,10 +2169,10 @@ The implementation lives in src/auth/password.ts.
       config_paths_added: ["README.md"],
     });
 
-    const scan = await runCli(root, ["scan"]);
+    const scan = await runCli(root, ["task", "scan"]);
     expect(scan.code).toBe(0);
 
-    const taskContext = JSON.parse((await runCli(root, ["context", "DOC-PASSWORD", "--json"])).stdout);
+    const taskContext = JSON.parse((await runCli(root, ["task", "context", "DOC-PASSWORD", "--json"])).stdout);
     expect(taskContext.task).toMatchObject({
       id: "DOC-PASSWORD",
       doc: { path: "README.md", heading: "Password entry" },
@@ -2051,7 +2224,7 @@ steps:
       - docs/specs/feature.md
     tests: []
     checks:
-      - jumpspace plan validate JS-100
+      - jumpspace task plan validate JS-100
     evidence: []
   - id: implement
     outcome: Implementation exists.

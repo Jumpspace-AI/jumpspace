@@ -66,13 +66,13 @@ export type HandoffPacket = {
   task: HandoffTaskState | null;
   suggested_commands: string[];
   schemas: {
-    packet: "handoff";
+    packet: "task.handoff";
     failures: "error";
-    history: "history";
-    doctor: "doctor";
-    audit: "audit";
-    context: "context";
-    next: "next";
+    history: "task.history";
+    doctor: "task.doctor";
+    audit: "task.audit";
+    context: "task.context";
+    next: "task.next";
     schema_coverage: "schema.coverage";
   };
 };
@@ -165,13 +165,13 @@ export function buildHandoffPacket(options: BuildHandoffPacketOptions): HandoffP
     task: taskState,
     suggested_commands: suggestedCommands(packetBase),
     schemas: {
-      packet: "handoff",
+      packet: "task.handoff",
       failures: "error",
-      history: "history",
-      doctor: "doctor",
-      audit: "audit",
-      context: "context",
-      next: "next",
+      history: "task.history",
+      doctor: "task.doctor",
+      audit: "task.audit",
+      context: "task.context",
+      next: "task.next",
       schema_coverage: "schema.coverage",
     },
   };
@@ -271,24 +271,24 @@ function suggestedCommands(input: {
   const commands = new Set<string>();
 
   if ([...input.auditErrors, ...input.auditWarnings].some((issue) => issue.code === "STALE_INDEX")) {
-    commands.add("jumpspace scan");
+    commands.add("jumpspace task scan");
   } else {
-    commands.add("jumpspace scan");
+    commands.add("jumpspace task scan");
   }
 
   if ([...input.auditErrors, ...input.auditWarnings].some((issue) => issue.code === "STALE_SEMANTIC_INDEX")) {
-    commands.add("jumpspace semantic build --json");
+    commands.add("jumpspace task semantic build --json");
   }
 
-  commands.add("jumpspace audit --json");
-  commands.add("jumpspace doctor --json");
+  commands.add("jumpspace task audit --json");
+  commands.add("jumpspace task doctor --json");
   commands.add("jumpspace schema coverage --json");
 
   if (input.taskState) {
-    commands.add(`jumpspace context ${input.taskState.id} --json`);
+    commands.add(`jumpspace task context ${input.taskState.id} --json`);
     if (input.taskState.plan_status) {
-      commands.add(`jumpspace plan validate ${input.taskState.id} --json`);
-      commands.add(`jumpspace next ${input.taskState.id} --json`);
+      commands.add(`jumpspace task plan validate ${input.taskState.id} --json`);
+      commands.add(`jumpspace task next ${input.taskState.id} --json`);
     }
   }
 

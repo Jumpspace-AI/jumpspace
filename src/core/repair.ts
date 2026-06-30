@@ -124,7 +124,7 @@ export async function applyDriftRepair(root: string, since: string): Promise<Dri
     await refreshIndex(root);
     const config = await loadConfig(root);
     await recordMutation(root, {
-      command: "repair",
+      command: "task repair",
       touched_files: [...touchedFiles, config.indexPath],
       task_ids: [...grouped.keys()],
       index_changed: true,
@@ -241,7 +241,7 @@ function docRenameWarnings(
           code: "TASK_SOURCE_DOC_RENAMED",
           taskId: task.id,
           path: file.old_path,
-          message: `Task ${task.id} source document moved from "${file.old_path}" to "${file.path}". Run jumpspace scan after the move and review config docs globs if needed.`,
+          message: `Task ${task.id} source document moved from "${file.old_path}" to "${file.path}". Run jumpspace task scan after the move and review config docs globs if needed.`,
         });
       }
       if (file.statuses.includes("deleted") && task.doc.path === file.path) {

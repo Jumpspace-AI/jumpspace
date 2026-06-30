@@ -10,7 +10,7 @@ The goal is not to let a parser invent your architecture. The goal is to give an
 ## Discover Docs
 
 ```bash
-npx @jumpspace/cli bootstrap discover --json
+npx @jumpspace/cli task bootstrap discover --json
 ```
 
 Discovery looks for common Markdown locations such as README, PRODUCT, docs, documentation, ADRs, architecture docs, app README files, infrastructure docs, and skills. It reports recommended globs, detected files, profile hints, and ignored generated paths.
@@ -18,7 +18,7 @@ Discovery looks for common Markdown locations such as README, PRODUCT, docs, doc
 ## Export Context For An Agent
 
 ```bash
-npx @jumpspace/cli bootstrap context README.md documentation/**/*.md --json
+npx @jumpspace/cli task bootstrap context README.md documentation/**/*.md --json
 ```
 
 The context packet includes headings, source line numbers, parent heading chains, excerpts, existing task IDs, suggested IDs, linked file hints, and proposal instructions.
@@ -28,10 +28,10 @@ Use this packet with an AI agent to draft task blocks. The agent should reason a
 ## Propose, Validate, Apply
 
 ```bash
-npx @jumpspace/cli bootstrap propose README.md documentation/**/*.md --file jumpspace-bootstrap.json --json
-npx @jumpspace/cli bootstrap validate --file jumpspace-bootstrap.json --json
-npx @jumpspace/cli bootstrap apply --file jumpspace-bootstrap.json --dry-run --json
-npx @jumpspace/cli bootstrap apply --file jumpspace-bootstrap.json --json
+npx @jumpspace/cli task bootstrap propose README.md documentation/**/*.md --file jumpspace-bootstrap.json --json
+npx @jumpspace/cli task bootstrap validate --file jumpspace-bootstrap.json --json
+npx @jumpspace/cli task bootstrap apply --file jumpspace-bootstrap.json --dry-run --json
+npx @jumpspace/cli task bootstrap apply --file jumpspace-bootstrap.json --json
 ```
 
 Always inspect the dry run before applying.
@@ -42,12 +42,12 @@ Always inspect the dry run before applying.
 - Use source line numbers and parent headings to avoid duplicate-heading ambiguity.
 - Add `code` and `tests` only when the evidence is strong.
 - Add `gaps` when a doc describes behavior but implementation links are unknown.
-- Run `scan`, `audit`, and `doctor` after apply.
+- Run `task scan`, `task audit`, and `task doctor` after apply.
 
 ```bash
-npx @jumpspace/cli scan
-npx @jumpspace/cli audit --json
-npx @jumpspace/cli doctor --json
+npx @jumpspace/cli task scan
+npx @jumpspace/cli task audit --json
+npx @jumpspace/cli task doctor --json
 ```
 
 ## After Bootstrap

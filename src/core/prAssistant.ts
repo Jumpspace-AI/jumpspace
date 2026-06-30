@@ -56,8 +56,8 @@ export type PrAssistantReport = {
     allowed_follow_up_commands: string[];
   };
   schemas: {
-    packet: "pr.comment";
-    ci: "ci";
+    packet: "task.pr.comment";
+    ci: "task.ci";
     errors: "error";
   };
   ci: CiReport;
@@ -117,8 +117,8 @@ export async function buildPrAssistantComment(options: BuildPrAssistantOptions):
       allowed_follow_up_commands: allowedFollowUpCommands(options.since, ci.report),
     },
     schemas: {
-      packet: "pr.comment" as const,
-      ci: "ci" as const,
+      packet: "task.pr.comment" as const,
+      ci: "task.ci" as const,
       errors: "error" as const,
     },
     ci: ci.report,
@@ -192,7 +192,7 @@ function repairReviewItem(since: string, fix: RepairFix): PrAssistantReviewItem 
     field: fix.field,
     old_path: fix.old_path,
     new_path: fix.new_path,
-    command: `jumpspace repair --since ${since} --apply`,
+    command: `jumpspace task repair --since ${since} --apply`,
     evidence: [`${fix.field}: ${fix.old_path} -> ${fix.new_path}`, `change_sources: ${fix.sources.join(", ") || "unknown"}`],
   };
 }
@@ -203,15 +203,15 @@ function gapReviewItem(since: string, gap: RepairGap): PrAssistantReviewItem {
     task_id: gap.task_id,
     field: gap.field,
     path: gap.path,
-    command: `jumpspace repair --since ${since} --apply`,
+    command: `jumpspace task repair --since ${since} --apply`,
     evidence: [gap.message, `reason: ${gap.reason}`, `removes_link: ${gap.removes_link}`],
   };
 }
 
 function allowedFollowUpCommands(since: string, report: CiReport): string[] {
-  const commands = ["jumpspace scan", "jumpspace audit --json", "jumpspace doctor --json"];
+  const commands = ["jumpspace task scan", "jumpspace task audit --json", "jumpspace task doctor --json"];
   if (report.suggestions.repair.mechanical_fixes.length > 0 || report.suggestions.repair.gaps.length > 0) {
-    commands.unshift(`jumpspace repair --since ${since} --apply`);
+    commands.unshift(`jumpspace task repair --since ${since} --apply`);
   }
   return commands;
 }
@@ -225,7 +225,7 @@ function renderReviewComment(report: Omit<PrAssistantReport, "review_comment">):
     `Since: ${report.since}`,
     `Status: ${report.ok ? "ok" : "blocked"}`,
     "",
-    "This is a review-only packet generated from `jumpspace ci --since <ref> --json`. It does not mutate source files or branches. Apply suggestions only after human review.",
+    "This is a review-only packet generated from `jumpspace task ci --since <ref> --json`. It does not mutate source files or branches. Apply suggestions only after human review.",
     "",
     "## Mutation Policy",
     "- Mutates source: no",

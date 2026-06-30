@@ -47,27 +47,27 @@ describe("schema coverage", () => {
 
   it("detects catalog entries without declared JSON commands", async () => {
     const report = await checkSchemaCoverage({
-      declarations: jsonCommandContracts.filter((schema) => schema.name !== "ask"),
+      declarations: jsonCommandContracts.filter((schema) => schema.name !== "task.ask"),
       checkArtifacts: false,
     });
 
     expect(report.ok).toBe(false);
     expect(report.issues).toContainEqual(expect.objectContaining({
       code: "ORPHANED_SCHEMA_CATALOG_ENTRY",
-      name: "ask",
+      name: "task.ask",
     }));
   });
 
   it("detects SDK schema-name drift", async () => {
     const report = await checkSchemaCoverage({
-      sdkSchemaNames: JUMPSPACE_SCHEMA_NAMES.filter((name) => name !== "work"),
+      sdkSchemaNames: JUMPSPACE_SCHEMA_NAMES.filter((name) => name !== "task.work"),
       checkArtifacts: false,
     });
 
     expect(report.ok).toBe(false);
     expect(report.issues).toContainEqual(expect.objectContaining({
       code: "MISSING_SDK_SCHEMA_NAME",
-      name: "work",
+      name: "task.work",
     }));
   });
 

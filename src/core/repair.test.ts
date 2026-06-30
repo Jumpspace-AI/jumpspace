@@ -92,7 +92,7 @@ describe("drift repair", () => {
       'Linked code file "src/feature.ts" was deleted; repair removed it from active links and preserved this gap for human review.',
     ]);
     await expect(readLastMutation(root)).resolves.toMatchObject({
-      command: "repair",
+      command: "task repair",
       task_ids: ["JS-100"],
       index_changed: true,
     });

@@ -9,7 +9,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Jumpspace',
-      description: 'Repo-local implementation memory for AI coding agents.',
+      description: 'Repo-local intent memory for AI coding agents.',
       sidebar: [
         {
           label: 'Start Here',
@@ -51,8 +51,23 @@ export default defineConfig({
         {
           label: 'Core Concepts',
           items: [
-            { slug: 'core-concepts/task-blocks' },
             { slug: 'core-concepts/source-backed-memory' },
+            { slug: 'core-concepts/intents' },
+            { slug: 'core-concepts/scopes-and-lookup' },
+            { slug: 'core-concepts/rejected-alternatives' },
+            { slug: 'core-concepts/json-contracts' }
+          ]
+        },
+        {
+          label: 'Advanced Task Graph',
+          items: [
+            { slug: 'advanced/bootstrap' },
+            { slug: 'advanced/planning-and-verification' },
+            { slug: 'advanced/drift-ci-and-repair' },
+            { slug: 'advanced/retrieval-and-graph-queries' },
+            { slug: 'advanced/agent-skills' },
+            { slug: 'core-concepts/tasks-and-graph' },
+            { slug: 'core-concepts/task-blocks' },
             { slug: 'core-concepts/plans' },
             { slug: 'core-concepts/acceptance-criteria' },
             { slug: 'core-concepts/verification-records' },

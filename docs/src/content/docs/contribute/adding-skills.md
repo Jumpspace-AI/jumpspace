@@ -21,6 +21,7 @@ npx @jumpspace/cli add-skill --codex
 npx @jumpspace/cli add-skill --claude
 npx @jumpspace/cli add-skill --all
 npx @jumpspace/cli add-skill jumpspace-work --agent claude
+npx @jumpspace/cli add-skill intent-review --agent codex
 ```
 
 Named pipeline skills are current install targets. Add new skills by extending

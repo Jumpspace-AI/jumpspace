@@ -24,15 +24,19 @@ Point it at:
 - `skills/README.md`
 - `AGENTS.md` or `CLAUDE.md`, if present
 - `docs/src/content/docs/start-here/quickstart.md`
-- `docs/src/content/docs/workflows/start-agent-work.md`
+- `docs/src/content/docs/core-concepts/intents.md`
+- `docs/src/content/docs/core-concepts/scopes-and-lookup.md`
 
 ## First Prompt
 
 ```text
-Use Jumpspace as repo-local implementation memory. Before editing, run the
-commands needed to find the relevant task, inspect linked docs/code/tests, and
-report any gaps in the evidence.
+Use Jumpspace as repo-local intent memory. Before editing scoped files, run
+intent check for the paths you may touch, read matching decisions and rejected
+alternatives, and report when no intent applies.
 ```
+
+If the repo intentionally uses task blocks, also read the advanced task graph
+docs and use `jumpspace task ...` commands for work packets and handoffs.
 
 ## Safe Rerun
 

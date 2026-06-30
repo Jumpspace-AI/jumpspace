@@ -20,50 +20,54 @@ export const jsonCommandContracts: JsonCommandContractDeclaration[] = [
   { name: "schema.list", command: "jumpspace schema list --json", description: "Lists available JSON schema contracts." },
   { name: "schema.show", command: "jumpspace schema show <name> --json", description: "Returns one named JSON schema contract." },
   { name: "schema.coverage", command: "jumpspace schema coverage --json", description: "Reports schema coverage across declared JSON commands, the live catalog, generated artifacts, and SDK contract surfaces." },
-  { name: "list", command: "jumpspace list --json", description: "Indexed task list." },
-  { name: "find", command: "jumpspace find <query...> --json", description: "Task search results with matched and unmatched terms." },
-  { name: "find.compact", command: "jumpspace find <query...> --json --compact", description: "Compact task search results for agent orientation without embedded plans or long specs." },
-  { name: "audit", command: "jumpspace audit --json", description: "Validation issues for task metadata and graph references." },
-  { name: "last", command: "jumpspace last --json", description: "Most recent successful mutation summary." },
-  { name: "history", command: "jumpspace history [--task <id>] [--limit <n>] --json", description: "Generated mutation history entries, newest first, with task and limit filters." },
-  { name: "handoff", command: "jumpspace handoff [--task <id>] [--limit <n>] --json", description: "Agent handoff recap with recent mutations, graph health, optional task state, and suggested next commands." },
+  { name: "task.list", command: "jumpspace task list --json", description: "Indexed task list." },
+  { name: "task.find", command: "jumpspace task find <query...> --json", description: "Task search results with matched and unmatched terms." },
+  { name: "task.find.compact", command: "jumpspace task find <query...> --json --compact", description: "Compact task search results for agent orientation without embedded plans or long specs." },
+  { name: "task.audit", command: "jumpspace task audit --json", description: "Validation issues for task metadata and graph references." },
+  { name: "task.last", command: "jumpspace task last --json", description: "Most recent successful mutation summary." },
+  { name: "task.history", command: "jumpspace task history [--task <id>] [--limit <n>] --json", description: "Generated mutation history entries, newest first, with task and limit filters." },
+  { name: "task.handoff", command: "jumpspace task handoff [--task <id>] [--limit <n>] --json", description: "Agent handoff recap with recent mutations, graph health, optional task state, and suggested next commands." },
   { name: "init.ci", command: "jumpspace init --ci github --json", description: "Installs or previews a repo-local Jumpspace-managed GitHub Actions PR assistant workflow." },
-  { name: "doctor", command: "jumpspace doctor [--since <ref>] --json", description: "Post-mutation diagnostics that separate blocking errors, factual warnings, and suggested repairs." },
+  { name: "task.doctor", command: "jumpspace task doctor [--since <ref>] --json", description: "Post-mutation diagnostics that separate blocking errors, factual warnings, and suggested repairs." },
   { name: "release.doctor", command: "jumpspace release doctor [--check-registry] --json", description: "Package release-readiness diagnostics with local blockers separated from external npm registry state." },
   { name: "release.install-doctor", command: "jumpspace release install-doctor --json", description: "Active install freshness diagnostics for the invoked and PATH-resolved Jumpspace binaries." },
-  { name: "context", command: "jumpspace context <id> --json", description: "Agent-ready task context packet." },
-  { name: "related", command: "jumpspace related <id> --json", description: "Full dependency and reference relationships for a task." },
-  { name: "related.compact", command: "jumpspace related <id> --json --compact", description: "Compact dependency and reference relationships for agent orientation without embedded plans or long specs." },
-  { name: "plan.review", command: "jumpspace plan review <id> --json", description: "Human approval and execution-readiness packet for a documented task." },
-  { name: "plan.save", command: "jumpspace plan save <id> --file <plan-file> --json", description: "Successful durable plan persistence result." },
-  { name: "plan.show", command: "jumpspace plan show <id> --json", description: "Persisted durable plan for a task." },
-  { name: "plan.validate", command: "jumpspace plan validate <id> --json", description: "Durable plan validation result with issues and structured errors." },
-  { name: "ready", command: "jumpspace ready --json", description: "Approved or partial tasks ready for agent execution." },
-  { name: "execute", command: "jumpspace execute <id> --json", description: "Execution gate packet for an approved or partial task." },
-  { name: "next", command: "jumpspace next <id> --json", description: "Pending unblocked durable plan steps for a task." },
-  { name: "step.complete", command: "jumpspace step complete <task-id> <step-id> --evidence <evidence> --json", description: "Successful durable plan step completion result." },
-  { name: "status", command: "jumpspace status <id> <status> --json", description: "Successful task status update result. Verified status is excluded and must be earned with verify." },
-  { name: "verify", command: "jumpspace verify <id> --check <cmd> --criteria <criterion-id> --json", description: "Successful earned verification result with commit, checks, criteria coverage, and evidence." },
-  { name: "work", command: "jumpspace work <id> [--since <ref>] --json", description: "Complete agent start packet for a ready task, including plan state, next steps, verification, schemas, guardrails, and optional drift." },
-  { name: "ask", command: "jumpspace ask <question...> --json", description: "Evidence summary for a repo-local question. This is retrieval evidence, not an authoritative answer." },
-  { name: "ask.compact", command: "jumpspace ask <question...> --json --compact", description: "Compact evidence summary for agent orientation. This is retrieval evidence, not an authoritative answer." },
-  { name: "semantic.build", command: "jumpspace semantic build --json", description: "Builds and enables the optional local semantic task index." },
-  { name: "semantic.status", command: "jumpspace semantic status --json", description: "Reports semantic index readiness, staleness, backend, and non-blocking issues." },
-  { name: "semantic.search", command: "jumpspace semantic search <query...> --json", description: "Searches the generated local semantic task index." },
-  { name: "semantic.eval", command: "jumpspace semantic eval --json", description: "Compares lexical, deterministic task-vector, and active semantic retrieval on built-in evaluation fixtures." },
-  { name: "query", command: "jumpspace query [filters] --json", description: "Deterministic graph query results with applied filters, matched graph paths, and unanswered constraints." },
-  { name: "drift", command: "jumpspace drift --since <ref> --json", description: "Factual task-memory drift separated from heuristic maintenance warnings." },
-  { name: "ci", command: "jumpspace ci --since <ref> [--query <field=value>] --json", description: "Local CI/PR report with scan, audit, doctor, drift, repair suggestions, graph query packets, task-block suggestions, and a Markdown PR comment." },
-  { name: "pr.comment", command: "jumpspace pr comment --since <ref> --json", description: "Idempotent, review-only PR assistant comment packet built from the local CI report." },
-  { name: "repair", command: "jumpspace repair --since <ref> [--apply] --json", description: "Dry-run or applied task-memory repairs for Git path drift. Renames are mechanical fixes; missing/deleted linked files become explicit gaps." },
-  { name: "link", command: "jumpspace link update <id> [link options] --json", description: "Dry-run or applied task metadata link updates for code, tests, dependencies, refs, and gaps." },
-  { name: "link.suggest", command: "jumpspace link suggest <id> [--since <ref>] [--path <path>] --json", description: "Evidence-backed code/test link suggestions from working-tree changes, changed files, or explicit candidate paths. This command never mutates source." },
-  { name: "link.eval", command: "jumpspace link eval [--file <fixture-file>] --json", description: "Built-in or file-based ranking quality evaluation for link suggestion fixtures." },
-  { name: "bootstrap.context", command: "jumpspace bootstrap context [paths...] --json", description: "Markdown heading context packet for AI-assisted graph bootstrap proposals." },
-  { name: "bootstrap.discover", command: "jumpspace bootstrap discover --json", description: "Discovers common Markdown docs, recommended config globs, profile hints, and ignored noisy paths." },
-  { name: "bootstrap.propose", command: "jumpspace bootstrap propose [paths...] [--file <proposal-file>] --json", description: "Deterministic bootstrap proposal draft packet. This is extraction evidence, not agent reasoning, and apply still requires human approval." },
-  { name: "bootstrap.validate", command: "jumpspace bootstrap validate --file <proposal-file> --json", description: "Bootstrap proposal validation result." },
-  { name: "bootstrap.apply", command: "jumpspace bootstrap apply --file <proposal-file> [--dry-run] --json", description: "Bootstrap apply or dry-run result." },
+  { name: "task.context", command: "jumpspace task context <id> --json", description: "Agent-ready task context packet." },
+  { name: "task.related", command: "jumpspace task related <id> --json", description: "Full dependency and reference relationships for a task." },
+  { name: "task.related.compact", command: "jumpspace task related <id> --json --compact", description: "Compact dependency and reference relationships for agent orientation without embedded plans or long specs." },
+  { name: "task.plan.review", command: "jumpspace task plan review <id> --json", description: "Human approval and execution-readiness packet for a documented task." },
+  { name: "task.plan.save", command: "jumpspace task plan save <id> --file <plan-file> --json", description: "Successful durable plan persistence result." },
+  { name: "task.plan.show", command: "jumpspace task plan show <id> --json", description: "Persisted durable plan for a task." },
+  { name: "task.plan.validate", command: "jumpspace task plan validate <id> --json", description: "Durable plan validation result with issues and structured errors." },
+  { name: "task.ready", command: "jumpspace task ready --json", description: "Approved or partial tasks ready for agent execution." },
+  { name: "task.execute", command: "jumpspace task execute <id> --json", description: "Execution gate packet for an approved or partial task." },
+  { name: "task.next", command: "jumpspace task next <id> --json", description: "Pending unblocked durable plan steps for a task." },
+  { name: "task.step.complete", command: "jumpspace task step complete <task-id> <step-id> --evidence <evidence> --json", description: "Successful durable plan step completion result." },
+  { name: "task.status", command: "jumpspace task status <id> <status> --json", description: "Successful task status update result. Verified status is excluded and must be earned with task verify." },
+  { name: "task.verify", command: "jumpspace task verify <id> --check <cmd> --criteria <criterion-id> --json", description: "Successful earned verification result with commit, checks, criteria coverage, and evidence." },
+  { name: "task.work", command: "jumpspace task work <id> [--since <ref>] --json", description: "Complete agent start packet for a ready task, including plan state, next steps, verification, schemas, guardrails, and optional drift." },
+  { name: "task.ask", command: "jumpspace task ask <question...> --json", description: "Evidence summary for a repo-local question. This is retrieval evidence, not an authoritative answer." },
+  { name: "task.ask.compact", command: "jumpspace task ask <question...> --json --compact", description: "Compact evidence summary for agent orientation. This is retrieval evidence, not an authoritative answer." },
+  { name: "task.semantic.build", command: "jumpspace task semantic build --json", description: "Builds and enables the optional local semantic task index." },
+  { name: "task.semantic.status", command: "jumpspace task semantic status --json", description: "Reports semantic index readiness, staleness, backend, and non-blocking issues." },
+  { name: "task.semantic.search", command: "jumpspace task semantic search <query...> --json", description: "Searches the generated local semantic task index." },
+  { name: "task.semantic.eval", command: "jumpspace task semantic eval --json", description: "Compares lexical, deterministic task-vector, and active semantic retrieval on built-in evaluation fixtures." },
+  { name: "task.query", command: "jumpspace task query [filters] --json", description: "Deterministic graph query results with applied filters, matched graph paths, and unanswered constraints." },
+  { name: "task.drift", command: "jumpspace task drift --since <ref> --json", description: "Factual task-memory drift separated from heuristic maintenance warnings." },
+  { name: "task.ci", command: "jumpspace task ci --since <ref> [--query <field=value>] --json", description: "Local CI/PR report with scan, audit, doctor, drift, repair suggestions, graph query packets, task-block suggestions, and a Markdown PR comment." },
+  { name: "task.pr.comment", command: "jumpspace task pr comment --since <ref> --json", description: "Idempotent, review-only PR assistant comment packet built from the local CI report." },
+  { name: "intent.list", command: "jumpspace intent list --json", description: "Lists repo-local durable intent records from configured intent roots." },
+  { name: "intent.check", command: "jumpspace intent check --for <path> --json", description: "Returns active intents whose scope globs match supplied paths." },
+  { name: "intent.validate", command: "jumpspace intent validate [--since <ref>] [--max-new <n>] --json", description: "Validates repo-local intent files without mutating them, with an optional branch-level new-intent guardrail." },
+  { name: "intent.verify", command: "jumpspace intent verify (--for <path> | --since <ref> | --diff <file>) --json", description: "Creates a PR-level intent verification packet without mutating intent files." },
+  { name: "task.repair", command: "jumpspace task repair --since <ref> [--apply] --json", description: "Dry-run or applied task-memory repairs for Git path drift. Renames are mechanical fixes; missing/deleted linked files become explicit gaps." },
+  { name: "task.link", command: "jumpspace task link update <id> [link options] --json", description: "Dry-run or applied task metadata link updates for code, tests, dependencies, refs, and gaps." },
+  { name: "task.link.suggest", command: "jumpspace task link suggest <id> [--since <ref>] [--path <path>] --json", description: "Evidence-backed code/test link suggestions from working-tree changes, changed files, or explicit candidate paths. This command never mutates source." },
+  { name: "task.link.eval", command: "jumpspace task link eval [--file <fixture-file>] --json", description: "Built-in or file-based ranking quality evaluation for link suggestion fixtures." },
+  { name: "task.bootstrap.context", command: "jumpspace task bootstrap context [paths...] --json", description: "Markdown heading context packet for AI-assisted graph bootstrap proposals." },
+  { name: "task.bootstrap.discover", command: "jumpspace task bootstrap discover --json", description: "Discovers common Markdown docs, recommended config globs, profile hints, and ignored noisy paths." },
+  { name: "task.bootstrap.propose", command: "jumpspace task bootstrap propose [paths...] [--file <proposal-file>] --json", description: "Deterministic bootstrap proposal draft packet. This is extraction evidence, not agent reasoning, and apply still requires human approval." },
+  { name: "task.bootstrap.validate", command: "jumpspace task bootstrap validate --file <proposal-file> --json", description: "Bootstrap proposal validation result." },
+  { name: "task.bootstrap.apply", command: "jumpspace task bootstrap apply --file <proposal-file> [--dry-run] --json", description: "Bootstrap apply or dry-run result." },
 ];
 
 const schemaVersion = "https://json-schema.org/draft/2020-12/schema";
@@ -292,6 +296,57 @@ const commandErrorSchema = {
     taskId: { type: "string" },
     path: { type: "string" },
     stepId: { type: "string" },
+  },
+};
+
+const intentSummarySchema = {
+  type: "object",
+  required: ["id", "status", "scope", "title", "path"],
+  additionalProperties: false,
+  properties: {
+    id: { type: "string" },
+    status: { enum: ["active", "superseded", "rejected"] },
+    scope: { type: "array", items: { type: "string" } },
+    title: { type: "string" },
+    path: { type: "string" },
+    superseded_by: { type: "string" },
+  },
+};
+
+const intentCheckIntentSchema = {
+  type: "object",
+  required: ["id", "status", "scope", "title", "path"],
+  additionalProperties: false,
+  properties: {
+    ...intentSummarySchema.properties,
+    decision: { type: "string" },
+    why: { type: "string" },
+    alternatives_rejected: { type: "string" },
+  },
+};
+
+const intentValidationIssueSchema = {
+  type: "object",
+  required: ["severity", "code", "message"],
+  additionalProperties: false,
+  properties: {
+    severity: { enum: ["error", "warning"] },
+    code: { type: "string" },
+    message: { type: "string" },
+    path: { type: "string" },
+    intent_id: { type: "string" },
+  },
+};
+
+const intentVerificationResultSchema = {
+  type: "object",
+  required: ["status", "paths", "evidence"],
+  additionalProperties: false,
+  properties: {
+    status: { enum: ["consistent", "possible_violation", "unknown", "not_applicable"] },
+    intent: intentSummarySchema,
+    paths: { type: "array", items: { type: "string" } },
+    evidence: { type: "array", items: { type: "string" } },
   },
 };
 
@@ -1119,14 +1174,14 @@ const prAssistantReportSchema = {
     },
     schemas: {
       type: "object",
-      required: ["packet", "ci", "errors"],
-      additionalProperties: false,
-      properties: {
-        packet: { const: "pr.comment" },
-        ci: { const: "ci" },
-        errors: { const: "error" },
-      },
-    },
+          required: ["packet", "ci", "errors"],
+          additionalProperties: false,
+          properties: {
+            packet: { const: "task.pr.comment" },
+            ci: { const: "task.ci" },
+            errors: { const: "error" },
+          },
+        },
     ci: ciReportSchema,
     review_items: { type: "array", items: prAssistantReviewItemSchema },
     summary: {
@@ -1284,8 +1339,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "list",
-    command: "jumpspace list --json",
+    name: "task.list",
+    command: "jumpspace task list --json",
     description: "Indexed task list.",
     schema: {
       $schema: schemaVersion,
@@ -1298,8 +1353,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "find",
-    command: "jumpspace find <query...> --json",
+    name: "task.find",
+    command: "jumpspace task find <query...> --json",
     description: "Task search results with matched and unmatched terms.",
     schema: {
       $schema: schemaVersion,
@@ -1328,8 +1383,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "find.compact",
-    command: "jumpspace find <query...> --json --compact",
+    name: "task.find.compact",
+    command: "jumpspace task find <query...> --json --compact",
     description: "Compact task search results for agent orientation without embedded plans or long specs.",
     schema: {
       $schema: schemaVersion,
@@ -1346,8 +1401,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "audit",
-    command: "jumpspace audit --json",
+    name: "task.audit",
+    command: "jumpspace task audit --json",
     description: "Validation issues for task metadata and graph references.",
     schema: {
       $schema: schemaVersion,
@@ -1363,8 +1418,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "last",
-    command: "jumpspace last --json",
+    name: "task.last",
+    command: "jumpspace task last --json",
     description: "Most recent successful mutation summary.",
     schema: {
       $schema: schemaVersion,
@@ -1378,8 +1433,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "history",
-    command: "jumpspace history [--task <id>] [--limit <n>] --json",
+    name: "task.history",
+    command: "jumpspace task history [--task <id>] [--limit <n>] --json",
     description: "Generated mutation history entries, newest first, with task and limit filters.",
     schema: {
       $schema: schemaVersion,
@@ -1392,8 +1447,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "handoff",
-    command: "jumpspace handoff [--task <id>] [--limit <n>] --json",
+    name: "task.handoff",
+    command: "jumpspace task handoff [--task <id>] [--limit <n>] --json",
     description: "Agent handoff recap with recent mutations, graph health, optional task state, and suggested next commands.",
     schema: {
       $schema: schemaVersion,
@@ -1496,13 +1551,13 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
           required: ["packet", "failures", "history", "doctor", "audit", "context", "next", "schema_coverage"],
           additionalProperties: false,
           properties: {
-            packet: { const: "handoff" },
+            packet: { const: "task.handoff" },
             failures: { const: "error" },
-            history: { const: "history" },
-            doctor: { const: "doctor" },
-            audit: { const: "audit" },
-            context: { const: "context" },
-            next: { const: "next" },
+            history: { const: "task.history" },
+            doctor: { const: "task.doctor" },
+            audit: { const: "task.audit" },
+            context: { const: "task.context" },
+            next: { const: "task.next" },
             schema_coverage: { const: "schema.coverage" },
           },
         },
@@ -1519,8 +1574,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "doctor",
-    command: "jumpspace doctor [--since <ref>] --json",
+    name: "task.doctor",
+    command: "jumpspace task doctor [--since <ref>] --json",
     description: "Post-mutation diagnostics that separate blocking errors, factual warnings, and suggested repairs.",
     schema: {
       $schema: schemaVersion,
@@ -1800,8 +1855,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "context",
-    command: "jumpspace context <id> --json",
+    name: "task.context",
+    command: "jumpspace task context <id> --json",
     description: "Agent-ready task context packet.",
     schema: {
       $schema: schemaVersion,
@@ -1816,8 +1871,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "related",
-    command: "jumpspace related <id> --json",
+    name: "task.related",
+    command: "jumpspace task related <id> --json",
     description: "Full dependency and reference relationships for a task.",
     schema: {
       $schema: schemaVersion,
@@ -1856,8 +1911,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "related.compact",
-    command: "jumpspace related <id> --json --compact",
+    name: "task.related.compact",
+    command: "jumpspace task related <id> --json --compact",
     description: "Compact dependency and reference relationships for agent orientation without embedded plans or long specs.",
     schema: {
       $schema: schemaVersion,
@@ -1898,8 +1953,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "plan.review",
-    command: "jumpspace plan review <id> --json",
+    name: "task.plan.review",
+    command: "jumpspace task plan review <id> --json",
     description: "Human approval and execution-readiness packet for a documented task.",
     schema: {
       $schema: schemaVersion,
@@ -1907,8 +1962,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "plan.save",
-    command: "jumpspace plan save <id> --file <plan-file> --json",
+    name: "task.plan.save",
+    command: "jumpspace task plan save <id> --file <plan-file> --json",
     description: "Successful durable plan persistence result.",
     schema: {
       $schema: schemaVersion,
@@ -1923,8 +1978,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "plan.show",
-    command: "jumpspace plan show <id> --json",
+    name: "task.plan.show",
+    command: "jumpspace task plan show <id> --json",
     description: "Persisted durable plan for a task.",
     schema: {
       $schema: schemaVersion,
@@ -1938,8 +1993,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "plan.validate",
-    command: "jumpspace plan validate <id> --json",
+    name: "task.plan.validate",
+    command: "jumpspace task plan validate <id> --json",
     description: "Durable plan validation result with issues and structured errors.",
     schema: {
       $schema: schemaVersion,
@@ -1955,8 +2010,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "ready",
-    command: "jumpspace ready --json",
+    name: "task.ready",
+    command: "jumpspace task ready --json",
     description: "Approved or partial tasks ready for agent execution.",
     schema: {
       $schema: schemaVersion,
@@ -1969,8 +2024,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "execute",
-    command: "jumpspace execute <id> --json",
+    name: "task.execute",
+    command: "jumpspace task execute <id> --json",
     description: "Execution gate packet for an approved or partial task.",
     schema: {
       $schema: schemaVersion,
@@ -1989,8 +2044,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "next",
-    command: "jumpspace next <id> --json",
+    name: "task.next",
+    command: "jumpspace task next <id> --json",
     description: "Pending unblocked durable plan steps for a task.",
     schema: {
       $schema: schemaVersion,
@@ -2004,8 +2059,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "step.complete",
-    command: "jumpspace step complete <task-id> <step-id> --evidence <evidence> --json",
+    name: "task.step.complete",
+    command: "jumpspace task step complete <task-id> <step-id> --evidence <evidence> --json",
     description: "Successful durable plan step completion result.",
     schema: {
       $schema: schemaVersion,
@@ -2021,9 +2076,9 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "status",
-    command: "jumpspace status <id> <status> --json",
-    description: "Successful task status update result. Verified status is excluded and must be earned with verify.",
+    name: "task.status",
+    command: "jumpspace task status <id> <status> --json",
+    description: "Successful task status update result. Verified status is excluded and must be earned with task verify.",
     schema: {
       $schema: schemaVersion,
       type: "object",
@@ -2037,8 +2092,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "verify",
-    command: "jumpspace verify <id> --check <cmd> --criteria <criterion-id> --json",
+    name: "task.verify",
+    command: "jumpspace task verify <id> --check <cmd> --criteria <criterion-id> --json",
     description: "Successful earned verification result with commit, checks, criteria coverage, and evidence.",
     schema: {
       $schema: schemaVersion,
@@ -2054,8 +2109,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "work",
-    command: "jumpspace work <id> [--since <ref>] --json",
+    name: "task.work",
+    command: "jumpspace task work <id> [--since <ref>] --json",
     description: "Complete agent start packet for a ready task, including plan state, next steps, verification, schemas, guardrails, and optional drift.",
     schema: {
       $schema: schemaVersion,
@@ -2161,12 +2216,12 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
           required: ["packet", "failures", "context", "audit", "drift", "history"],
           additionalProperties: false,
           properties: {
-            packet: { const: "work" },
+            packet: { const: "task.work" },
             failures: { const: "error" },
-            context: { const: "context" },
-            audit: { const: "audit" },
-            drift: { const: "drift" },
-            history: { const: "history" },
+            context: { const: "task.context" },
+            audit: { const: "task.audit" },
+            drift: { const: "task.drift" },
+            history: { const: "task.history" },
           },
         },
         guardrails: { type: "array", items: { type: "string" } },
@@ -2175,8 +2230,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "ask",
-    command: "jumpspace ask <question...> --json",
+    name: "task.ask",
+    command: "jumpspace task ask <question...> --json",
     description: "Evidence summary for a repo-local question. This is retrieval evidence, not an authoritative answer.",
     schema: {
       $schema: schemaVersion,
@@ -2194,8 +2249,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "ask.compact",
-    command: "jumpspace ask <question...> --json --compact",
+    name: "task.ask.compact",
+    command: "jumpspace task ask <question...> --json --compact",
     description: "Compact evidence summary for agent orientation. This is retrieval evidence, not an authoritative answer.",
     schema: {
       $schema: schemaVersion,
@@ -2255,8 +2310,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "semantic.build",
-    command: "jumpspace semantic build --json",
+    name: "task.semantic.build",
+    command: "jumpspace task semantic build --json",
     description: "Builds and enables the optional local semantic task index.",
     schema: {
       $schema: schemaVersion,
@@ -2275,8 +2330,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "semantic.status",
-    command: "jumpspace semantic status --json",
+    name: "task.semantic.status",
+    command: "jumpspace task semantic status --json",
     description: "Reports semantic index readiness, staleness, backend, and non-blocking issues.",
     schema: {
       $schema: schemaVersion,
@@ -2298,8 +2353,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "semantic.search",
-    command: "jumpspace semantic search <query...> --json",
+    name: "task.semantic.search",
+    command: "jumpspace task semantic search <query...> --json",
     description: "Searches the generated local semantic task index.",
     schema: {
       $schema: schemaVersion,
@@ -2316,8 +2371,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "semantic.eval",
-    command: "jumpspace semantic eval --json",
+    name: "task.semantic.eval",
+    command: "jumpspace task semantic eval --json",
     description: "Compares lexical, deterministic task-vector, and active semantic retrieval on built-in evaluation fixtures.",
     schema: {
       $schema: schemaVersion,
@@ -2358,8 +2413,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "query",
-    command: "jumpspace query [filters] --json",
+    name: "task.query",
+    command: "jumpspace task query [filters] --json",
     description: "Deterministic graph query results with applied filters, matched graph paths, and unanswered constraints.",
     schema: {
       $schema: schemaVersion,
@@ -2367,8 +2422,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "drift",
-    command: "jumpspace drift --since <ref> --json",
+    name: "task.drift",
+    command: "jumpspace task drift --since <ref> --json",
     description: "Factual task-memory drift separated from heuristic maintenance warnings.",
     schema: {
       $schema: schemaVersion,
@@ -2385,8 +2440,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "ci",
-    command: "jumpspace ci --since <ref> [--query <field=value>] --json",
+    name: "task.ci",
+    command: "jumpspace task ci --since <ref> [--query <field=value>] --json",
     description: "Local CI/PR report with scan, audit, doctor, drift, repair suggestions, graph query packets, task-block suggestions, and a Markdown PR comment.",
     schema: {
       $schema: schemaVersion,
@@ -2394,8 +2449,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "pr.comment",
-    command: "jumpspace pr comment --since <ref> --json",
+    name: "task.pr.comment",
+    command: "jumpspace task pr comment --since <ref> --json",
     description: "Idempotent, review-only PR assistant comment packet built from the local CI report.",
     schema: {
       $schema: schemaVersion,
@@ -2403,8 +2458,109 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "repair",
-    command: "jumpspace repair --since <ref> [--apply] --json",
+    name: "intent.list",
+    command: "jumpspace intent list --json",
+    description: "Lists repo-local durable intent records from configured intent roots.",
+    schema: {
+      $schema: schemaVersion,
+      type: "object",
+      required: ["ok", "roots", "count", "intents", "issues"],
+      additionalProperties: false,
+      properties: {
+        ok: { const: true },
+        roots: { type: "array", items: { type: "string" } },
+        count: { type: "number" },
+        intents: { type: "array", items: intentSummarySchema },
+        issues: { type: "array", items: intentValidationIssueSchema },
+      },
+    },
+  },
+  {
+    name: "intent.check",
+    command: "jumpspace intent check --for <path> --json",
+    description: "Returns active intents whose scope globs match supplied paths.",
+    schema: {
+      $schema: schemaVersion,
+      type: "object",
+      required: ["ok", "roots", "paths", "active_intent_count", "matched_intent_count", "matches", "unmatched_paths"],
+      additionalProperties: false,
+      properties: {
+        ok: { const: true },
+        roots: { type: "array", items: { type: "string" } },
+        paths: { type: "array", items: { type: "string" } },
+        active_intent_count: { type: "number" },
+        matched_intent_count: { type: "number" },
+        matches: {
+          type: "array",
+          items: {
+            type: "object",
+            required: ["intent", "matched_paths"],
+            additionalProperties: false,
+            properties: {
+              intent: intentCheckIntentSchema,
+              matched_paths: { type: "array", items: { type: "string" } },
+            },
+          },
+        },
+        unmatched_paths: { type: "array", items: { type: "string" } },
+      },
+    },
+  },
+  {
+    name: "intent.validate",
+    command: "jumpspace intent validate [--since <ref>] [--max-new <n>] --json",
+    description: "Validates repo-local intent files without mutating them, with an optional branch-level new-intent guardrail.",
+    schema: {
+      $schema: schemaVersion,
+      type: "object",
+      required: ["ok", "roots", "count", "issues", "errors", "warnings"],
+      additionalProperties: false,
+      properties: {
+        ok: { type: "boolean" },
+        roots: { type: "array", items: { type: "string" } },
+        count: { type: "number" },
+        since: { type: "string" },
+        max_new_active_intents: { type: "number" },
+        new_active_intent_count: { type: "number" },
+        new_active_intents: { type: "array", items: intentSummarySchema },
+        issues: { type: "array", items: intentValidationIssueSchema },
+        errors: { type: "array", items: intentValidationIssueSchema },
+        warnings: { type: "array", items: intentValidationIssueSchema },
+      },
+    },
+  },
+  {
+    name: "intent.verify",
+    command: "jumpspace intent verify (--for <path> | --since <ref> | --diff <file>) --json",
+    description: "Creates a PR-level intent verification packet without mutating intent files.",
+    schema: {
+      $schema: schemaVersion,
+      type: "object",
+      required: ["ok", "since", "roots", "paths", "summary", "results"],
+      additionalProperties: false,
+      properties: {
+        ok: { const: true },
+        since: { anyOf: [{ type: "string" }, { type: "null" }] },
+        roots: { type: "array", items: { type: "string" } },
+        paths: { type: "array", items: { type: "string" } },
+        summary: {
+          type: "object",
+          required: ["consistent", "possible_violation", "unknown", "not_applicable"],
+          additionalProperties: false,
+          properties: {
+            consistent: { type: "number" },
+            possible_violation: { type: "number" },
+            unknown: { type: "number" },
+            not_applicable: { type: "number" },
+          },
+        },
+        results: { type: "array", items: intentVerificationResultSchema },
+      },
+    },
+  },
+  {
+    name: "task.repair",
+    command: "jumpspace task repair --since <ref> [--apply] --json",
     description: "Dry-run or applied task-memory repairs for Git path drift. Renames are mechanical fixes; missing/deleted linked files become explicit gaps.",
     schema: {
       $schema: schemaVersion,
@@ -2412,8 +2568,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "link",
-    command: "jumpspace link update <id> [link options] --json",
+    name: "task.link",
+    command: "jumpspace task link update <id> [link options] --json",
     description: "Dry-run or applied task metadata link updates for code, tests, dependencies, refs, and gaps.",
     schema: {
       $schema: schemaVersion,
@@ -2432,8 +2588,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "link.suggest",
-    command: "jumpspace link suggest <id> [--since <ref>] [--path <path>] --json",
+    name: "task.link.suggest",
+    command: "jumpspace task link suggest <id> [--since <ref>] [--path <path>] --json",
     description: "Evidence-backed code/test link suggestions from working-tree changes, changed files, or explicit candidate paths. This command never mutates source.",
     schema: {
       $schema: schemaVersion,
@@ -2452,8 +2608,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "link.eval",
-    command: "jumpspace link eval [--file <fixture-file>] --json",
+    name: "task.link.eval",
+    command: "jumpspace task link eval [--file <fixture-file>] --json",
     description: "Built-in or file-based ranking quality evaluation for link suggestion fixtures.",
     schema: {
       $schema: schemaVersion,
@@ -2511,8 +2667,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "bootstrap.context",
-    command: "jumpspace bootstrap context [paths...] --json",
+    name: "task.bootstrap.context",
+    command: "jumpspace task bootstrap context [paths...] --json",
     description: "Markdown heading context packet for AI-assisted graph bootstrap proposals.",
     schema: {
       $schema: schemaVersion,
@@ -2532,8 +2688,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "bootstrap.discover",
-    command: "jumpspace bootstrap discover --json",
+    name: "task.bootstrap.discover",
+    command: "jumpspace task bootstrap discover --json",
     description: "Discovers common Markdown docs, recommended config globs, profile hints, and ignored noisy paths.",
     schema: {
       $schema: schemaVersion,
@@ -2564,8 +2720,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "bootstrap.propose",
-    command: "jumpspace bootstrap propose [paths...] [--file <proposal-file>] --json",
+    name: "task.bootstrap.propose",
+    command: "jumpspace task bootstrap propose [paths...] [--file <proposal-file>] --json",
     description: "Deterministic bootstrap proposal draft packet. This is extraction evidence, not agent reasoning, and apply still requires human approval.",
     schema: {
       $schema: schemaVersion,
@@ -2640,8 +2796,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "bootstrap.validate",
-    command: "jumpspace bootstrap validate --file <proposal-file> --json",
+    name: "task.bootstrap.validate",
+    command: "jumpspace task bootstrap validate --file <proposal-file> --json",
     description: "Bootstrap proposal validation result.",
     schema: {
       $schema: schemaVersion,
@@ -2658,8 +2814,8 @@ export const schemaCatalog: JsonSchemaDefinition[] = [
     },
   },
   {
-    name: "bootstrap.apply",
-    command: "jumpspace bootstrap apply --file <proposal-file> [--dry-run] --json",
+    name: "task.bootstrap.apply",
+    command: "jumpspace task bootstrap apply --file <proposal-file> [--dry-run] --json",
     description: "Bootstrap apply or dry-run result.",
     schema: {
       $schema: schemaVersion,

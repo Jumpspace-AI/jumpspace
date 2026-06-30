@@ -56,8 +56,8 @@ Every task should have:
 - `refs`: typed relationships to other tasks.
 - `sources`: project tracker, GitHub, ADR, or other external references.
 - `gaps`: known missing code, tests, docs, or decisions.
-- `acceptance_criteria`: named criteria that `jumpspace verify` can cover.
-- `verification_records`: earned verification evidence written by `jumpspace verify`.
+- `acceptance_criteria`: named criteria that `jumpspace task verify` can cover.
+- `verification_records`: earned verification evidence written by `jumpspace task verify`.
 - `plan`: durable ordered execution steps.
 
 ## Status Values
@@ -71,7 +71,7 @@ Use plain statuses that match your team language, such as:
 - `blocked`
 - `verified`
 
-`verified` is protected. Use `jumpspace verify` to earn it instead of setting it directly with `jumpspace status`.
+`verified` is protected. Use `jumpspace task verify` to earn it instead of setting it directly with `jumpspace task status`.
 
 ## Good Task Granularity
 
@@ -90,8 +90,8 @@ Good task blocks usually answer:
 Run these after editing task blocks:
 
 ```bash
-npx @jumpspace/cli scan
-npx @jumpspace/cli audit --json
+npx @jumpspace/cli task scan
+npx @jumpspace/cli task audit --json
 ```
 
 `scan` refreshes the index. `audit` catches broken task references, missing linked files, invalid plans, and stale semantic indexes.

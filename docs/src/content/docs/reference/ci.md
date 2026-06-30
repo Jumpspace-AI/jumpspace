@@ -17,8 +17,8 @@ The generated workflow runs `scan`, refreshes the semantic index with
 Run locally:
 
 ```bash
-npx @jumpspace/cli ci --since main --json
-npx @jumpspace/cli pr comment --since main
+npx @jumpspace/cli task ci --since main --json
+npx @jumpspace/cli task pr comment --since main
 ```
 
 The PR comment command renders text. It does not post to GitHub by itself.

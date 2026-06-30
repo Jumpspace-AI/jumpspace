@@ -96,7 +96,7 @@ export async function runSemanticBuild(options: SemanticBuildOptions = {}): Prom
   }
   await writeSemanticIndex(root, settings.path, semanticIndex);
   await recordMutation(root, {
-    command: "semantic build",
+    command: "task semantic build",
     touched_files: [settings.path, ...(configUpdated ? [".jumpspace/config.json"] : [])],
     config_changes: configUpdated
       ? [
@@ -160,7 +160,7 @@ export async function runSemanticSearch(
       status.issues.length > 0
         ? issuesToCommandErrors(status.issues)
         : [
-            commandError("SEMANTIC_INDEX_UNAVAILABLE", "Semantic index is not ready. Run `jumpspace semantic build`.", {
+            commandError("SEMANTIC_INDEX_UNAVAILABLE", "Semantic index is not ready. Run `jumpspace task semantic build`.", {
               path: status.path,
             }),
           ];

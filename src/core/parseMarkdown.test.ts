@@ -55,7 +55,7 @@ plan:
         - docs/specs/example.md
       tests: []
       checks:
-        - jumpspace plan validate DOC-MON-001
+        - jumpspace task plan validate DOC-MON-001
       evidence:
         - Human approved the plan.
 -->
@@ -134,7 +134,7 @@ Outside the task.
             depends_on: [],
             source_files: ["docs/specs/example.md"],
             tests: [],
-            checks: ["jumpspace plan validate DOC-MON-001"],
+            checks: ["jumpspace task plan validate DOC-MON-001"],
             evidence: ["Human approved the plan."],
           },
         ],

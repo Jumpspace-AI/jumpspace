@@ -1,11 +1,18 @@
 ---
 title: New Repo Use
-description: Add Jumpspace to an existing repo and let an agent bootstrap the first graph.
+description: Add Jumpspace to a repo and choose intent memory or advanced task graph bootstrap.
 ---
 
 This is the path for a repo that does not have Jumpspace yet.
 
-You do not need to memorize every command. The fastest workflow is to install Jumpspace, add agent guidance, then ask your agent for the outcome. The installed guidance tells the agent to use Jumpspace as the workflow spine.
+For the default intent-memory workflow, use
+[Quickstart](/start-here/quickstart/) and add one intent that code cannot
+explain. Continue here only when you want an agent to bootstrap the advanced
+task graph from existing docs.
+
+You do not need to memorize every command. The fastest workflow is to install
+Jumpspace, add agent guidance, then ask your agent for the outcome. The
+installed guidance tells the agent to use Jumpspace as the workflow spine.
 
 ## The Goal
 
@@ -68,19 +75,19 @@ Bootstrap this repo. Run discovery first, inspect the docs, propose a small sour
 The agent should use commands like:
 
 ```bash
-npx @jumpspace/cli bootstrap discover --json
-npx @jumpspace/cli bootstrap context README.md docs/**/*.md documentation/**/*.md --json
-npx @jumpspace/cli bootstrap propose README.md docs/**/*.md documentation/**/*.md --file jumpspace-bootstrap.json --json
-npx @jumpspace/cli bootstrap validate --file jumpspace-bootstrap.json --json
-npx @jumpspace/cli bootstrap apply --file jumpspace-bootstrap.json --dry-run --json
+npx @jumpspace/cli task bootstrap discover --json
+npx @jumpspace/cli task bootstrap context README.md docs/**/*.md documentation/**/*.md --json
+npx @jumpspace/cli task bootstrap propose README.md docs/**/*.md documentation/**/*.md --file jumpspace-bootstrap.json --json
+npx @jumpspace/cli task bootstrap validate --file jumpspace-bootstrap.json --json
+npx @jumpspace/cli task bootstrap apply --file jumpspace-bootstrap.json --dry-run --json
 ```
 
 After you approve the dry run:
 
 ```bash
-npx @jumpspace/cli bootstrap apply --file jumpspace-bootstrap.json --json
-npx @jumpspace/cli scan
-npx @jumpspace/cli audit --json
+npx @jumpspace/cli task bootstrap apply --file jumpspace-bootstrap.json --json
+npx @jumpspace/cli task scan
+npx @jumpspace/cli task audit --json
 ```
 
 Use `link suggest <id> --json` without `--since` when you only want current
@@ -112,7 +119,7 @@ For implementation:
 Create or review the plan for PM-TASK-001. Show me the plan before making changes. After I approve it, execute the next step and record evidence.
 ```
 
-The agent can translate that into `context`, `plan`, `next`, `work`, `step complete`, `verify`, `scan`, and `audit` calls.
+The agent can translate that into `task context`, `task plan`, `task next`, `task work`, `task step complete`, `task verify`, `task scan`, and `task audit` calls.
 
 ## Day-Two Habit
 
@@ -126,7 +133,7 @@ That usually maps to:
 
 ```bash
 npx @jumpspace/cli changed --since main --json
-npx @jumpspace/cli drift --since main --json
-npx @jumpspace/cli link suggest PM-TASK-001 --since main --json
-npx @jumpspace/cli audit --json
+npx @jumpspace/cli task drift --since main --json
+npx @jumpspace/cli task link suggest PM-TASK-001 --since main --json
+npx @jumpspace/cli task audit --json
 ```

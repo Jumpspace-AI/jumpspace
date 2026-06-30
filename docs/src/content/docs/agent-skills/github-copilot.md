@@ -10,14 +10,14 @@ Use Jumpspace through the CLI and keep repo guidance in Markdown:
 ```bash
 npx @jumpspace/cli init --auto
 npx @jumpspace/cli add-skill --all
-npx @jumpspace/cli scan
+npx @jumpspace/cli task scan
 ```
 
 For pull requests, use:
 
 ```bash
-npx @jumpspace/cli ci --since main --json
-npx @jumpspace/cli pr comment --since main
+npx @jumpspace/cli task ci --since main --json
+npx @jumpspace/cli task pr comment --since main
 ```
 
 `pr comment` renders a review-only comment. It does not post to GitHub by

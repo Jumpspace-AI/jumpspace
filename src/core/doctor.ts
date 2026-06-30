@@ -99,7 +99,7 @@ function compactTaskGapWarnings(issues: JumpIssue[]): JumpIssue[] {
         ? issue
         : {
             ...issue,
-            message: `Task ${issue.taskId} has ${count} explicit unresolved gaps. Run \`jumpspace audit --json\` or \`jumpspace context ${issue.taskId} --json\` for details.`,
+            message: `Task ${issue.taskId} has ${count} explicit unresolved gaps. Run \`jumpspace task audit --json\` or \`jumpspace task context ${issue.taskId} --json\` for details.`,
           },
     );
   }
@@ -246,7 +246,7 @@ function suggestionsForIssues(issues: JumpIssue[]): DoctorSuggestion[] {
       suggestions.push({
         code: "RUN_SCAN",
         message: "Refresh the generated index.",
-        command: "jumpspace scan",
+        command: "jumpspace task scan",
       });
     } else if (issue.code === "MISSING_CODE_FILE" || issue.code === "MISSING_TEST_FILE") {
       suggestions.push({
@@ -277,7 +277,7 @@ function suggestionsForIssues(issues: JumpIssue[]): DoctorSuggestion[] {
       suggestions.push({
         code: "REFRESH_SOURCE_DOC_RENAME",
         message: "Refresh the index after the source document move and confirm config docs still include the new path.",
-        command: "jumpspace scan",
+        command: "jumpspace task scan",
         taskId: issue.taskId,
         path: issue.path,
       });
@@ -309,7 +309,7 @@ function suggestionsForIssues(issues: JumpIssue[]): DoctorSuggestion[] {
       suggestions.push({
         code: "REBUILD_SEMANTIC_INDEX",
         message: "Refresh the optional generated semantic retrieval index.",
-        command: "jumpspace semantic build",
+        command: "jumpspace task semantic build",
         path: issue.path,
       });
     }
@@ -335,7 +335,7 @@ function suggestionsForRepair(repair: DriftRepairReport | null): DoctorSuggestio
     {
       code: "RUN_REPAIR",
       message: `Apply ${repair.mechanical_fixes.length} mechanical fix(es) and record ${repair.gaps.length} gap(s).`,
-      command: `jumpspace repair --since ${repair.since} --apply`,
+      command: `jumpspace task repair --since ${repair.since} --apply`,
     },
   ];
 }
@@ -380,7 +380,7 @@ function renderRepairOpportunities(repair: DriftRepairReport | null): string {
     `- Warnings: ${repair.warnings.length}`,
   ];
   if (repair.mechanical_fixes.length > 0 || repair.gaps.length > 0) {
-    lines.push(`- Apply: jumpspace repair --since ${repair.since} --apply`);
+    lines.push(`- Apply: jumpspace task repair --since ${repair.since} --apply`);
   }
   return lines.join("\n");
 }

@@ -58,6 +58,6 @@ describe("renderTaskContext", () => {
     expect(packet).toContain("- related_to: JS-005 - Context tells agents to run audit.");
     expect(packet).toContain("## Plan");
     expect(packet).toContain("Goal: Render context with plans.");
-    expect(packet).toContain("Run `jumpspace scan` and `jumpspace audit` before finishing.");
+    expect(packet).toContain("Run `jumpspace task scan` and `jumpspace task audit` before finishing.");
   });
 });

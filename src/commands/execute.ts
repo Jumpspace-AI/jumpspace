@@ -16,7 +16,7 @@ export async function runExecute(id: string, options: ExecuteOptions = {}): Prom
   const state = getExecutionState(index, id);
 
   if (!state) {
-    throw new Error(`Unknown Jumpspace task ID "${id}". Run \`jumpspace find <query>\` to locate it.`);
+    throw new Error(`Unknown Jumpspace task ID "${id}". Run \`jumpspace task find <query>\` to locate it.`);
   }
 
   if (!state.ready && !options.force) {

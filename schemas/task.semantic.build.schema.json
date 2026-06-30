@@ -1,0 +1,182 @@
+{
+  "contract_version": 1,
+  "name": "task.semantic.build",
+  "command": "jumpspace task semantic build --json",
+  "description": "Builds and enables the optional local semantic task index.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "index_path",
+      "task_count",
+      "document_count",
+      "source_index",
+      "backend",
+      "config_updated"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "const": true
+      },
+      "index_path": {
+        "type": "string"
+      },
+      "task_count": {
+        "type": "number"
+      },
+      "document_count": {
+        "type": "number"
+      },
+      "source_index": {
+        "type": "object",
+        "required": [
+          "path",
+          "generated_at",
+          "task_count",
+          "task_ids",
+          "hash"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "generated_at": {
+            "type": "string"
+          },
+          "task_count": {
+            "type": "number"
+          },
+          "task_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "hash": {
+            "type": "string"
+          }
+        }
+      },
+      "backend": {
+        "type": "object",
+        "required": [
+          "active",
+          "preferred",
+          "selected",
+          "optional_dependencies",
+          "model",
+          "vector_kind",
+          "store",
+          "degraded",
+          "reason"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "active": {
+            "enum": [
+              "local-task-vector-v1",
+              "lancedb-onnx-v1"
+            ]
+          },
+          "preferred": {
+            "const": "lancedb+onnx"
+          },
+          "selected": {
+            "enum": [
+              "auto",
+              "local-task-vector-v1",
+              "lancedb-onnx-v1"
+            ]
+          },
+          "optional_dependencies": {
+            "type": "object",
+            "required": [
+              "lancedb",
+              "onnx"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "lancedb": {
+                "type": "boolean"
+              },
+              "onnx": {
+                "type": "boolean"
+              }
+            }
+          },
+          "model": {
+            "type": "object",
+            "required": [
+              "name",
+              "source"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "source": {
+                "enum": [
+                  "default",
+                  "config",
+                  "option",
+                  "provider"
+                ]
+              },
+              "dimensions": {
+                "type": "number"
+              }
+            }
+          },
+          "vector_kind": {
+            "enum": [
+              "sparse_terms",
+              "dense_embedding"
+            ]
+          },
+          "store": {
+            "type": "object",
+            "required": [
+              "kind",
+              "path",
+              "available"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "kind": {
+                "enum": [
+                  "json",
+                  "lancedb"
+                ]
+              },
+              "path": {
+                "type": "string"
+              },
+              "table": {
+                "type": "string"
+              },
+              "available": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string"
+              }
+            }
+          },
+          "degraded": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "config_updated": {
+        "type": "boolean"
+      }
+    }
+  }
+}

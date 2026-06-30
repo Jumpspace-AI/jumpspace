@@ -1,0 +1,65 @@
+{
+  "contract_version": 1,
+  "name": "task.bootstrap.apply",
+  "command": "jumpspace task bootstrap apply --file <proposal-file> [--dry-run] --json",
+  "description": "Bootstrap apply or dry-run result.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "dry_run",
+      "applied",
+      "config_paths_added"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "const": true
+      },
+      "dry_run": {
+        "type": "boolean"
+      },
+      "applied": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "id",
+            "path",
+            "heading",
+            "line",
+            "action"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "heading": {
+              "type": "string"
+            },
+            "line": {
+              "type": "number"
+            },
+            "action": {
+              "enum": [
+                "inserted",
+                "would_insert"
+              ]
+            }
+          }
+        }
+      },
+      "config_paths_added": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

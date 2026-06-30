@@ -15,83 +15,95 @@ This page gives you the shortest useful path. Use the
 npm install -D @jumpspace/cli
 npx @jumpspace/cli init --auto
 npx @jumpspace/cli add-skill --all
-npx @jumpspace/cli doctor
+npx @jumpspace/cli intent list
+npx @jumpspace/cli intent validate --json
 ```
 
-Add a small task block to a Markdown spec:
+Add a small intent for a decision code cannot explain:
 
 ```md
-## Project invite flow
+---
+id: no-pre-launch-feature-flags
+status: active
+scope: src/**/*.ts, src/**/*.tsx
+---
 
-<!-- jumpspace
-id: DOC-PROJECT-001
-type: spec
-status: approved
-module: project-management
-space: repo
-code:
-  - src/project/invitations.ts
-tests:
-  - tests/project-invitations.test.ts
-acceptance_criteria:
-  - id: AC-1
-    description: A project admin can invite a teammate by email.
--->
+# Do not gate new code paths behind runtime feature flags
+
+## Decision
+While the app is pre-launch, new features ship without runtime feature-flag
+gates.
+
+## Why
+Feature flags add a second state dimension that the team does not need before
+external launch.
+
+## Alternatives rejected
+- **Environment-variable gates.** They still create cleanup debt.
 ```
 
-Then index and inspect it:
+Save it under `documentation/intents/`, then inspect it:
 
 ```bash
-npx @jumpspace/cli scan
-npx @jumpspace/cli context DOC-PROJECT-001
+npx @jumpspace/cli intent list
+npx @jumpspace/cli intent check --for src/app/page.tsx
+npx @jumpspace/cli intent validate --json
 ```
 
-## Path 2: Existing Repo Bootstrap
+## Path 2: Existing Repo Intent Memory
 
-Use this when the repo already has Markdown docs but no Jumpspace task blocks.
+Use this when the repo already has docs but no durable intent memory yet. Start
+with one decision that code cannot explain.
 
 ```bash
 npx @jumpspace/cli init --auto
-npx @jumpspace/cli bootstrap propose README.md docs/**/*.md --file jumpspace-bootstrap.json
-npx @jumpspace/cli bootstrap validate --file jumpspace-bootstrap.json
-npx @jumpspace/cli bootstrap apply --file jumpspace-bootstrap.json --dry-run
+npx @jumpspace/cli intent list --json
+npx @jumpspace/cli intent check --for src/app/page.tsx --json
+npx @jumpspace/cli intent validate --json
 ```
 
-Review the proposed task blocks. If they are useful:
+When a branch adds intent files, compare against a base ref so the 0-3
+new-intent guardrail can warn before review gets noisy:
 
 ```bash
-npx @jumpspace/cli bootstrap apply --file jumpspace-bootstrap.json
-npx @jumpspace/cli scan
-npx @jumpspace/cli doctor
+npx @jumpspace/cli intent validate --since origin/main --json
+npx @jumpspace/cli intent verify --since origin/main --json
 ```
 
-Use `bootstrap context README.md docs/**/*.md --json` when you want an AI agent
-to reason about headings and propose a better graph before applying anything.
+Use `bootstrap propose`, `bootstrap validate`, and `bootstrap apply` only when
+you want the advanced task graph/workflow layer from existing Markdown docs.
 
 ## Path 3: Agent Setup
 
 ```bash
 npx @jumpspace/cli add-skill --all
-npx @jumpspace/cli scan
-npx @jumpspace/cli ask "What does this repo know?"
+npx @jumpspace/cli intent check --for src/app/page.tsx
+npx @jumpspace/cli intent validate --json
 ```
 
 Then ask your agent:
 
 ```text
 Read the repo's Jumpspace guidance, then use Jumpspace to understand the
-implementation memory before changing code.
+intent memory before changing code.
 ```
 
-`ask` returns an evidence summary, not an authoritative answer. Treat it as a
-map of task IDs, paths, match reasons, coverage, and unanswered terms.
+`intent check` returns scoped decisions, not a hidden agent memory dump. Treat
+matches as binding context to read before editing, and propose new intents only
+for decisions code cannot explain.
 
 ## Health Check
 
 Run this whenever setup feels uncertain:
 
 ```bash
-npx @jumpspace/cli doctor --json
-npx @jumpspace/cli audit --json
+npx @jumpspace/cli intent validate --json
 npx @jumpspace/cli release install-doctor --json
+```
+
+If the repo intentionally uses task blocks, also run:
+
+```bash
+npx @jumpspace/cli task doctor --json
+npx @jumpspace/cli task audit --json
 ```

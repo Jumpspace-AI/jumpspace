@@ -32,6 +32,7 @@ Use `--json` when another tool needs to inspect exactly what changed.
 npx @jumpspace/cli add-skill jumpspace-bootstrap --agent claude
 npx @jumpspace/cli add-skill jumpspace-work --agent codex
 npx @jumpspace/cli add-skill review --agent claude
+npx @jumpspace/cli add-skill intent-review --agent codex
 ```
 
 Named installs include the reference `jumpspace-workflow` skill and the selected
@@ -42,7 +43,7 @@ workflow.
 
 ```bash
 npx @jumpspace/cli release install-doctor --json
-npx @jumpspace/cli doctor --json
+npx @jumpspace/cli task doctor --json
 ```
 
 `release install-doctor` checks whether the `jumpspace` on your PATH matches
@@ -52,22 +53,28 @@ the current repo build. `doctor` checks repo-local task memory health.
 
 ```text
 Read the Jumpspace guidance for this repo. Then run the appropriate Jumpspace
-commands to understand existing implementation memory before editing code.
+commands to understand existing intent memory before editing code.
 ```
 
-If the repo has tasks, the agent should usually run:
+Once likely edit paths are known, the agent should usually run:
 
 ```bash
-npx @jumpspace/cli scan
-npx @jumpspace/cli find <keywords> --json --compact
-npx @jumpspace/cli context <TASK_ID> --json
+npx @jumpspace/cli intent check --for <paths...> --json
 ```
 
-For approved implementation work, it should prefer:
+If the repo intentionally uses the advanced task graph, it can also run:
 
 ```bash
-npx @jumpspace/cli work <TASK_ID> --json
+npx @jumpspace/cli task scan
+npx @jumpspace/cli task find <keywords> --json --compact
+npx @jumpspace/cli task work <TASK_ID> --json
 ```
+
+When CI says changed files match active intents, ask the agent to use the
+`jumpspace-intent-review` skill. The agent should run
+`jumpspace intent validate --since <ref> --json` and
+`jumpspace intent verify --since <ref> --json`, inspect local diff hunks, and
+report `possible_violation` only with quoted intent and diff evidence.
 
 ## What Humans Still Approve
 

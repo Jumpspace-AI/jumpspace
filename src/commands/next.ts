@@ -17,7 +17,7 @@ export async function runNext(id: string, options: NextOptions = {}): Promise<nu
   const task = index.tasks.find((candidate) => candidate.id === id);
 
   if (!task) {
-    const message = `Unknown Jumpspace task ID "${id}". Run \`jumpspace find <query>\` to locate it.`;
+    const message = `Unknown Jumpspace task ID "${id}". Run \`jumpspace task find <query>\` to locate it.`;
     if (options.json) {
       writeLine(JSON.stringify(errorEnvelope(commandError("UNKNOWN_TASK", message, { taskId: id })), null, 2));
     } else {

@@ -1,0 +1,272 @@
+{
+  "contract_version": 1,
+  "name": "task.plan.review",
+  "command": "jumpspace task plan review <id> --json",
+  "description": "Human approval and execution-readiness packet for a documented task.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "task",
+      "ready",
+      "blockers",
+      "dependencies",
+      "missingDependencies"
+    ],
+    "additionalProperties": true,
+    "properties": {
+      "task": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "type",
+          "status",
+          "doc",
+          "spec",
+          "code",
+          "tests",
+          "depends_on"
+        ],
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "spec",
+              "engineering",
+              "hotfix",
+              "adr"
+            ]
+          },
+          "status": {
+            "enum": [
+              "draft",
+              "proposed",
+              "approved",
+              "partial",
+              "implemented",
+              "verified",
+              "stale"
+            ]
+          },
+          "module": {
+            "type": "string"
+          },
+          "space": {
+            "enum": [
+              "repo",
+              "module",
+              "global"
+            ]
+          },
+          "doc": {
+            "type": "object",
+            "required": [
+              "path",
+              "heading"
+            ],
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "heading": {
+                "type": "string"
+              },
+              "line": {
+                "type": "number"
+              },
+              "level": {
+                "type": "number"
+              },
+              "parent_headings": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "spec": {
+            "type": "string"
+          },
+          "code": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tests": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "gaps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "depends_on": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ready": {
+        "type": "boolean"
+      },
+      "blockers": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "type",
+            "message"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "enum": [
+                "status",
+                "dependency"
+              ]
+            },
+            "message": {
+              "type": "string"
+            },
+            "taskId": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "dependencies": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "id",
+            "title",
+            "type",
+            "status",
+            "doc",
+            "spec",
+            "code",
+            "tests",
+            "depends_on"
+          ],
+          "additionalProperties": true,
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "type": {
+              "enum": [
+                "spec",
+                "engineering",
+                "hotfix",
+                "adr"
+              ]
+            },
+            "status": {
+              "enum": [
+                "draft",
+                "proposed",
+                "approved",
+                "partial",
+                "implemented",
+                "verified",
+                "stale"
+              ]
+            },
+            "module": {
+              "type": "string"
+            },
+            "space": {
+              "enum": [
+                "repo",
+                "module",
+                "global"
+              ]
+            },
+            "doc": {
+              "type": "object",
+              "required": [
+                "path",
+                "heading"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "heading": {
+                  "type": "string"
+                },
+                "line": {
+                  "type": "number"
+                },
+                "level": {
+                  "type": "number"
+                },
+                "parent_headings": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "spec": {
+              "type": "string"
+            },
+            "code": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "tests": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "gaps": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "depends_on": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "missingDependencies": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

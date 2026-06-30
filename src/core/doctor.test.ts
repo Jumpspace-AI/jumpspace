@@ -41,7 +41,7 @@ describe("doctor diagnostics", () => {
     expect(report.warnings).toContainEqual(expect.objectContaining({ code: "MISSING_CODE_FILE" }));
     expect(report.suggestions).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ code: "RUN_SCAN", command: "jumpspace scan" }),
+        expect.objectContaining({ code: "RUN_SCAN", command: "jumpspace task scan" }),
         expect.objectContaining({ code: "RESTORE_OR_RELINK_FILE", taskId: "JS-100", path: "src/missing.ts" }),
       ]),
     );
@@ -115,7 +115,7 @@ Run it again.
     expect(report.suggestions).toContainEqual(
       expect.objectContaining({
         code: "REBUILD_SEMANTIC_INDEX",
-        command: "jumpspace semantic build",
+        command: "jumpspace task semantic build",
       }),
     );
     expect(renderDoctorReport(report)).toContain("Semantic index: enabled at .jumpspace/semantic-index.json");
@@ -215,7 +215,7 @@ Repair stale links.
     expect(report.suggestions).toContainEqual(
       expect.objectContaining({
         code: "RUN_REPAIR",
-        command: `jumpspace repair --since ${base} --apply`,
+        command: `jumpspace task repair --since ${base} --apply`,
       }),
     );
   });

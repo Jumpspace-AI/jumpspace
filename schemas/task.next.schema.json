@@ -1,0 +1,83 @@
+{
+  "contract_version": 1,
+  "name": "task.next",
+  "command": "jumpspace task next <id> --json",
+  "description": "Pending unblocked durable plan steps for a task.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "task_id",
+      "steps"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "task_id": {
+        "type": "string"
+      },
+      "steps": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "id",
+            "outcome",
+            "status",
+            "depends_on",
+            "source_files",
+            "tests",
+            "checks",
+            "evidence"
+          ],
+          "additionalProperties": true,
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "outcome": {
+              "type": "string"
+            },
+            "status": {
+              "enum": [
+                "pending",
+                "in_progress",
+                "complete",
+                "blocked"
+              ]
+            },
+            "depends_on": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "source_files": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "tests": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "checks": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "evidence": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,12 +1,14 @@
 # Jumpspace Agent Routing Index
 
-Jumpspace gives coding agents source-backed implementation memory inside a repo.
+Jumpspace gives coding agents source-backed intent memory inside a repo.
 
 ## Start Here
 
 - /start-here/welcome/ explains the first useful win.
 - /start-here/quickstart/ gives new repo, existing repo, and agent setup paths.
-- /start-here/existing-repo-bootstrap/ explains bootstrap propose, validate, dry-run, and apply.
+- /core-concepts/intents/ explains durable decisions, rationale, and rejected alternatives.
+- /core-concepts/scopes-and-lookup/ explains path-scoped intent matching.
+- /start-here/existing-repo-bootstrap/ explains advanced task graph bootstrap propose, validate, dry-run, and apply.
 - /start-here/agent-setup/ explains `add-skill --all`, `--codex`, `--claude`, and named pipeline skill installs.
 - /start-here/why-jumpspace/ compares Jumpspace to Git, issue trackers, docs, vector search, and generic memory.
 - /start-here/faq/ covers merge conflicts, teammate adoption, ask trust, and what to commit.
@@ -53,22 +55,20 @@ manual guidance pages.
 
 ## Agent Behavior
 
-Before editing code, run Jumpspace discovery:
+Before editing code, check scoped intent:
 
 ```bash
-npx @jumpspace/cli scan
-npx @jumpspace/cli find <keywords> --json --compact
-npx @jumpspace/cli context <TASK_ID> --json
+npx @jumpspace/cli intent check --for <path> --json
 ```
 
-For approved implementation work, prefer:
+For repos that intentionally use advanced task blocks, prefer:
 
 ```bash
-npx @jumpspace/cli work <TASK_ID> --json
+npx @jumpspace/cli task work <TASK_ID> --json
 ```
 
 When pausing or switching agents, run:
 
 ```bash
-npx @jumpspace/cli handoff --task <TASK_ID> --json
+npx @jumpspace/cli task handoff --task <TASK_ID> --json
 ```

@@ -9,7 +9,7 @@ Use the manual path:
 
 ```bash
 npx @jumpspace/cli add-skill --all
-npx @jumpspace/cli scan
+npx @jumpspace/cli intent list
 ```
 
 Then point Cursor at the repo guidance and docs:
@@ -21,9 +21,10 @@ Then point Cursor at the repo guidance and docs:
 ## First Prompt
 
 ```text
-Use Jumpspace as repo-local implementation memory. Run scan, find, ask, context,
-or work as appropriate before editing. Treat ask output as evidence, not an
-authoritative answer.
+Use Jumpspace as repo-local intent memory. Run intent check for files you may
+edit, read matching decisions and rejected alternatives, and treat task ask
+output as evidence only when this repo intentionally uses the advanced task
+graph.
 ```
 
 ## Roadmap

@@ -1,0 +1,483 @@
+{
+  "contract_version": 1,
+  "name": "task.link.eval",
+  "command": "jumpspace task link eval [--file <fixture-file>] --json",
+  "description": "Built-in or file-based ranking quality evaluation for link suggestion fixtures.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "suite",
+      "fixture_path",
+      "case_count",
+      "summary",
+      "cases"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "const": true
+      },
+      "suite": {
+        "type": "string"
+      },
+      "fixture_path": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "case_count": {
+        "type": "number"
+      },
+      "summary": {
+        "type": "object",
+        "required": [
+          "passed",
+          "failed",
+          "top1_accuracy",
+          "mean_reciprocal_rank"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "passed": {
+            "type": "number"
+          },
+          "failed": {
+            "type": "number"
+          },
+          "top1_accuracy": {
+            "type": "number"
+          },
+          "mean_reciprocal_rank": {
+            "type": "number"
+          }
+        }
+      },
+      "cases": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "id",
+            "description",
+            "expected",
+            "passed",
+            "rank",
+            "reciprocal_rank",
+            "top",
+            "suggestions",
+            "rejected_candidates",
+            "failure_reason"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "expected": {
+              "type": "object",
+              "required": [
+                "path",
+                "field",
+                "max_rank"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "field": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "code",
+                        "tests"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "max_rank": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "min_matched_terms": {
+                  "type": "number"
+                }
+              }
+            },
+            "passed": {
+              "type": "boolean"
+            },
+            "rank": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reciprocal_rank": {
+              "type": "number"
+            },
+            "top": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "field",
+                    "path",
+                    "score",
+                    "matched_terms",
+                    "match_reasons",
+                    "evidence"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "field": {
+                      "enum": [
+                        "code",
+                        "tests"
+                      ]
+                    },
+                    "path": {
+                      "type": "string"
+                    },
+                    "score": {
+                      "type": "number"
+                    },
+                    "matched_terms": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "match_reasons": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "evidence": {
+                      "type": "object",
+                      "required": [
+                        "path_terms",
+                        "basename_terms",
+                        "content_terms",
+                        "identifier_terms",
+                        "phrase_matches",
+                        "coverage"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "path_terms": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "basename_terms": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "content_terms": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "identifier_terms": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "phrase_matches": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "coverage": {
+                          "type": "object",
+                          "required": [
+                            "matched_terms",
+                            "total_terms",
+                            "ratio"
+                          ],
+                          "additionalProperties": false,
+                          "properties": {
+                            "matched_terms": {
+                              "type": "number"
+                            },
+                            "total_terms": {
+                              "type": "number"
+                            },
+                            "ratio": {
+                              "type": "number"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "suggestions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "field",
+                  "path",
+                  "score",
+                  "matched_terms",
+                  "match_reasons",
+                  "evidence"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "field": {
+                    "enum": [
+                      "code",
+                      "tests"
+                    ]
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "score": {
+                    "type": "number"
+                  },
+                  "matched_terms": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "match_reasons": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "evidence": {
+                    "type": "object",
+                    "required": [
+                      "path_terms",
+                      "basename_terms",
+                      "content_terms",
+                      "identifier_terms",
+                      "phrase_matches",
+                      "coverage"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "path_terms": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "basename_terms": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "content_terms": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "identifier_terms": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "phrase_matches": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "coverage": {
+                        "type": "object",
+                        "required": [
+                          "matched_terms",
+                          "total_terms",
+                          "ratio"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                          "matched_terms": {
+                            "type": "number"
+                          },
+                          "total_terms": {
+                            "type": "number"
+                          },
+                          "ratio": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "rejected_candidates": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "field",
+                  "path",
+                  "reason",
+                  "matched_terms",
+                  "match_reasons",
+                  "evidence"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "field": {
+                    "enum": [
+                      "code",
+                      "tests"
+                    ]
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "const": "NO_SOURCE_EVIDENCE"
+                  },
+                  "matched_terms": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "match_reasons": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "evidence": {
+                    "type": "object",
+                    "required": [
+                      "path_terms",
+                      "basename_terms",
+                      "content_terms",
+                      "identifier_terms",
+                      "phrase_matches",
+                      "coverage"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                      "path_terms": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "basename_terms": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "content_terms": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "identifier_terms": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "phrase_matches": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "coverage": {
+                        "type": "object",
+                        "required": [
+                          "matched_terms",
+                          "total_terms",
+                          "ratio"
+                        ],
+                        "additionalProperties": false,
+                        "properties": {
+                          "matched_terms": {
+                            "type": "number"
+                          },
+                          "total_terms": {
+                            "type": "number"
+                          },
+                          "ratio": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "failure_reason": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

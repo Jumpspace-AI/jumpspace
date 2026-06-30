@@ -23,7 +23,7 @@ describe("TypeScript SDK contracts", () => {
     expect(JUMPSPACE_SCHEMA_NAMES).toEqual(listSchemas().map((schema) => schema.name));
     expect(JUMPSPACE_SCHEMA_NAMES).toEqual(generatedCatalog.schemas.map((schema: { name: string }) => schema.name));
     expect(listSdkSchemas()).toEqual(listSchemas());
-    expect(getSdkSchema("bootstrap.propose")).toEqual(getSchema("bootstrap.propose"));
+    expect(getSdkSchema("task.bootstrap.propose")).toEqual(getSchema("task.bootstrap.propose"));
 
     for (const schemaName of JUMPSPACE_SCHEMA_NAMES) {
       const artifact = JSON.parse(await fs.readFile(path.join(process.cwd(), "schemas", `${schemaName}.schema.json`), "utf8"));
@@ -36,7 +36,7 @@ describe("TypeScript SDK contracts", () => {
   });
 
   it("guards schema names and error envelopes", () => {
-    expect(isJumpspaceSchemaName("work")).toBe(true);
+    expect(isJumpspaceSchemaName("task.work")).toBe(true);
     expect(isJumpspaceSchemaName("nope")).toBe(false);
     expect(isJumpspaceErrorEnvelope({ ok: false, errors: [{ code: "NOPE", message: "Nope." }] })).toBe(true);
     expect(isJumpspaceErrorEnvelope({ ok: true, errors: [] })).toBe(false);

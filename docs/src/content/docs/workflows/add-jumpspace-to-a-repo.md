@@ -33,9 +33,9 @@ This adds repo-local guidance for supported coding agents.
 ## 4. Scan And Diagnose
 
 ```bash
-npx @jumpspace/cli scan
-npx @jumpspace/cli doctor
-npx @jumpspace/cli audit
+npx @jumpspace/cli task scan
+npx @jumpspace/cli task doctor
+npx @jumpspace/cli task audit
 ```
 
 `scan` writes the generated index. `doctor` gives operator-friendly diagnostics.

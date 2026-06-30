@@ -57,27 +57,27 @@ Summarize the task you just worked on, what is complete, what evidence was recor
 The agent can translate your request into this loop:
 
 ```bash
-npx @jumpspace/cli find "task approval" --json --compact
-npx @jumpspace/cli context PM-TASK-001 --json
-npx @jumpspace/cli plan show PM-TASK-001 --json
-npx @jumpspace/cli next PM-TASK-001 --json
-npx @jumpspace/cli work PM-TASK-001 --json
+npx @jumpspace/cli task find "task approval" --json --compact
+npx @jumpspace/cli task context PM-TASK-001 --json
+npx @jumpspace/cli task plan show PM-TASK-001 --json
+npx @jumpspace/cli task next PM-TASK-001 --json
+npx @jumpspace/cli task work PM-TASK-001 --json
 ```
 
 After coding:
 
 ```bash
-npx @jumpspace/cli step complete PM-TASK-001 implementation --evidence "Implemented task approval states and tests."
-npx @jumpspace/cli verify PM-TASK-001 --check "npm test" --criteria AC-1 --json
-npx @jumpspace/cli scan
-npx @jumpspace/cli audit --json
+npx @jumpspace/cli task step complete PM-TASK-001 implementation --evidence "Implemented task approval states and tests."
+npx @jumpspace/cli task verify PM-TASK-001 --check "npm test" --criteria AC-1 --json
+npx @jumpspace/cli task scan
+npx @jumpspace/cli task audit --json
 ```
 
-If the repo does not have Git available, `verify` may refuse to write a record because it cannot capture a commit SHA. That is good behavior. The agent should report the failed verification honestly instead of marking the task verified.
+If the repo does not have Git available, `task verify` may refuse to write a record because it cannot capture a commit SHA. That is good behavior. The agent should report the failed verification honestly instead of marking the task verified.
 
 ## Codex Pattern
 
-Once `jumpspace add-skill --codex` has updated `AGENTS.md`, Codex should use Jumpspace without a special reminder. The managed block tells Codex to start with scan/find/context/related/audit, use `work` or `next` for approved implementation, record step evidence, and finish with scan/audit/handoff.
+Once `jumpspace add-skill --codex` has updated `AGENTS.md`, Codex should use Jumpspace without a special reminder. The managed block tells Codex to start with `task scan`, `task find`, `task context`, `task related`, and `task audit`, use `task work` or `task next` for approved implementation, record step evidence, and finish with `task scan`, `task audit`, and `task handoff`.
 
 If Codex seems to skip the graph, ask it to check the installed `AGENTS.md` guidance and rerun the task from the Jumpspace packet.
 

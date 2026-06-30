@@ -12,7 +12,7 @@ Use schemas before scripting against command output.
 
 ```bash
 npx @jumpspace/cli schema list --json
-npx @jumpspace/cli schema show work --json
+npx @jumpspace/cli schema show task.work --json
 npx @jumpspace/cli schema coverage --json
 ```
 
@@ -26,13 +26,13 @@ Generated schema artifacts are published under `schemas/`.
 
 Useful contracts include:
 
-- `find`
-- `ask`
-- `work`
-- `plan.save`
-- `step.complete`
-- `verify`
+- `task.find`
+- `task.ask`
+- `task.work`
+- `task.plan.save`
+- `task.step.complete`
+- `task.verify`
 - `changed`
-- `drift`
-- `ci`
-- `pr.comment`
+- `task.drift`
+- `task.ci`
+- `task.pr.comment`

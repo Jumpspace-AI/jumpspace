@@ -32,21 +32,21 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           set +e
-          npx @jumpspace/cli scan
+          npx @jumpspace/cli task scan
           SCAN_EXIT=$?
-          npx @jumpspace/cli semantic build --json > jumpspace-semantic-build.json
+          npx @jumpspace/cli task semantic build --json > jumpspace-semantic-build.json
           SEMANTIC_EXIT=$?
-          npx @jumpspace/cli pr comment --since "$BASE_SHA" > jumpspace-pr-comment.md
+          npx @jumpspace/cli task pr comment --since "$BASE_SHA" > jumpspace-pr-comment.md
           COMMENT_EXIT=$?
-          npx @jumpspace/cli audit --json > jumpspace-audit.json
+          npx @jumpspace/cli task audit --json > jumpspace-audit.json
           AUDIT_EXIT=$?
-          npx @jumpspace/cli doctor --json > jumpspace-doctor.json
+          npx @jumpspace/cli task doctor --json > jumpspace-doctor.json
           DOCTOR_EXIT=$?
 
           node <<'NODE'
           const fs = require("fs");
           const marker = "<!-- jumpspace-pr-assistant:v1 -->";
-          const footer = "\n\n---\n\nOutput truncated to stay within GitHub limits. Run jumpspace pr comment --since <base-sha> locally for the full packet.\n";
+          const footer = "\n\n---\n\nOutput truncated to stay within GitHub limits. Run jumpspace task pr comment --since <base-sha> locally for the full packet.\n";
           const source = fs.readFileSync("jumpspace-pr-comment.md", "utf8");
 
           function bounded(value, maxChars) {

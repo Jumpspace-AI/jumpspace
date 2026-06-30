@@ -125,6 +125,7 @@ export type JumpIndex = {
 
 export type JumpConfig = {
   docs: string[];
+  intents?: string[];
   indexPath: string;
   semanticIndex?: {
     enabled?: boolean;
@@ -279,6 +280,7 @@ export const jumpIndexSchema = z
 export const jumpConfigSchema: z.ZodType<JumpConfig> = z
   .object({
     docs: z.array(z.string().min(1)).min(1),
+    intents: z.array(z.string().min(1)).default(["documentation/intents/*.md"]),
     indexPath: z.string().min(1),
     semanticIndex: z
       .object({
