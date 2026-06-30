@@ -15,7 +15,7 @@ export async function runContext(id: string, options: ContextOptions = {}): Prom
   const task = index.tasks.find((candidate) => candidate.id === id);
 
   if (!task) {
-    throw new Error(`Unknown Jumpspace task ID "${id}". Run \`jumpspace list\` to see known tasks.`);
+    throw new Error(`Unknown Jumpspace task ID "${id}". Run \`jumpspace task list\` to see known tasks.`);
   }
 
   const execution = getExecutionState(index, id);

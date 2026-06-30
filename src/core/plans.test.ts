@@ -40,7 +40,7 @@ function taskWithPlan(overrides: Partial<JumpTask["plan"]> = {}): JumpTask {
           depends_on: [],
           source_files: ["docs/specs/example.md"],
           tests: [],
-          checks: ["jumpspace plan validate JS-100"],
+          checks: ["jumpspace task plan validate JS-100"],
           evidence: ["Reviewed with a human."],
         },
         {

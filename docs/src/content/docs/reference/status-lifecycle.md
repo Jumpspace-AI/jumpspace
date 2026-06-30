@@ -10,17 +10,17 @@ Common statuses:
 - `approved`: accepted source of truth for future implementation
 - `partial`: work has started
 - `implemented`: code exists and is linked
-- `verified`: checks have passed through `jumpspace verify`
+- `verified`: checks have passed through `jumpspace task verify`
 - `stale`: no longer trusted as current behavior
 
 Update non-verified statuses with:
 
 ```bash
-npx @jumpspace/cli status DOC-PROJECT-001 implemented
+npx @jumpspace/cli task status DOC-PROJECT-001 implemented
 ```
 
 Earn verified status with:
 
 ```bash
-npx @jumpspace/cli verify DOC-PROJECT-001 --check "npm test" --criteria AC-1
+npx @jumpspace/cli task verify DOC-PROJECT-001 --check "npm test" --criteria AC-1
 ```

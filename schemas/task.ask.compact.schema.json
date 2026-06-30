@@ -1,0 +1,142 @@
+{
+  "contract_version": 1,
+  "name": "task.ask.compact",
+  "command": "jumpspace task ask <question...> --json --compact",
+  "description": "Compact evidence summary for agent orientation. This is retrieval evidence, not an authoritative answer.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "compact",
+      "question",
+      "retrieval_mode",
+      "evidence",
+      "coverage",
+      "unanswered_terms",
+      "retrieval",
+      "weak_evidence"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "const": true
+      },
+      "compact": {
+        "const": true
+      },
+      "question": {
+        "type": "string"
+      },
+      "retrieval_mode": {
+        "type": "string"
+      },
+      "terms": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "coverage": {
+        "type": "object"
+      },
+      "unanswered_terms": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "retrieval": {
+        "type": "object"
+      },
+      "weak_evidence": {
+        "type": "boolean"
+      },
+      "evidence": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "task_id",
+            "title",
+            "status",
+            "path",
+            "heading",
+            "match_reasons",
+            "matched_terms",
+            "semantic_terms",
+            "retrieval_sources",
+            "scores",
+            "linked_code_count",
+            "linked_test_count",
+            "connected_task_ids",
+            "graph_path_count"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "task_id": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "heading": {
+              "type": "string"
+            },
+            "match_reasons": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "matched_terms": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "semantic_terms": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "retrieval_sources": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "lexical",
+                  "semantic"
+                ]
+              }
+            },
+            "scores": {
+              "type": "object"
+            },
+            "linked_code_count": {
+              "type": "number"
+            },
+            "linked_test_count": {
+              "type": "number"
+            },
+            "connected_task_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "graph_path_count": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    }
+  }
+}

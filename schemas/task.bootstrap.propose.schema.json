@@ -1,0 +1,142 @@
+{
+  "contract_version": 1,
+  "name": "task.bootstrap.propose",
+  "command": "jumpspace task bootstrap propose [paths...] [--file <proposal-file>] --json",
+  "description": "Deterministic bootstrap proposal draft packet. This is extraction evidence, not agent reasoning, and apply still requires human approval.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "propose_version",
+      "mode",
+      "agent_generated",
+      "human_approval_required",
+      "inputs",
+      "summary",
+      "proposal",
+      "validation",
+      "next_commands",
+      "notes"
+    ],
+    "additionalProperties": true,
+    "properties": {
+      "ok": {
+        "const": true
+      },
+      "propose_version": {
+        "const": 1
+      },
+      "mode": {
+        "const": "deterministic_extraction"
+      },
+      "agent_generated": {
+        "const": false
+      },
+      "human_approval_required": {
+        "const": true
+      },
+      "proposal_file": {
+        "type": "string"
+      },
+      "inputs": {
+        "type": "object",
+        "required": [
+          "pattern_source",
+          "patterns",
+          "discovered_docs"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "pattern_source": {
+            "enum": [
+              "arguments",
+              "discovery",
+              "config"
+            ]
+          },
+          "patterns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "discovered_docs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "summary": {
+        "type": "object",
+        "required": [
+          "documents",
+          "headings",
+          "proposed_tasks",
+          "skipped_headings",
+          "existing_tasks",
+          "validation_errors",
+          "validation_warnings"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "documents": {
+            "type": "number"
+          },
+          "headings": {
+            "type": "number"
+          },
+          "proposed_tasks": {
+            "type": "number"
+          },
+          "skipped_headings": {
+            "type": "number"
+          },
+          "existing_tasks": {
+            "type": "number"
+          },
+          "validation_errors": {
+            "type": "number"
+          },
+          "validation_warnings": {
+            "type": "number"
+          }
+        }
+      },
+      "proposal": {
+        "type": "object"
+      },
+      "validation": {
+        "type": "object"
+      },
+      "next_commands": {
+        "type": "object",
+        "required": [
+          "validate",
+          "dry_run",
+          "apply_after_approval"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "validate": {
+            "type": "string"
+          },
+          "dry_run": {
+            "type": "string"
+          },
+          "apply_after_approval": {
+            "type": "string"
+          }
+        }
+      },
+      "notes": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

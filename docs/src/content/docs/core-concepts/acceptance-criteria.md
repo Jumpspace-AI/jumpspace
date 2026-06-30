@@ -13,10 +13,10 @@ acceptance_criteria:
     description: Expired invites cannot be accepted.
 ```
 
-Use stable IDs because `jumpspace verify` records which criteria were covered.
+Use stable IDs because `jumpspace task verify` records which criteria were covered.
 
 ```bash
-npx @jumpspace/cli verify DOC-PROJECT-001 --check "npm test" --criteria AC-1 AC-2
+npx @jumpspace/cli task verify DOC-PROJECT-001 --check "npm test" --criteria AC-1 AC-2
 ```
 
 Verification fails if a provided criterion ID does not exist.

@@ -1,0 +1,115 @@
+{
+  "contract_version": 1,
+  "name": "intent.check",
+  "command": "jumpspace intent check --for <path> --json",
+  "description": "Returns active intents whose scope globs match supplied paths.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "roots",
+      "paths",
+      "active_intent_count",
+      "matched_intent_count",
+      "matches",
+      "unmatched_paths"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "const": true
+      },
+      "roots": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "paths": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "active_intent_count": {
+        "type": "number"
+      },
+      "matched_intent_count": {
+        "type": "number"
+      },
+      "matches": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "intent",
+            "matched_paths"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "intent": {
+              "type": "object",
+              "required": [
+                "id",
+                "status",
+                "scope",
+                "title",
+                "path"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "status": {
+                  "enum": [
+                    "active",
+                    "superseded",
+                    "rejected"
+                  ]
+                },
+                "scope": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "title": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "superseded_by": {
+                  "type": "string"
+                },
+                "decision": {
+                  "type": "string"
+                },
+                "why": {
+                  "type": "string"
+                },
+                "alternatives_rejected": {
+                  "type": "string"
+                }
+              }
+            },
+            "matched_paths": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "unmatched_paths": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

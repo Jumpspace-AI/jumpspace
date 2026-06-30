@@ -31,7 +31,7 @@ export async function runPlanReview(id: string, options: PlanOptions = {}): Prom
   const state = getExecutionState(index, id);
 
   if (!state) {
-    return writeCommandError(options, "UNKNOWN_TASK", `Unknown Jumpspace task ID "${id}". Run \`jumpspace find <query>\` to locate it.`);
+    return writeCommandError(options, "UNKNOWN_TASK", `Unknown Jumpspace task ID "${id}". Run \`jumpspace task find <query>\` to locate it.`);
   }
 
   writeLine(options.json ? JSON.stringify(state, null, 2) : renderPlanPacket(state));
@@ -45,7 +45,7 @@ export async function runPlanSave(id: string, options: PlanSaveOptions): Promise
   const task = index.tasks.find((candidate) => candidate.id === id);
 
   if (!task) {
-    return writeCommandError(options, "UNKNOWN_TASK", `Unknown Jumpspace task ID "${id}". Run \`jumpspace find <query>\` to locate it.`);
+    return writeCommandError(options, "UNKNOWN_TASK", `Unknown Jumpspace task ID "${id}". Run \`jumpspace task find <query>\` to locate it.`);
   }
 
   let plan;
@@ -68,7 +68,7 @@ export async function runPlanSave(id: string, options: PlanSaveOptions): Promise
   await refreshIndex(root);
   const config = await loadConfig(root);
   await recordMutation(root, {
-    command: "plan save",
+    command: "task plan save",
     touched_files: [task.doc.path, config.indexPath],
     task_ids: [id],
     index_changed: true,
@@ -85,7 +85,7 @@ export async function runPlanShow(id: string, options: PlanOptions = {}): Promis
   const task = index.tasks.find((candidate) => candidate.id === id);
 
   if (!task) {
-    return writeCommandError(options, "UNKNOWN_TASK", `Unknown Jumpspace task ID "${id}". Run \`jumpspace find <query>\` to locate it.`);
+    return writeCommandError(options, "UNKNOWN_TASK", `Unknown Jumpspace task ID "${id}". Run \`jumpspace task find <query>\` to locate it.`);
   }
 
   if (!task.plan) {
@@ -103,7 +103,7 @@ export async function runPlanValidate(id: string, options: PlanOptions = {}): Pr
   const task = index.tasks.find((candidate) => candidate.id === id);
 
   if (!task) {
-    return writeCommandError(options, "UNKNOWN_TASK", `Unknown Jumpspace task ID "${id}". Run \`jumpspace find <query>\` to locate it.`);
+    return writeCommandError(options, "UNKNOWN_TASK", `Unknown Jumpspace task ID "${id}". Run \`jumpspace task find <query>\` to locate it.`);
   }
 
   const validation = validateTaskPlan(task, { requirePlan: true });

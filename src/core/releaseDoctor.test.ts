@@ -79,13 +79,14 @@ describe("createReleaseDoctorReport", () => {
     );
   });
 
-  it("can check npm registry availability without making it a local blocker", async () => {
+  it("warns when the exact npm version is already published", async () => {
     const root = await createReleaseFixture();
     const exec: ExecFileLike = async (file, args) => {
       if (file === "npm" && args[0] === "pack") {
         return { stdout: packOutput(allPackFiles()), stderr: "" };
       }
       if (file === "npm" && args[0] === "view") {
+        expect(args[1]).toBe("@jumpspace/cli@0.1.0");
         return { stdout: JSON.stringify("0.1.0"), stderr: "" };
       }
       throw new Error(`Unexpected command: ${file} ${args.join(" ")}`);
@@ -103,7 +104,43 @@ describe("createReleaseDoctorReport", () => {
       checked: true,
       version: "0.1.0",
     });
-    expect(report.external_warnings).toContainEqual(expect.objectContaining({ code: "REGISTRY_NAME_UNAVAILABLE" }));
+    expect(report.external_warnings).toContainEqual(expect.objectContaining({ code: "REGISTRY_VERSION_ALREADY_PUBLISHED" }));
+  });
+
+  it("passes the registry check when the exact npm version is not published", async () => {
+    const root = await createReleaseFixture();
+    const exec: ExecFileLike = async (file, args) => {
+      if (file === "npm" && args[0] === "pack") {
+        return { stdout: packOutput(allPackFiles()), stderr: "" };
+      }
+      if (file === "npm" && args[0] === "view") {
+        expect(args[1]).toBe("@jumpspace/cli@0.1.0");
+        const error = new Error("npm ERR! code E404\nnpm ERR! 404 No match found for version 0.1.0") as Error & { code?: number; stderr?: string };
+        error.code = 1;
+        error.stderr = "npm ERR! code E404\nnpm ERR! 404 No match found for version 0.1.0";
+        throw error;
+      }
+      throw new Error(`Unexpected command: ${file} ${args.join(" ")}`);
+    };
+
+    const report = await createReleaseDoctorReport(root, {
+      checkRegistry: true,
+      execFile: exec,
+    });
+
+    expect(report).toMatchObject({
+      ok: true,
+      summary: {
+        external_warnings: 0,
+      },
+      registry: {
+        status: "available",
+        check: "checked",
+        checked: true,
+        version: null,
+      },
+    });
+    expect(report.external_warnings).toEqual([]);
   });
 });
 

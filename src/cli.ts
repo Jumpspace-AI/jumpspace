@@ -16,6 +16,7 @@ import { runFind } from "./commands/find.js";
 import { runHandoff } from "./commands/handoff.js";
 import { runHistory } from "./commands/history.js";
 import { runInit } from "./commands/init.js";
+import { runIntentCheck, runIntentList, runIntentValidate, runIntentVerify } from "./commands/intent.js";
 import { runLast } from "./commands/last.js";
 import { runLinkEval, runLinkSuggest, runLinkUpdate } from "./commands/link.js";
 import { runList } from "./commands/list.js";
@@ -75,7 +76,7 @@ program
   .description("Install repo-local Jumpspace skill definitions for coding agents.")
   .argument(
     "[skills...]",
-    "optional skill names or aliases: jumpspace-workflow, jumpspace-bootstrap, jumpspace-work, jumpspace-review, jumpspace-handoff",
+    "optional skill names or aliases: workflow, bootstrap, work, review, intent-review, handoff, or jumpspace-* names",
   )
   .option("--agent <agent>", "install for one supported agent: codex or claude")
   .option("--codex", "install Codex guidance and skill definition")
@@ -97,18 +98,23 @@ program
     ),
   );
 
-program
+const taskCommand = program
+  .command("task")
+  .description("Advanced task graph workflows for teams that opt into task blocks.")
+  .action(() => taskCommand.help());
+
+taskCommand
   .command("scan")
   .description("Parse Markdown task blocks and write the repo-local Jumpspace index.")
   .action(() => runCommand(() => runScan()));
 
-program
+taskCommand
   .command("last")
   .description("Show the most recent Jumpspace mutation summary.")
   .option("--json", "print machine-readable JSON")
   .action((options: { json?: boolean }) => runCommand(() => runLast({ json: options.json }), { json: options.json }));
 
-program
+taskCommand
   .command("history")
   .description("Show the generated Jumpspace mutation history.")
   .option("--task <id>", "filter to mutation entries that mention a task ID")
@@ -118,7 +124,7 @@ program
     runCommand(() => runHistory({ task: options.task, limit: options.limit, json: options.json }), { json: options.json }),
   );
 
-program
+taskCommand
   .command("handoff")
   .description("Summarize recent Jumpspace work, health, task state, and next commands.")
   .option("--task <id>", "include task-specific plan and next-step state")
@@ -128,7 +134,7 @@ program
     runCommand(() => runHandoff({ task: options.task, limit: options.limit, json: options.json }), { json: options.json }),
   );
 
-program
+taskCommand
   .command("doctor")
   .description("Run post-mutation diagnostics and repair suggestions.")
   .option("--since <ref>", "include repair opportunities since a Git ref")
@@ -183,7 +189,68 @@ schemaCommand
   .option("--json", "print machine-readable JSON")
   .action((options: { json?: boolean }) => runCommand(() => runSchemaCoverage({ json: options.json }), { json: options.json }));
 
-program
+const intentCommand = program
+  .command("intent")
+  .description("Inspect repo-local durable intent memory.")
+  .action(() => intentCommand.help());
+
+intentCommand
+  .command("list")
+  .description("List repo-local intent files.")
+  .option("--status <status>", "filter by intent status")
+  .option("--json", "print machine-readable JSON")
+  .action((options: { status?: string; json?: boolean }) =>
+    runCommand(() => runIntentList({ status: options.status, json: options.json }), { json: options.json }),
+  );
+
+intentCommand
+  .command("check")
+  .description("Show active intents whose scopes match paths.")
+  .requiredOption("--for <path>", "path to check; repeat for multiple paths", collect, [])
+  .option("--json", "print machine-readable JSON")
+  .action((options: { for?: string[]; json?: boolean }) =>
+    runCommand(() => runIntentCheck({ paths: options.for ?? [], json: options.json }), { json: options.json }),
+  );
+
+intentCommand
+  .command("validate")
+  .description("Validate repo-local intent files.")
+  .option("--since <ref>", "Git ref to compare against for new active intent count")
+  .option("--max-new <n>", "warn when --since adds more than this many active intents", "3")
+  .option("--json", "print machine-readable JSON")
+  .action((options: { since?: string; maxNew?: string; json?: boolean }) =>
+    runCommand(
+      () =>
+        runIntentValidate({
+          since: options.since,
+          maxNew: parsePositiveInteger(options.maxNew) ?? 3,
+          json: options.json,
+        }),
+      { json: options.json },
+    ),
+  );
+
+intentCommand
+  .command("verify")
+  .description("Create a PR-level intent verification packet for changed paths.")
+  .option("--for <path>", "path to verify; repeat for multiple paths", collect, [])
+  .option("--since <ref>", "Git ref to compare against for changed paths")
+  .option("--diff <file>", "diff file to inspect for changed paths")
+  .option("--json", "print machine-readable JSON")
+  .action((options: { for?: string[]; since?: string; diff?: string; json?: boolean }) =>
+    runCommand(
+      () =>
+        runIntentVerify({
+          paths: options.for,
+          since: options.since,
+          diff: options.diff,
+          json: options.json,
+        }),
+      { json: options.json },
+    ),
+  );
+
+taskCommand
   .command("list")
   .description("List indexed Jumpspace tasks.")
   .option("--status <status>", "filter by task status")
@@ -204,7 +271,7 @@ program
     ),
   );
 
-program
+taskCommand
   .command("find")
   .description("Search indexed Jumpspace tasks.")
   .argument("<query...>", "search query")
@@ -230,14 +297,14 @@ program
     ),
   );
 
-program
+taskCommand
   .command("context")
   .description("Print an agent-ready context packet for a task.")
   .argument("<id>", "Jumpspace task ID")
   .option("--json", "print machine-readable JSON")
   .action((id: string, options: { json?: boolean }) => runCommand(() => runContext(id, { json: options.json }), { json: options.json }));
 
-program
+taskCommand
   .command("ask")
   .description("Summarize repo-local Jumpspace evidence for a question.")
   .argument("<question...>", "question to investigate")
@@ -247,7 +314,7 @@ program
     runCommand(() => runAsk(question.join(" "), { compact: options.compact, json: options.json }), { json: options.json }),
   );
 
-const semanticCommand = program
+const semanticCommand = taskCommand
   .command("semantic")
   .description("Manage the optional generated semantic retrieval index.")
   .action(() => semanticCommand.help());
@@ -311,7 +378,7 @@ semanticCommand
     ),
   );
 
-program
+taskCommand
   .command("query")
   .description("Run deterministic structured graph queries over indexed Jumpspace tasks.")
   .option("--status <status>", "match task status; repeat for OR behavior", collect, [])
@@ -388,7 +455,7 @@ program
       ),
   );
 
-const bootstrapCommand = program
+const bootstrapCommand = taskCommand
   .command("bootstrap")
   .description("Bootstrap a source-backed Jumpspace graph from existing Markdown docs.")
   .action(() => bootstrapCommand.help());
@@ -437,7 +504,7 @@ bootstrapCommand
     runCommand(() => runBootstrapApply({ file: options.file, dryRun: options.dryRun, json: options.json }), { json: options.json }),
   );
 
-const planCommand = program
+const planCommand = taskCommand
   .command("plan")
   .description("Review and manage durable task plans.")
   .action(() => planCommand.help());
@@ -473,7 +540,7 @@ planCommand
   .option("--json", "print machine-readable JSON")
   .action((id: string, options: { json?: boolean }) => runCommand(() => runPlanValidate(id, { json: options.json }), { json: options.json }));
 
-program
+taskCommand
   .command("ready")
   .description("List approved tasks ready for agent execution.")
   .option("--status <status>", "filter by task status")
@@ -503,7 +570,7 @@ program
     ),
   );
 
-program
+taskCommand
   .command("execute")
   .description("Print an agent execution packet for an approved task.")
   .argument("<id>", "Jumpspace task ID")
@@ -513,7 +580,7 @@ program
     runCommand(() => runExecute(id, { force: options.force, json: options.json }), { json: options.json }),
   );
 
-program
+taskCommand
   .command("work")
   .description("Print a complete agent start packet for a ready task.")
   .argument("<id>", "Jumpspace task ID")
@@ -523,14 +590,14 @@ program
     runCommand(() => runWork(id, { since: options.since, json: options.json }), { json: options.json }),
   );
 
-program
+taskCommand
   .command("next")
   .description("Show pending unblocked plan steps for a task.")
   .argument("<id>", "Jumpspace task ID")
   .option("--json", "print machine-readable JSON")
   .action((id: string, options: { json?: boolean }) => runCommand(() => runNext(id, { json: options.json }), { json: options.json }));
 
-const stepCommand = program.command("step").description("Update durable task plan steps.");
+const stepCommand = taskCommand.command("step").description("Update durable task plan steps.");
 
 stepCommand
   .command("complete")
@@ -543,7 +610,7 @@ stepCommand
     runCommand(() => runStepComplete(taskId, stepId, { evidence: options.evidence, json: options.json }), { json: options.json }),
   );
 
-const linkCommand = program
+const linkCommand = taskCommand
   .command("link")
   .description("Update or suggest task code/test/dependency/ref/gap links.")
   .action(() => linkCommand.help());
@@ -633,9 +700,9 @@ linkCommand
     runCommand(() => runLinkEval({ file: options.file, limit: parsePositiveInteger(options.limit), json: options.json }), { json: options.json }),
   );
 
-program
+taskCommand
   .command("status")
-  .description("Update a task status. The verified status must be earned with verify.")
+  .description("Update a task status. The verified status must be earned with task verify.")
   .argument("<id>", "Jumpspace task ID")
   .argument("<status>", "new task status")
   .option("--json", "print machine-readable JSON")
@@ -643,7 +710,7 @@ program
     runCommand(() => runStatus(id, status, { json: options.json }), { json: options.json }),
   );
 
-program
+taskCommand
   .command("verify")
   .description("Run checks and record structured verification evidence for a task.")
   .argument("<id>", "Jumpspace task ID")
@@ -664,7 +731,7 @@ program
     ),
   );
 
-program
+taskCommand
   .command("related")
   .description("Show dependency and reference relationships for a task.")
   .argument("<id>", "Jumpspace task ID")
@@ -683,7 +750,7 @@ program
     runCommand(() => runChanged({ since: options.since, json: options.json }), { json: options.json }),
   );
 
-program
+taskCommand
   .command("ci")
   .description("Run a local CI/PR Jumpspace report with drift, repair, graph, and suggestion packets.")
   .requiredOption("--since <ref>", "Git ref to compare against")
@@ -693,7 +760,7 @@ program
     runCommand(() => runCi({ since: options.since, query: options.query, json: options.json }), { json: options.json }),
   );
 
-const prCommand = program
+const prCommand = taskCommand
   .command("pr")
   .description("Generate review-only PR assistant output from the local CI packet.")
   .action(() => prCommand.help());
@@ -707,7 +774,7 @@ prCommand
     runCommand(() => runPrComment({ since: options.since, json: options.json }), { json: options.json }),
   );
 
-program
+taskCommand
   .command("drift")
   .description("Detect factual task-memory drift and separate heuristic warnings.")
   .requiredOption("--since <ref>", "Git ref to compare against")
@@ -716,7 +783,7 @@ program
     runCommand(() => runDrift({ since: options.since, json: options.json }), { json: options.json }),
   );
 
-program
+taskCommand
   .command("repair")
   .description("Preview or apply safe task-memory repairs for Git path drift.")
   .requiredOption("--since <ref>", "Git ref to compare against")
@@ -726,7 +793,7 @@ program
     runCommand(() => runRepair({ since: options.since, apply: options.apply, json: options.json }), { json: options.json }),
   );
 
-program
+taskCommand
   .command("audit")
   .description("Validate Jumpspace task metadata and linked files.")
   .option("--json", "print machine-readable JSON")

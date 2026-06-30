@@ -16,7 +16,7 @@ export async function runRelated(id: string, options: RelatedOptions = {}): Prom
   const summary = getTaskRelations(index, id);
 
   if (!summary) {
-    throw new Error(`Unknown Jumpspace task ID "${id}". Run \`jumpspace list\` to see known tasks.`);
+    throw new Error(`Unknown Jumpspace task ID "${id}". Run \`jumpspace task list\` to see known tasks.`);
   }
 
   const body =

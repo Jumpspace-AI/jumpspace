@@ -26,7 +26,7 @@ Duplicate paths are merged with all sources, such as `committed`, `staged`, `uns
 ## Drift
 
 ```bash
-npx @jumpspace/cli drift --since main --json
+npx @jumpspace/cli task drift --since main --json
 ```
 
 Drift separates facts from warnings.
@@ -44,7 +44,7 @@ Warnings include recommendations such as "docs may need updating" or "tests may 
 ## Local CI Packet
 
 ```bash
-npx @jumpspace/cli ci --since main --json
+npx @jumpspace/cli task ci --since main --json
 ```
 
 The CI packet combines drift, repair suggestions, graph state, and link suggestions for local or PR automation.
@@ -52,8 +52,8 @@ The CI packet combines drift, repair suggestions, graph state, and link suggesti
 ## PR Comment
 
 ```bash
-npx @jumpspace/cli pr comment --since main
-npx @jumpspace/cli pr comment --since main --json
+npx @jumpspace/cli task pr comment --since main
+npx @jumpspace/cli task pr comment --since main --json
 ```
 
 The PR assistant is review-only. It should explain factual drift, suggested links, and warnings without mutating source.
@@ -63,13 +63,13 @@ The PR assistant is review-only. It should explain factual drift, suggested link
 Preview safe repairs:
 
 ```bash
-npx @jumpspace/cli repair --since main --json
+npx @jumpspace/cli task repair --since main --json
 ```
 
 Apply safe repairs:
 
 ```bash
-npx @jumpspace/cli repair --since main --apply
+npx @jumpspace/cli task repair --since main --apply
 ```
 
 Repair is intended for mechanical path drift, such as Git renames. Deleted files should become gaps unless there is a confident replacement.
@@ -77,8 +77,8 @@ Repair is intended for mechanical path drift, such as Git renames. Deleted files
 ## Evaluate Link Ranking
 
 ```bash
-npx @jumpspace/cli link eval --json
-npx @jumpspace/cli link eval --file fixtures/link-eval.json --json
+npx @jumpspace/cli task link eval --json
+npx @jumpspace/cli task link eval --file fixtures/link-eval.json --json
 ```
 
 Use fixtures when a real repo exposes weak ranking. A good fixture proves that the same candidate pool can rank differently for different headings, or reject candidates when evidence is missing.

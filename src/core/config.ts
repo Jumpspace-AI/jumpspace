@@ -7,6 +7,7 @@ export const CONFIG_PATH = ".jumpspace/config.json";
 
 export const DEFAULT_CONFIG: JumpConfig = {
   docs: ["docs/**/*.md"],
+  intents: ["documentation/intents/*.md"],
   indexPath: ".jumpspace/index.json",
 };
 

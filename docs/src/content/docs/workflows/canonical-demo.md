@@ -22,22 +22,22 @@ npx @jumpspace/cli add-skill --all
 ## 3. Bootstrap Source-Backed Task Blocks
 
 ```bash
-npx @jumpspace/cli bootstrap propose README.md docs/**/*.md --file jumpspace-bootstrap.json
-npx @jumpspace/cli bootstrap validate --file jumpspace-bootstrap.json
-npx @jumpspace/cli bootstrap apply --file jumpspace-bootstrap.json --dry-run
+npx @jumpspace/cli task bootstrap propose README.md docs/**/*.md --file jumpspace-bootstrap.json
+npx @jumpspace/cli task bootstrap validate --file jumpspace-bootstrap.json
+npx @jumpspace/cli task bootstrap apply --file jumpspace-bootstrap.json --dry-run
 ```
 
 Review the proposal, then apply:
 
 ```bash
-npx @jumpspace/cli bootstrap apply --file jumpspace-bootstrap.json
-npx @jumpspace/cli scan
+npx @jumpspace/cli task bootstrap apply --file jumpspace-bootstrap.json
+npx @jumpspace/cli task scan
 ```
 
 ## 4. Ask Where A Behavior Is Implemented
 
 ```bash
-npx @jumpspace/cli ask "Where are project invites implemented?" --json
+npx @jumpspace/cli task ask "Where are project invites implemented?" --json
 ```
 
 Treat the response as evidence. Inspect task IDs, paths, match reasons, linked
@@ -46,7 +46,7 @@ code/tests, coverage, and unanswered terms.
 ## 5. Start Agent Work From A Task Packet
 
 ```bash
-npx @jumpspace/cli work DOC-PROJECT-001 --json
+npx @jumpspace/cli task work DOC-PROJECT-001 --json
 ```
 
 The agent should inspect the packet before editing code.
@@ -54,13 +54,13 @@ The agent should inspect the packet before editing code.
 ## 6. Complete A Plan Step
 
 ```bash
-npx @jumpspace/cli step complete DOC-PROJECT-001 design --evidence "Human approved the implementation plan."
+npx @jumpspace/cli task step complete DOC-PROJECT-001 design --evidence "Human approved the implementation plan."
 ```
 
 ## 7. Verify Work
 
 ```bash
-npx @jumpspace/cli verify DOC-PROJECT-001 --check "npm test" --criteria AC-1 --evidence "Focused tests passed."
+npx @jumpspace/cli task verify DOC-PROJECT-001 --check "npm test" --criteria AC-1 --evidence "Focused tests passed."
 ```
 
 `verified` is earned only when checks pass.
@@ -69,8 +69,8 @@ npx @jumpspace/cli verify DOC-PROJECT-001 --check "npm test" --criteria AC-1 --e
 
 ```bash
 npx @jumpspace/cli changed --since main --json
-npx @jumpspace/cli drift --since main --json
-npx @jumpspace/cli pr comment --since main
+npx @jumpspace/cli task drift --since main --json
+npx @jumpspace/cli task pr comment --since main
 ```
 
 The PR comment is review-only text; it does not post to GitHub.
@@ -78,7 +78,7 @@ The PR comment is review-only text; it does not post to GitHub.
 ## 9. Hand Off To The Next Agent
 
 ```bash
-npx @jumpspace/cli handoff --task DOC-PROJECT-001 --json
+npx @jumpspace/cli task handoff --task DOC-PROJECT-001 --json
 ```
 
 The next agent can resume from repo-local implementation memory instead of

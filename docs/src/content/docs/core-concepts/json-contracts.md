@@ -28,9 +28,9 @@ Human-readable commands still print useful messages, but scripts should use `--j
 
 ```bash
 npx @jumpspace/cli schema list --json
-npx @jumpspace/cli schema show work --json
-npx @jumpspace/cli schema show plan.save --json
-npx @jumpspace/cli schema show verify --json
+npx @jumpspace/cli schema show task.work --json
+npx @jumpspace/cli schema show task.plan.save --json
+npx @jumpspace/cli schema show task.verify --json
 npx @jumpspace/cli schema coverage --json
 ```
 
@@ -50,7 +50,7 @@ Use those when you need static contracts without shelling out to the CLI.
 ```ts
 import { assertOk, getSdkSchema, isJumpspaceErrorEnvelope } from '@jumpspace/cli/sdk';
 
-const workSchema = getSdkSchema('work');
+const workSchema = getSdkSchema('task.work');
 ```
 
 The TypeScript SDK exposes schema names, contract version, command result aliases, and error helpers.

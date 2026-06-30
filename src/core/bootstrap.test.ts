@@ -39,7 +39,7 @@ describe("bootstrap", () => {
       ]),
     );
     expect(context.headings.find((heading) => heading.heading === "Password entry")?.linked_file_hints).not.toContain("Next.js");
-    expect(context.proposal_schema.commands.apply).toBe("jumpspace bootstrap apply --file <proposal-file>");
+    expect(context.proposal_schema.commands.apply).toBe("jumpspace task bootstrap apply --file <proposal-file>");
   });
 
   it("validates proposal IDs, dependencies, headings, and evidenced links", async () => {

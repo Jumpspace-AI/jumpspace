@@ -32,8 +32,8 @@ describe("installCiWorkflow", () => {
     expect(workflow).toContain("node-version: 22");
     expect(workflow).toContain("cache: npm");
     expect(workflow).toContain("npm ci --ignore-scripts");
-    expect(workflow).toContain("npx @jumpspace/cli scan");
-    expect(workflow).toContain("npx @jumpspace/cli semantic build --json > jumpspace-semantic-build.json");
+    expect(workflow).toContain("npx @jumpspace/cli task scan");
+    expect(workflow).toContain("npx @jumpspace/cli task semantic build --json > jumpspace-semantic-build.json");
     expect(workflow).toContain('"$SCAN_EXIT" "$SEMANTIC_EXIT" "$COMMENT_EXIT" "$AUDIT_EXIT" "$DOCTOR_EXIT"');
     expect(workflow).toContain("pr comment --since \"$BASE_SHA\"");
     expect(workflow).not.toContain("npm run build");

@@ -123,7 +123,7 @@ export function renderTaskContext(task: JumpTask): string {
     "- If you change implementation files, update this jumpspace block.",
     "- If you add or change behavior, update the spec text.",
     "- If you add or change tests, update the `tests` links.",
-    "- Run `jumpspace scan` and `jumpspace audit` before finishing.",
+    "- Run `jumpspace task scan` and `jumpspace task audit` before finishing.",
     "- In your final response, mention which Jumpspace task IDs were changed or verified.",
     "",
   ].join("\n");

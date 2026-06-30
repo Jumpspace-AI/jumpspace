@@ -10,15 +10,17 @@ Current named skills package narrower workflows:
 
 | Skill | Use when |
 | --- | --- |
-| `jumpspace-bootstrap` | Converting existing docs into task memory. |
-| `jumpspace-work` | Starting implementation from a ready task. |
+| `jumpspace-bootstrap` | Advanced import from existing docs into task memory. |
+| `jumpspace-work` | Advanced implementation from a ready task. |
 | `jumpspace-review` | Reviewing drift and preparing PR output. |
+| `jumpspace-intent-review` | Local review when changed files match active intents. |
 | `jumpspace-handoff` | Switching agents or preserving session state. |
 
 Install one named skill for one supported agent:
 
 ```bash
 npx @jumpspace/cli add-skill jumpspace-work --agent claude
+npx @jumpspace/cli add-skill intent-review --agent codex
 npx @jumpspace/cli add-skill bootstrap --agent codex
 ```
 

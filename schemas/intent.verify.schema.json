@@ -1,0 +1,142 @@
+{
+  "contract_version": 1,
+  "name": "intent.verify",
+  "command": "jumpspace intent verify (--for <path> | --since <ref> | --diff <file>) --json",
+  "description": "Creates a PR-level intent verification packet without mutating intent files.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "since",
+      "roots",
+      "paths",
+      "summary",
+      "results"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "const": true
+      },
+      "since": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "roots": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "paths": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "summary": {
+        "type": "object",
+        "required": [
+          "consistent",
+          "possible_violation",
+          "unknown",
+          "not_applicable"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "consistent": {
+            "type": "number"
+          },
+          "possible_violation": {
+            "type": "number"
+          },
+          "unknown": {
+            "type": "number"
+          },
+          "not_applicable": {
+            "type": "number"
+          }
+        }
+      },
+      "results": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "status",
+            "paths",
+            "evidence"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "status": {
+              "enum": [
+                "consistent",
+                "possible_violation",
+                "unknown",
+                "not_applicable"
+              ]
+            },
+            "intent": {
+              "type": "object",
+              "required": [
+                "id",
+                "status",
+                "scope",
+                "title",
+                "path"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "status": {
+                  "enum": [
+                    "active",
+                    "superseded",
+                    "rejected"
+                  ]
+                },
+                "scope": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "title": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "superseded_by": {
+                  "type": "string"
+                }
+              }
+            },
+            "paths": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "evidence": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

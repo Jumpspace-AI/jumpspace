@@ -3,7 +3,7 @@ title: Verification Records
 description: Structured proof that checks ran and criteria were covered.
 ---
 
-Verification records are written by `jumpspace verify`.
+Verification records are written by `jumpspace task verify`.
 
 They capture:
 
@@ -19,13 +19,13 @@ They capture:
 `verified` cannot be set directly:
 
 ```bash
-npx @jumpspace/cli status DOC-PROJECT-001 verified
+npx @jumpspace/cli task status DOC-PROJECT-001 verified
 ```
 
 That command is rejected. Use:
 
 ```bash
-npx @jumpspace/cli verify DOC-PROJECT-001 --check "npm test" --criteria AC-1
+npx @jumpspace/cli task verify DOC-PROJECT-001 --check "npm test" --criteria AC-1
 ```
 
 Failed checks do not write verification records or mark the task verified.

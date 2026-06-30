@@ -22,7 +22,7 @@ export async function runStatus(id: string, status: string, options: StatusOptio
   if (!task) {
     return writeError(
       options,
-      commandError("UNKNOWN_TASK", `Unknown Jumpspace task ID "${id}". Run \`jumpspace find <query>\` to locate it.`, {
+      commandError("UNKNOWN_TASK", `Unknown Jumpspace task ID "${id}". Run \`jumpspace task find <query>\` to locate it.`, {
         taskId: id,
       }),
     );
@@ -40,7 +40,7 @@ export async function runStatus(id: string, status: string, options: StatusOptio
   if (status === "verified") {
     return writeError(
       options,
-      commandError("PROTECTED_VERIFIED_STATUS", "Use `jumpspace verify` to earn verified status.", { taskId: id }),
+      commandError("PROTECTED_VERIFIED_STATUS", "Use `jumpspace task verify` to earn verified status.", { taskId: id }),
     );
   }
 
@@ -51,7 +51,7 @@ export async function runStatus(id: string, status: string, options: StatusOptio
   await refreshIndex(root);
   const config = await loadConfig(root);
   await recordMutation(root, {
-    command: "status",
+    command: "task status",
     touched_files: [task.doc.path, config.indexPath],
     task_ids: [id],
     index_changed: true,

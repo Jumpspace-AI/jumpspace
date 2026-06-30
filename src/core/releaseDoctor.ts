@@ -7,6 +7,7 @@ import { schemaCatalog } from "./schemas.js";
 
 const execFileAsync = promisify(execFile);
 const SEMVER_PATTERN = /^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/;
+const NPM_REGISTRY_TIMEOUT_MS = 30_000;
 
 export type ReleaseDoctorIssue = {
   code: string;
@@ -193,7 +194,7 @@ export async function createReleaseDoctorReport(root: string, options: ReleaseDo
     });
   }
 
-  const registry = await inspectRegistry(root, packageJson.name, exec, Boolean(options.checkRegistry));
+  const registry = await inspectRegistry(root, packageJson.name, packageJson.version, exec, Boolean(options.checkRegistry));
   if (registry.status === "unknown") {
     externalWarnings.push({
       code: registry.check === "not_requested" ? "REGISTRY_CHECK_NOT_REQUESTED" : "REGISTRY_CHECK_UNKNOWN",
@@ -202,9 +203,9 @@ export async function createReleaseDoctorReport(root: string, options: ReleaseDo
     });
   } else if (registry.status === "unavailable") {
     externalWarnings.push({
-      code: "REGISTRY_NAME_UNAVAILABLE",
+      code: "REGISTRY_VERSION_ALREADY_PUBLISHED",
       category: "external",
-      message: `npm package name ${packageJson.name} already exists at version ${registry.version ?? "unknown"}.`,
+      message: `npm package version ${packageJson.name}@${registry.version ?? packageJson.version} already exists.`,
     });
   }
 
@@ -424,6 +425,7 @@ function schemaInclusion(files: Array<{ path: string }>): ReleaseDoctorReport["s
 async function inspectRegistry(
   root: string,
   packageName: string,
+  packageVersion: string,
   exec: ExecFileLike,
   checkRegistry: boolean,
 ): Promise<ReleaseDoctorReport["registry"]> {
@@ -440,10 +442,11 @@ async function inspectRegistry(
     };
   }
 
-  const command = `npm view ${packageName} version --json`;
-  const result = await runProcess(exec, "npm", ["view", packageName, "version", "--json"], {
+  const packageSpec = `${packageName}@${packageVersion}`;
+  const command = `npm view ${packageSpec} version --json`;
+  const result = await runProcess(exec, "npm", ["view", packageSpec, "version", "--json"], {
     cwd: root,
-    timeout: 10_000,
+    timeout: NPM_REGISTRY_TIMEOUT_MS,
   });
 
   if (result.exitCode === 0) {
@@ -455,7 +458,7 @@ async function inspectRegistry(
       command,
       exit_code: result.exitCode,
       version: parseNpmViewVersion(result.stdout),
-      reason: "Registry returned an existing package version.",
+      reason: "Registry returned this exact package version.",
     };
   }
 
@@ -469,7 +472,7 @@ async function inspectRegistry(
       command,
       exit_code: result.exitCode,
       version: null,
-      reason: "Registry returned a not-found response for this package name.",
+      reason: "Registry returned a not-found response for this package version.",
     };
   }
 
@@ -499,6 +502,8 @@ async function runProcess(
       env: {
         ...process.env,
         npm_config_cache: process.env.JUMPSPACE_NPM_CACHE ?? path.join(os.tmpdir(), "jumpspace-npm-cache"),
+        npm_config_fetch_retries: process.env.JUMPSPACE_NPM_FETCH_RETRIES ?? "0",
+        npm_config_fetch_timeout: process.env.JUMPSPACE_NPM_FETCH_TIMEOUT ?? "10000",
       },
     });
     return {
@@ -507,12 +512,13 @@ async function runProcess(
       stderr: result.stderr,
     };
   } catch (error) {
-    const candidate = error as { code?: unknown; stdout?: unknown; stderr?: unknown; message?: unknown };
+    const candidate = error as { code?: unknown; stdout?: unknown; stderr?: unknown; message?: unknown; signal?: unknown; killed?: unknown };
+    const timedOut = Boolean(options.timeout) && (candidate.signal === "SIGTERM" || candidate.killed === true);
     return {
       exitCode: typeof candidate.code === "number" ? candidate.code : 1,
       stdout: typeof candidate.stdout === "string" ? candidate.stdout : String(candidate.stdout ?? ""),
       stderr: typeof candidate.stderr === "string" ? candidate.stderr : String(candidate.stderr ?? ""),
-      errorMessage: typeof candidate.message === "string" ? candidate.message : String(error),
+      errorMessage: timedOut ? `Command timed out after ${options.timeout}ms: ${file} ${args.join(" ")}` : typeof candidate.message === "string" ? candidate.message : String(error),
     };
   }
 }

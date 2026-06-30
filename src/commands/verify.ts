@@ -24,7 +24,7 @@ export async function runVerify(id: string, options: VerifyOptions = {}): Promis
 
   if (!task) {
     return writeErrors(options, [
-      commandError("UNKNOWN_TASK", `Unknown Jumpspace task ID "${id}". Run \`jumpspace find <query>\` to locate it.`, {
+      commandError("UNKNOWN_TASK", `Unknown Jumpspace task ID "${id}". Run \`jumpspace task find <query>\` to locate it.`, {
         taskId: id,
       }),
     ]);
@@ -59,7 +59,7 @@ export async function runVerify(id: string, options: VerifyOptions = {}): Promis
   await refreshIndex(root);
   const config = await loadConfig(root);
   await recordMutation(root, {
-    command: "verify",
+    command: "task verify",
     touched_files: [task.doc.path, config.indexPath],
     task_ids: [id],
     index_changed: true,

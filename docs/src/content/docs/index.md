@@ -1,14 +1,15 @@
 ---
 title: Jumpspace
-description: Implementation memory for AI coding agents.
+description: Repo-local intent memory for AI coding agents.
 ---
 
-Jumpspace gives coding agents a source-backed map between docs, code, tests,
-acceptance criteria, verification, drift, and handoff state.
+Jumpspace gives coding agents repo-local intent memory: source-controlled
+decisions, rationale, rejected alternatives, and scoped paths an agent should
+check before editing code.
 
-It is not generic memory. It is repo-local implementation memory: readable
-Markdown task blocks plus CLI packets that help agents understand what matters
-before they edit.
+It is not generic memory and it is not a hidden hosted knowledge graph. It is a
+small set of Markdown records plus CLI packets that help agents understand what
+code alone cannot explain.
 
 > Jumpspace is alpha software. CLI commands, JSON schemas, task metadata fields,
 > and generated agent guidance may change before a stable 1.0 release. Pin
@@ -20,12 +21,12 @@ before they edit.
 npm install -D @jumpspace/cli
 npx @jumpspace/cli init --auto
 npx @jumpspace/cli add-skill --all
-npx @jumpspace/cli scan
-npx @jumpspace/cli ask "What does this repo know?"
+npx @jumpspace/cli intent list
+npx @jumpspace/cli intent check --for src/app/page.tsx
 ```
 
-If the repo already has docs but no task blocks, start with
-[Existing Repo Bootstrap](/start-here/existing-repo-bootstrap/).
+If the repo does not have intent files yet, write one decision that code cannot
+explain and save it under `documentation/intents/`.
 
 ## Where To Go
 
@@ -33,6 +34,8 @@ If the repo already has docs but no task blocks, start with
 - [Quickstart](/start-here/quickstart/) gives three copy-paste paths.
 - [Why Jumpspace?](/start-here/why-jumpspace/) explains the category.
 - [Agent Setup](/start-here/agent-setup/) installs guidance for coding agents.
+- [Intents](/core-concepts/intents/) explains what belongs in durable memory.
+- [Scopes And Lookup](/core-concepts/scopes-and-lookup/) shows how path-scoped matching works.
 - [Ask Questions With Evidence](/workflows/ask-questions-with-evidence/) shows how to use retrieval honestly.
 - [Start Agent Work](/workflows/start-agent-work/) explains work packets.
 - [Verify Work](/workflows/verify-work/) records checks and acceptance coverage.
@@ -42,6 +45,6 @@ If the repo already has docs but no task blocks, start with
 
 ## Agent Rule
 
-When using Jumpspace as an agent, treat `ask` as an evidence summary, inspect
-linked files before editing, and use `work <id>` when a task is ready for
-implementation.
+When using Jumpspace as an agent, run `intent check --for <path>` before
+editing scoped files. Treat `task ask` and `task work` as advanced task-graph
+tools for repos that intentionally use task blocks.

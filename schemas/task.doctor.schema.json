@@ -1,0 +1,322 @@
+{
+  "contract_version": 1,
+  "name": "task.doctor",
+  "command": "jumpspace task doctor [--since <ref>] --json",
+  "description": "Post-mutation diagnostics that separate blocking errors, factual warnings, and suggested repairs.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "errors",
+      "warnings",
+      "suggestions",
+      "checked",
+      "last_mutation",
+      "repair"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "type": "boolean"
+      },
+      "errors": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "severity",
+            "code",
+            "message"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "severity": {
+              "enum": [
+                "warning",
+                "error"
+              ]
+            },
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "line": {
+              "type": "number"
+            },
+            "taskId": {
+              "type": "string"
+            },
+            "stepId": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "warnings": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "severity",
+            "code",
+            "message"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "severity": {
+              "enum": [
+                "warning",
+                "error"
+              ]
+            },
+            "code": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "line": {
+              "type": "number"
+            },
+            "taskId": {
+              "type": "string"
+            },
+            "stepId": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "suggestions": {
+        "type": "array",
+        "items": {
+          "type": "object"
+        }
+      },
+      "checked": {
+        "type": "object",
+        "required": [
+          "config_docs",
+          "ignored_patterns",
+          "semantic_index"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "config_docs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "ignored_patterns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "repair_since": {
+            "type": "string"
+          },
+          "semantic_index": {
+            "type": "object",
+            "required": [
+              "enabled",
+              "path"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "path": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "last_mutation": {
+        "anyOf": [
+          {
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "repair": {
+        "anyOf": [
+          {
+            "type": "object",
+            "required": [
+              "ok",
+              "since",
+              "mode",
+              "applied",
+              "mechanical_fixes",
+              "gaps",
+              "warnings",
+              "touched_files",
+              "task_ids"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "ok": {
+                "const": true
+              },
+              "since": {
+                "type": "string"
+              },
+              "mode": {
+                "enum": [
+                  "dry-run",
+                  "apply"
+                ]
+              },
+              "applied": {
+                "type": "boolean"
+              },
+              "mechanical_fixes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "type",
+                    "task_id",
+                    "field",
+                    "old_path",
+                    "new_path",
+                    "sources"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {
+                      "const": "replace_linked_path"
+                    },
+                    "task_id": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "enum": [
+                        "code",
+                        "tests",
+                        "sources"
+                      ]
+                    },
+                    "old_path": {
+                      "type": "string"
+                    },
+                    "new_path": {
+                      "type": "string"
+                    },
+                    "sources": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              },
+              "gaps": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "type",
+                    "task_id",
+                    "field",
+                    "path",
+                    "reason",
+                    "message",
+                    "removes_link"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {
+                      "const": "record_gap"
+                    },
+                    "task_id": {
+                      "type": "string"
+                    },
+                    "field": {
+                      "enum": [
+                        "code",
+                        "tests"
+                      ]
+                    },
+                    "path": {
+                      "type": "string"
+                    },
+                    "reason": {
+                      "enum": [
+                        "deleted",
+                        "missing"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "removes_link": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "warnings": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "taskId": {
+                      "type": "string"
+                    },
+                    "path": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "touched_files": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "task_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    }
+  }
+}

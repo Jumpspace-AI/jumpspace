@@ -118,7 +118,7 @@ export async function planTaskLinkUpdate(
   if (!task) {
     return {
       ok: false,
-      errors: [commandError("UNKNOWN_TASK", `Unknown Jumpspace task ID "${taskId}". Run \`jumpspace find <query>\` to locate it.`, { taskId })],
+      errors: [commandError("UNKNOWN_TASK", `Unknown Jumpspace task ID "${taskId}". Run \`jumpspace task find <query>\` to locate it.`, { taskId })],
     };
   }
 

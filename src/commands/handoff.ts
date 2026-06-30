@@ -33,7 +33,7 @@ export async function runHandoff(options: HandoffOptions = {}): Promise<number> 
   const [audit, config, lastMutation, index] = await Promise.all([auditJumpspace(root), loadConfig(root), readLastMutation(root), readIndex(root)]);
 
   if (options.task && !index.tasks.some((task) => task.id === options.task)) {
-    const error = commandError("UNKNOWN_TASK", `Unknown Jumpspace task ID "${options.task}". Run \`jumpspace find <query>\` to locate it.`, {
+    const error = commandError("UNKNOWN_TASK", `Unknown Jumpspace task ID "${options.task}". Run \`jumpspace task find <query>\` to locate it.`, {
       taskId: options.task,
     });
     if (options.json) {

@@ -30,7 +30,7 @@ export async function auditJumpspace(root = process.cwd()): Promise<AuditResult>
       severity: "error",
       code: "MISSING_INDEX",
       path: config.indexPath,
-      message: `Missing ${config.indexPath}. Run \`jumpspace scan\` first.`,
+      message: `Missing ${config.indexPath}. Run \`jumpspace task scan\` first.`,
     });
   } else {
     try {
@@ -51,7 +51,7 @@ export async function auditJumpspace(root = process.cwd()): Promise<AuditResult>
       severity: "error",
       code: "STALE_INDEX",
       path: config.indexPath,
-      message: `${config.indexPath} is stale. Run \`jumpspace scan\` to regenerate it.`,
+      message: `${config.indexPath} is stale. Run \`jumpspace task scan\` to regenerate it.`,
     });
   }
   issues.push(...indexed.issues);

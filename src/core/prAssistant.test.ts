@@ -44,8 +44,8 @@ The implementation changed near src/import.ts.
       requires_human_approval: true,
     });
     expect(first.report.schemas).toEqual({
-      packet: "pr.comment",
-      ci: "ci",
+      packet: "task.pr.comment",
+      ci: "task.ci",
       errors: "error",
     });
     expect(first.report.review_items).toEqual(
@@ -75,7 +75,7 @@ The implementation changed near src/import.ts.
           task_id: "JS-100",
           old_path: "src/feature.ts",
           new_path: "src/renamed-feature.ts",
-          command: `jumpspace repair --since ${base} --apply`,
+          command: `jumpspace task repair --since ${base} --apply`,
         }),
       ]),
     );

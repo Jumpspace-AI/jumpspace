@@ -1,10 +1,10 @@
 # Jumpspace
 
-Implementation memory for AI coding agents.
+Repo-local intent memory for AI coding agents.
 
 Coding agents lose the thread between sessions, branches, and teammates.
-Jumpspace lets your repo docs remember which code, tests, decisions, plans, and
-verification records implement product intent.
+Jumpspace lets your repo remember the decisions, constraints, and rejected
+alternatives that code alone cannot explain.
 
 > Jumpspace is alpha software. CLI commands, JSON schemas, task metadata fields,
 > and generated agent guidance may change before a stable 1.0 release. Pin
@@ -13,27 +13,24 @@ verification records implement product intent.
 ## Why Jumpspace?
 
 Coding agents are getting better at changing code, but they still lose product
-intent. Git remembers what changed, but not what human goal the change
-satisfied. Issue trackers know planned work, but not always where that work
-lives in code. Docs explain intent, but drift from implementation. Vector search
-can find similar text, but it does not provide task lifecycle, acceptance
-criteria, verification, or drift detection.
+intent. Git remembers what changed, but not why a decision was made. Issue
+trackers know planned work, but not always which alternatives were rejected.
+Docs explain intent, but drift from implementation. Vector search can find
+similar text, but it does not tell an agent which constraints are binding before
+editing a file.
 
-Jumpspace is repo-local implementation memory. It gives coding agents and
+Jumpspace is repo-local intent memory first. It gives coding agents and
 teammates a source-backed map between:
 
-- product intent
-- Markdown docs
-- code links
-- tests
-- acceptance criteria
-- durable plans
-- verification records
-- drift warnings
-- handoff state
+- durable decisions
+- rationale
+- rejected alternatives
+- scoped code paths
+- PR-level intent verification
+- optional task/workflow state
 
-Git remembers what changed. Jumpspace remembers why it mattered, where it
-lives, what verifies it, and what the next agent should do.
+Git remembers what changed. Jumpspace remembers the constraints a future agent
+should honor.
 
 ## 30-Second Demo
 
@@ -41,81 +38,98 @@ lives, what verifies it, and what the next agent should do.
 npm install -D @jumpspace/cli
 npx @jumpspace/cli init --auto
 npx @jumpspace/cli add-skill --all
-npx @jumpspace/cli scan
-npx @jumpspace/cli ask "What does this repo know?"
+npx @jumpspace/cli intent list
+npx @jumpspace/cli intent check --for src/app/page.tsx
 ```
 
-For an existing repo with Markdown docs but no Jumpspace task blocks yet:
+For an existing repo with docs but no intent memory yet, start by writing one
+decision that code cannot explain:
 
 ```bash
-npx @jumpspace/cli bootstrap propose README.md docs/**/*.md --file jumpspace-bootstrap.json
-npx @jumpspace/cli bootstrap validate --file jumpspace-bootstrap.json
-npx @jumpspace/cli bootstrap apply --file jumpspace-bootstrap.json --dry-run
+npx @jumpspace/cli intent list --json
+npx @jumpspace/cli intent check --for src/app/page.tsx --json
+npx @jumpspace/cli intent validate --json
 ```
 
-Review the proposal, apply it, then ask an evidence question:
+When a branch adds intent files, compare against a base ref so Jumpspace can
+warn if the feature is drifting past the 0-3 new-intent guardrail:
 
 ```bash
-npx @jumpspace/cli bootstrap apply --file jumpspace-bootstrap.json
-npx @jumpspace/cli scan
-npx @jumpspace/cli ask "Where is this behavior implemented?"
+npx @jumpspace/cli intent validate --since origin/main --json
+npx @jumpspace/cli intent verify --since origin/main --json
 ```
 
 ## What It Does
 
-- Turns Markdown docs into source-backed task memory.
-- Links product intent to code and tests.
-- Gives agents safe work packets through `jumpspace work <id>`.
-- Preserves plans, acceptance criteria, and verification records.
-- Detects drift when code changes without matching docs.
+- Reads durable intent files from `documentation/intents/*.md` by default.
+- Shows agents which active intents match files they are about to edit.
+- Validates intent frontmatter, duplicate IDs, supersession links, and missing
+  rejected alternatives.
+- Creates PR-level intent verification packets without mutating intent files.
+- Keeps task/work/verify as an opt-in advanced workflow for teams that want
+  source-backed execution state.
 - Keeps memory local, reviewable, and source-controlled in the repo.
 
-## Minimal Task Block
+## Minimal Intent
 
-Add a `jumpspace` block under the Markdown heading that owns the intent:
+Add an intent when a decision captures what code cannot tell a future agent:
 
 ```md
-## Project invite flow
+---
+id: no-pre-launch-feature-flags
+status: active
+scope: src/**/*.ts, src/**/*.tsx
+---
 
-<!-- jumpspace
-id: DOC-PROJECT-001
-type: spec
-status: approved
-module: project-management
-space: repo
-keywords:
-  - invite
-  - members
-code:
-  - src/project/invitations.ts
-tests:
-  - tests/project-invitations.test.ts
-acceptance_criteria:
-  - id: AC-1
-    description: A project admin can invite a teammate by email.
--->
+# Do not gate new code paths behind runtime feature flags
 
-Project admins can invite teammates by email and see whether each invite is
-pending, accepted, or expired.
+## Decision
+While the app is pre-launch, new features ship without runtime feature-flag
+gates. Rollback is via git revert.
+
+## Why
+Feature flags add a second state dimension that the team does not need before
+external launch.
+
+## Alternatives rejected
+- **Environment-variable gates.** They still create cleanup debt and require a
+  redeploy to change.
 ```
 
-Then index and inspect it:
+Then inspect scoped intent memory:
 
 ```bash
-npx @jumpspace/cli scan
-npx @jumpspace/cli context DOC-PROJECT-001
+npx @jumpspace/cli intent list
+npx @jumpspace/cli intent check --for src/features/example.ts --json
+npx @jumpspace/cli intent validate --since origin/main --json
 ```
+
+Use YAML-array `scope` values when you need richer micromatch patterns such as
+braces or negation.
+
+## Advanced Task Graph
+
+Task blocks, durable plans, and earned verification records are still available
+for teams that want source-backed execution state. They are not the default
+Jumpspace shape.
+
+Use the task graph when a team needs approved work packets, dependency-aware
+plans, or recorded verification evidence. Keep that graph small and intentional:
+do not create task blocks when a small durable intent is enough.
 
 ## Quick Paths
 
 - [Quickstart](https://docs.jumpspace.ai/start-here/quickstart/)
-- [Existing repo bootstrap](https://docs.jumpspace.ai/start-here/existing-repo-bootstrap/)
 - [Agent setup](https://docs.jumpspace.ai/start-here/agent-setup/)
 - [Ask questions with evidence](https://docs.jumpspace.ai/workflows/ask-questions-with-evidence/)
-- [Start agent work](https://docs.jumpspace.ai/workflows/start-agent-work/)
-- [Verify work](https://docs.jumpspace.ai/workflows/verify-work/)
 - [Review PR drift](https://docs.jumpspace.ai/workflows/review-pr-drift/)
 - [CLI reference](https://docs.jumpspace.ai/reference/cli/)
+
+Advanced workflow docs:
+
+- [Existing repo bootstrap](https://docs.jumpspace.ai/start-here/existing-repo-bootstrap/)
+- [Start agent work](https://docs.jumpspace.ai/workflows/start-agent-work/)
+- [Verify work](https://docs.jumpspace.ai/workflows/verify-work/)
 
 ## Install
 
@@ -131,14 +145,22 @@ bootstrap proposal files.
 
 ## Current Command Surface
 
-The main commands are:
+The primary intent-memory commands are:
 
-- `init`, `add-skill`, `scan`, `doctor`
-- `bootstrap discover|context|propose|validate|apply`
-- `find`, `ask`, `semantic`, `query`, `related`
-- `plan`, `ready`, `work`, `execute`, `next`, `step`, `status`, `verify`
-- `changed`, `drift`, `ci`, `pr comment`, `repair`
-- `schema`, `last`, `history`, `handoff`, `release doctor`
+- `init`, `add-skill`
+- `intent list|check|validate|verify`
+- `changed`
+- `schema`
+- `release doctor`, `release install-doctor`
+
+Advanced task-graph commands remain available for teams that opt into the older
+workflow layer:
+
+- `task scan|list|find|ask|semantic|query|related`
+- `task bootstrap discover|context|propose|validate|apply`
+- `task plan|ready|work|execute|next|step|status|verify`
+- `task link suggest|update|eval`
+- `task drift|ci|pr comment|repair|last|history|handoff|doctor|audit`
 
 Use `npx @jumpspace/cli --help` for exact options and the
 [CLI reference](https://docs.jumpspace.ai/reference/cli/) for examples.
@@ -160,9 +182,9 @@ npm --prefix docs run dev
 Jumpspace v0 is for one repo, local Markdown docs, and small teams. It is not a
 hosted knowledge graph, Jira replacement, or Confluence replacement.
 
-The strongest path today is agent-assisted adoption: install the skills, let an
-agent use Jumpspace to orient itself, and keep task blocks small enough for code
-review.
+The strongest path today is agent-assisted adoption: install the skills, record
+the few intents code cannot explain, and let agents check those intents before
+they edit scoped files.
 
 ## License and Trademarks
 

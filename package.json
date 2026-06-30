@@ -1,6 +1,6 @@
 {
   "name": "@jumpspace/cli",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Repo-local implementation memory for AI coding agents.",
   "license": "Apache-2.0",
   "keywords": [
@@ -76,6 +76,7 @@
     "chalk": "^5.4.1",
     "commander": "^12.1.0",
     "fast-glob": "^3.3.3",
+    "micromatch": "^4.0.8",
     "yaml": "^2.6.1",
     "zod": "^3.24.1"
   },

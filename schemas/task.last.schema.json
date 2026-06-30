@@ -1,0 +1,94 @@
+{
+  "contract_version": 1,
+  "name": "task.last",
+  "command": "jumpspace task last --json",
+  "description": "Most recent successful mutation summary.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "summary"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "const": true
+      },
+      "summary": {
+        "type": "object",
+        "required": [
+          "version",
+          "command",
+          "recorded_at",
+          "touched_files",
+          "task_ids",
+          "config_changes",
+          "index_changed",
+          "warnings"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "version": {
+            "const": 1
+          },
+          "command": {
+            "type": "string"
+          },
+          "recorded_at": {
+            "type": "string"
+          },
+          "touched_files": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "task_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "config_changes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "index_changed": {
+            "type": "boolean"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "code",
+                "message"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "taskId": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "stepId": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

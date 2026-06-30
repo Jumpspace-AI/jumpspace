@@ -85,7 +85,7 @@ export async function runLinkUpdate(id: string, options: LinkUpdateOptions = {})
   if (!task) {
     return writeError(
       options,
-      commandError("UNKNOWN_TASK", `Unknown Jumpspace task ID "${id}". Run \`jumpspace find <query>\` to locate it.`, { taskId: id }),
+      commandError("UNKNOWN_TASK", `Unknown Jumpspace task ID "${id}". Run \`jumpspace task find <query>\` to locate it.`, { taskId: id }),
     );
   }
 
@@ -125,7 +125,7 @@ export async function runLinkUpdate(id: string, options: LinkUpdateOptions = {})
     const config = await loadConfig(root);
     touchedFiles = [task.doc.path, config.indexPath];
     await recordMutation(root, {
-      command: "link update",
+      command: "task link update",
       touched_files: touchedFiles,
       task_ids: [id],
       index_changed: true,
@@ -154,7 +154,7 @@ export async function runLinkSuggest(id: string, options: LinkSuggestOptions = {
   if (!task) {
     return writeError(
       options,
-      commandError("UNKNOWN_TASK", `Unknown Jumpspace task ID "${id}". Run \`jumpspace find <query>\` to locate it.`, { taskId: id }),
+      commandError("UNKNOWN_TASK", `Unknown Jumpspace task ID "${id}". Run \`jumpspace task find <query>\` to locate it.`, { taskId: id }),
     );
   }
   const candidates = new Map<string, TaskLinkSuggestionCandidate>();

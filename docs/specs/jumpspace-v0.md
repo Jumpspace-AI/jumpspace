@@ -2590,7 +2590,7 @@ code:
   - src/sdk/contracts.ts
   - sdk/python/jumpspace_sdk/contracts.py
   - schemas/catalog.json
-  - schemas/pr.comment.schema.json
+  - schemas/task.pr.comment.schema.json
   - README.md
   - src/templates/AGENTS.md
   - src/templates/SKILL.md
@@ -2721,7 +2721,7 @@ plan:
         - node dist/cli.js doctor --json
         - node dist/cli.js plan validate JS-026 --json
       evidence:
-        - "Final verification passed: npm run generate:schemas built dist and generated 26 schema artifacts; npm test passed 36 files/128 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed; env npm_config_cache=/private/tmp/jumpspace-npm-cache npm pack --dry-run --json included dist/commands/pr.*, dist/core/prAssistant.*, schemas/catalog.json, schemas/pr.comment.schema.json, SDK files, and templates; node dist/cli.js scan indexed 30 tasks; node dist/cli.js semantic build --json built 30 documents with expected local-task-vector-v1 fallback because optional LanceDB/ONNX dependencies are not installed; audit --json returned ok true with no issues; doctor --json returned ok true with no warnings; plan validate JS-026 --json returned ok true. Jumpspace verify was not run because this workspace is not a Git repository, so commit SHA capture is unavailable."
+        - "Final verification passed: npm run generate:schemas built dist and generated 26 schema artifacts; npm test passed 36 files/128 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed; env npm_config_cache=/private/tmp/jumpspace-npm-cache npm pack --dry-run --json included dist/commands/pr.*, dist/core/prAssistant.*, schemas/catalog.json, schemas/task.pr.comment.schema.json, SDK files, and templates; node dist/cli.js scan indexed 30 tasks; node dist/cli.js semantic build --json built 30 documents with expected local-task-vector-v1 fallback because optional LanceDB/ONNX dependencies are not installed; audit --json returned ok true with no issues; doctor --json returned ok true with no warnings; plan validate JS-026 --json returned ok true. Jumpspace verify was not run because this workspace is not a Git repository, so commit SHA capture is unavailable."
 acceptance_criteria:
   - id: AC-1
     description: A GitHub Action or local bot wrapper runs the existing Jumpspace CI packet against a supplied base ref.
@@ -3428,7 +3428,7 @@ code:
   - sdk/python/jumpspace_sdk/contracts.py
   - sdk/python/jumpspace_sdk/__init__.py
   - schemas/catalog.json
-  - schemas/semantic.eval.schema.json
+  - schemas/task.semantic.eval.schema.json
   - README.md
   - docs/specs/jumpspace-v0.md
   - src/templates/AGENTS.md
@@ -3558,7 +3558,7 @@ plan:
         - node dist/cli.js doctor --json
         - node dist/cli.js plan validate JS-030 --json
       evidence:
-        - "Full JS-030 verification passed: npm run generate:schemas generated 28 artifacts and rebuilt dist; npm test passed 37 files/139 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed; npm pack --dry-run --json passed with 248 files including dist/core/semanticIndex.js, dist/commands/semantic.js, schemas/semantic.eval.schema.json, schemas/catalog.json, and sdk/python/jumpspace_sdk/contracts.py, with no dist test files; node dist/cli.js scan indexed 31 tasks; node dist/cli.js semantic build --backend auto --json and node dist/cli.js semantic build --json both returned ok true with active local-task-vector-v1, selected auto, degraded true, and the truthful optional LanceDB/ONNX missing reason; semantic status --json returned ready true stale false; semantic eval --json returned 3 queries with lexical/local/active hits all 3; semantic search 'task vector graph retrieval' --json returned JS-030/JS-024 evidence with graph_expansion and connected_tasks; audit --json and doctor --json returned ok true with no issues; plan validate JS-030 --json returned ok true. Jumpspace verify was not run because this workspace is not a Git repository, so commit SHA capture is unavailable."
+        - "Full JS-030 verification passed: npm run generate:schemas generated 28 artifacts and rebuilt dist; npm test passed 37 files/139 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed; npm pack --dry-run --json passed with 248 files including dist/core/semanticIndex.js, dist/commands/semantic.js, schemas/task.semantic.eval.schema.json, schemas/catalog.json, and sdk/python/jumpspace_sdk/contracts.py, with no dist test files; node dist/cli.js scan indexed 31 tasks; node dist/cli.js semantic build --backend auto --json and node dist/cli.js semantic build --json both returned ok true with active local-task-vector-v1, selected auto, degraded true, and the truthful optional LanceDB/ONNX missing reason; semantic status --json returned ready true stale false; semantic eval --json returned 3 queries with lexical/local/active hits all 3; semantic search 'task vector graph retrieval' --json returned JS-030/JS-024 evidence with graph_expansion and connected_tasks; audit --json and doctor --json returned ok true with no issues; plan validate JS-030 --json returned ok true. Jumpspace verify was not run because this workspace is not a Git repository, so commit SHA capture is unavailable."
 acceptance_criteria:
   - id: AC-1
     description: A local optional embedding backend can be installed and selected without making semantic retrieval a required dependency.
@@ -3725,7 +3725,7 @@ plan:
         - node dist/cli.js doctor --json
         - node dist/cli.js plan validate JS-032 --json
       evidence:
-        - Final JS-032 verification passed. npm run generate:schemas generated 28 schema artifacts and rebuilt dist; npm test initially exposed a tight 5s timeout in the CLI schema contract test, so src/cli.test.ts now gives that subprocess-heavy test 10 seconds, and the rerun passed 38 files/144 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed; npm pack --dry-run --json passed and the inspected manifest had 251 files with dist/core/mutationLock.js, dist/core/mutationLock.d.ts, schemas/catalog.json, schemas/semantic.eval.schema.json, sdk/python/jumpspace_sdk/contracts.py, and no dist test files; node dist/cli.js scan indexed 32 tasks; semantic build --json built 32 documents with expected local-task-vector-v1 degraded fallback because optional LanceDB/ONNX dependencies are not installed; audit --json returned ok true with no issues; doctor --json returned ok true with no warnings or suggestions; plan validate JS-032 --json returned ok true; next JS-032 --json returned only final-verify before this completion.
+        - Final JS-032 verification passed. npm run generate:schemas generated 28 schema artifacts and rebuilt dist; npm test initially exposed a tight 5s timeout in the CLI schema contract test, so src/cli.test.ts now gives that subprocess-heavy test 10 seconds, and the rerun passed 38 files/144 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed; npm pack --dry-run --json passed and the inspected manifest had 251 files with dist/core/mutationLock.js, dist/core/mutationLock.d.ts, schemas/catalog.json, schemas/task.semantic.eval.schema.json, sdk/python/jumpspace_sdk/contracts.py, and no dist test files; node dist/cli.js scan indexed 32 tasks; semantic build --json built 32 documents with expected local-task-vector-v1 degraded fallback because optional LanceDB/ONNX dependencies are not installed; audit --json returned ok true with no issues; doctor --json returned ok true with no warnings or suggestions; plan validate JS-032 --json returned ok true; next JS-032 --json returned only final-verify before this completion.
 acceptance_criteria:
   - id: AC-1
     description: Task metadata mutation commands serialize read-modify-write operations through a repo-local lock.
@@ -3769,12 +3769,12 @@ code:
   - src/core/agentSkills.ts
   - src/core/types.ts
   - src/core/plans.ts
-  - schemas/link.schema.json
-  - schemas/plan.save.schema.json
-  - schemas/plan.show.schema.json
-  - schemas/step.complete.schema.json
-  - schemas/next.schema.json
-  - schemas/handoff.schema.json
+  - schemas/task.link.schema.json
+  - schemas/task.plan.save.schema.json
+  - schemas/task.plan.show.schema.json
+  - schemas/task.step.complete.schema.json
+  - schemas/task.next.schema.json
+  - schemas/task.handoff.schema.json
   - docs/src/content/docs/core-concepts/plans.md
   - docs/src/content/docs/advanced/planning-and-verification.md
 tests:
@@ -3912,7 +3912,7 @@ plan:
         - node dist/cli.js doctor --json
         - node dist/cli.js plan validate JS-033 --json
       evidence:
-        - "Final JS-033 verification passed: npm run generate:schemas generated 38 schema artifacts and rebuilt executable dist; npm test passed 38 files/144 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed; npm pack --dry-run --json produced jumpspace 0.1.0 with 262 files, included LICENSE, schemas/plan.save.schema.json, schemas/step.complete.schema.json, schemas/verify.schema.json, sdk/python/jumpspace_sdk/contracts.py, no dist test files, and dist/cli.js mode 493 (0755); node dist/cli.js scan indexed 34 tasks; semantic build --json refreshed 34 documents with expected local-task-vector-v1 fallback; audit --json returned ok true with no issues; doctor --json returned ok true with no warnings or suggestions; plan validate JS-033 --json returned ok true; schema list --json includes plan.review, plan.save, plan.show, plan.validate, ready, execute, next, step.complete, status, and verify."
+        - "Final JS-033 verification passed: npm run generate:schemas generated 38 schema artifacts and rebuilt executable dist; npm test passed 38 files/144 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed; npm pack --dry-run --json produced jumpspace 0.1.0 with 262 files, included LICENSE, schemas/task.plan.save.schema.json, schemas/task.step.complete.schema.json, schemas/task.verify.schema.json, sdk/python/jumpspace_sdk/contracts.py, no dist test files, and dist/cli.js mode 493 (0755); node dist/cli.js scan indexed 34 tasks; semantic build --json refreshed 34 documents with expected local-task-vector-v1 fallback; audit --json returned ok true with no issues; doctor --json returned ok true with no warnings or suggestions; plan validate JS-033 --json returned ok true; schema list --json includes plan.review, plan.save, plan.show, plan.validate, ready, execute, next, step.complete, status, and verify."
 acceptance_criteria:
   - id: AC-1
     description: package.json has launch-ready version, license, repository, homepage, bugs, and keywords metadata, and a LICENSE file is included in the package.
@@ -4083,7 +4083,7 @@ code:
   - sdk/python/jumpspace_sdk/contracts.py
   - sdk/python/jumpspace_sdk/__init__.py
   - schemas/catalog.json
-  - schemas/history.schema.json
+  - schemas/task.history.schema.json
   - README.md
   - docs/specs/jumpspace-v0.md
   - src/templates/AGENTS.md
@@ -4176,7 +4176,7 @@ plan:
         - npm test -- src/cli.test.ts src/sdk/contracts.test.ts src/schemaArtifacts.test.ts
         - python3 -m unittest discover -s sdk/python/tests
       evidence:
-        - "Added src/commands/history.ts and wired jumpspace history [--task <id>] [--limit <n>] [--json] into src/cli.ts. Added history JSON schema, shared mutation summary schema, TypeScript LastCommandResult/HistoryCommandResult and schema-name contract, Python SCHEMA_NAMES/HistoryResult export, and regenerated schemas/history.schema.json plus schemas/catalog.json. Verification passed: npm run generate:schemas generated 39 artifacts; npm test -- src/core/mutations.test.ts src/cli.test.ts src/sdk/contracts.test.ts src/schemaArtifacts.test.ts passed 4 files/29 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests."
+        - "Added src/commands/history.ts and wired jumpspace history [--task <id>] [--limit <n>] [--json] into src/cli.ts. Added history JSON schema, shared mutation summary schema, TypeScript LastCommandResult/HistoryCommandResult and schema-name contract, Python SCHEMA_NAMES/HistoryResult export, and regenerated schemas/task.history.schema.json plus schemas/catalog.json. Verification passed: npm run generate:schemas generated 39 artifacts; npm test -- src/core/mutations.test.ts src/cli.test.ts src/sdk/contracts.test.ts src/schemaArtifacts.test.ts passed 4 files/29 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests."
     - id: docs-links
       outcome: README, roadmap, and agent guidance explain mutation history, and JS-035 links point to implementation and tests.
       status: complete
@@ -4222,7 +4222,7 @@ plan:
         - node dist/cli.js doctor --json
         - node dist/cli.js plan validate JS-035 --json
       evidence:
-        - "Final JS-035 verification passed: npm run generate:schemas generated 39 schema artifacts and rebuilt dist; npm test passed 38 files/147 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed; npm pack --dry-run --json produced jumpspace 0.1.0 with 266 files, included dist/commands/history.js, dist/core/mutations.js, schemas/history.schema.json, SDK Python files, no dist test files, and dist/cli.js mode 493 (0755); node dist/cli.js scan indexed 35 tasks; semantic build --json refreshed 35 documents with expected local-task-vector-v1 fallback; audit --json returned ok true with no issues; doctor --json returned ok true with no warnings or suggestions; plan validate JS-035 --json returned ok true; schema show history --json returned ok true with required fields ok/history_path/total/returned/filters/entries; history --task JS-035 --limit 10 --json returned 3 entries before final-step completion."
+        - "Final JS-035 verification passed: npm run generate:schemas generated 39 schema artifacts and rebuilt dist; npm test passed 38 files/147 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed; npm pack --dry-run --json produced jumpspace 0.1.0 with 266 files, included dist/commands/history.js, dist/core/mutations.js, schemas/task.history.schema.json, SDK Python files, no dist test files, and dist/cli.js mode 493 (0755); node dist/cli.js scan indexed 35 tasks; semantic build --json refreshed 35 documents with expected local-task-vector-v1 fallback; audit --json returned ok true with no issues; doctor --json returned ok true with no warnings or suggestions; plan validate JS-035 --json returned ok true; schema show history --json returned ok true with required fields ok/history_path/total/returned/filters/entries; history --task JS-035 --limit 10 --json returned 3 entries before final-step completion."
 acceptance_criteria:
   - id: AC-1
     description: recordMutation still writes .jumpspace/last-mutation.json and also appends every successful mutation summary to .jumpspace/mutations.jsonl.
@@ -4345,7 +4345,7 @@ code:
   - src/core/workPacket.ts
   - src/commands/work.ts
   - src/core/schemas.ts
-  - schemas/work.schema.json
+  - schemas/task.work.schema.json
   - schemas/catalog.json
   - README.md
   - docs/specs/jumpspace-v0.md
@@ -4423,7 +4423,7 @@ plan:
         - packet-core
       source_files:
         - src/core/schemas.ts
-        - schemas/work.schema.json
+        - schemas/task.work.schema.json
         - schemas/catalog.json
         - README.md
         - docs/specs/jumpspace-v0.md
@@ -4439,7 +4439,7 @@ plan:
         - npm test -- src/sdk/contracts.test.ts src/schemaArtifacts.test.ts src/core/agentSkills.test.ts
         - node dist/cli.js link update JS-037 --dry-run --json
       evidence:
-        - "Updated src/core/schemas.ts and regenerated schemas/work.schema.json/catalog.json so work requires mutation_history and schemas.history. Updated README, static AGENTS/SKILL templates, generated agentSkills guidance, and agentSkills tests to say work packets include recent task mutation_history and history remains available for deeper trails. Linked JS-037 to implementation, schema artifacts, docs, templates, and tests after dry-run preview. Verification passed: npm run generate:schemas generated 39 artifacts; npm test -- src/sdk/contracts.test.ts src/schemaArtifacts.test.ts src/core/agentSkills.test.ts src/core/workPacket.test.ts src/cli.test.ts passed 5 files/31 tests; node dist/cli.js scan indexed 37 tasks."
+        - "Updated src/core/schemas.ts and regenerated schemas/task.work.schema.json/catalog.json so work requires mutation_history and schemas.history. Updated README, static AGENTS/SKILL templates, generated agentSkills guidance, and agentSkills tests to say work packets include recent task mutation_history and history remains available for deeper trails. Linked JS-037 to implementation, schema artifacts, docs, templates, and tests after dry-run preview. Verification passed: npm run generate:schemas generated 39 artifacts; npm test -- src/sdk/contracts.test.ts src/schemaArtifacts.test.ts src/core/agentSkills.test.ts src/core/workPacket.test.ts src/cli.test.ts passed 5 files/31 tests; node dist/cli.js scan indexed 37 tasks."
     - id: final-verify
       outcome: Focused tests, full tests, Python tests, build, package dry-run, scan, semantic rebuild, audit, doctor, plan validation, and work-packet smoke pass.
       status: complete
@@ -4502,7 +4502,7 @@ code:
   - docs/specs/jumpspace-v0.md
   - src/core/taskLinks.ts
   - src/core/schemas.ts
-  - schemas/ci.schema.json
+  - schemas/task.ci.schema.json
   - schemas/catalog.json
   - README.md
   - src/templates/AGENTS.md
@@ -4602,7 +4602,7 @@ plan:
         - node dist/cli.js doctor --json
         - node dist/cli.js plan validate JS-038 --json
       evidence:
-        - "Final JS-038 verification passed: npm run generate:schemas generated 39 schema artifacts; npm test -- src/core/ci.test.ts src/cli.test.ts src/core/agentSkills.test.ts src/schemaArtifacts.test.ts src/core/taskLinks.test.ts passed 5 files / 27 tests; npm test passed 38 files / 149 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed; npm pack --dry-run --json was rerun after build and produced jumpspace@0.1.0 with 266 files including dist/core/ci.js, dist/core/taskLinks.js, schemas/ci.schema.json, README, templates, and executable dist/cli.js mode 0755; scan indexed 38 tasks; semantic build refreshed 38 docs with expected local fallback; audit and doctor returned ok with no issues; plan validate JS-038 returned ok; schema show ci confirmed linked_code_candidate_matches and linked_test_candidate_matches."
+        - "Final JS-038 verification passed: npm run generate:schemas generated 39 schema artifacts; npm test -- src/core/ci.test.ts src/cli.test.ts src/core/agentSkills.test.ts src/schemaArtifacts.test.ts src/core/taskLinks.test.ts passed 5 files / 27 tests; npm test passed 38 files / 149 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed; npm pack --dry-run --json was rerun after build and produced jumpspace@0.1.0 with 266 files including dist/core/ci.js, dist/core/taskLinks.js, schemas/task.ci.schema.json, README, templates, and executable dist/cli.js mode 0755; scan indexed 38 tasks; semantic build refreshed 38 docs with expected local fallback; audit and doctor returned ok with no issues; plan validate JS-038 returned ok; schema show ci confirmed linked_code_candidate_matches and linked_test_candidate_matches."
 acceptance_criteria:
   - id: AC-1
     description: PR/CI task-block suggestions rank code and test candidates per heading instead of reusing the same global changed-file list for every heading.
@@ -4642,10 +4642,10 @@ code:
   - src/sdk/contracts.ts
   - sdk/python/jumpspace_sdk/contracts.py
   - schemas/catalog.json
-  - schemas/find.compact.schema.json
-  - schemas/ask.compact.schema.json
-  - schemas/related.schema.json
-  - schemas/related.compact.schema.json
+  - schemas/task.find.compact.schema.json
+  - schemas/task.ask.compact.schema.json
+  - schemas/task.related.schema.json
+  - schemas/task.related.compact.schema.json
   - README.md
   - src/templates/AGENTS.md
   - src/templates/SKILL.md
@@ -4799,8 +4799,8 @@ code:
   - src/templates/SKILL.md
   - src/core/agentSkills.ts
   - docs/specs/jumpspace-v0.md
-  - schemas/link.suggest.schema.json
-  - schemas/ci.schema.json
+  - schemas/task.link.suggest.schema.json
+  - schemas/task.ci.schema.json
   - schemas/catalog.json
 tests:
   - src/core/taskLinks.test.ts
@@ -4903,7 +4903,7 @@ plan:
         - node dist/cli.js doctor --json
         - node dist/cli.js plan validate JS-040 --json
       evidence:
-        - "Final JS-040 verification passed: npm test passed 38 files / 150 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed; env npm_config_cache=/private/tmp/jumpspace-npm-cache npm pack --dry-run --json passed for jumpspace@0.1.0 with 273 files including dist/core/taskLinks.js, dist/core/ci.js, schemas/link.suggest.schema.json, schemas/ci.schema.json, and executable dist/cli.js mode 0755; node dist/cli.js scan indexed 40 tasks; semantic build --json refreshed 40 docs with expected local-task-vector-v1 fallback; audit --json and doctor --json returned ok true with no issues; plan validate JS-040 --json returned ok true; built CLI link suggest JS-040 --path src/core/prAssistant.ts --json emitted evidence keys path_terms, basename_terms, content_terms, identifier_terms, phrase_matches, and coverage with no bad status stem or generic file/changed terms."
+        - "Final JS-040 verification passed: npm test passed 38 files / 150 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed; env npm_config_cache=/private/tmp/jumpspace-npm-cache npm pack --dry-run --json passed for jumpspace@0.1.0 with 273 files including dist/core/taskLinks.js, dist/core/ci.js, schemas/task.link.suggest.schema.json, schemas/task.ci.schema.json, and executable dist/cli.js mode 0755; node dist/cli.js scan indexed 40 tasks; semantic build --json refreshed 40 docs with expected local-task-vector-v1 fallback; audit --json and doctor --json returned ok true with no issues; plan validate JS-040 --json returned ok true; built CLI link suggest JS-040 --path src/core/prAssistant.ts --json emitted evidence keys path_terms, basename_terms, content_terms, identifier_terms, phrase_matches, and coverage with no bad status stem or generic file/changed terms."
 acceptance_criteria:
   - id: AC-1
     description: Link and PR task-block suggestions use one shared weighted scorer for path, basename, identifier, phrase, content, status, and source evidence.
@@ -4946,7 +4946,7 @@ code:
   - src/templates/SKILL.md
   - src/core/agentSkills.ts
   - docs/specs/jumpspace-v0.md
-  - schemas/link.eval.schema.json
+  - schemas/task.link.eval.schema.json
   - schemas/catalog.json
 tests:
   - src/core/taskLinkEval.test.ts
@@ -5056,7 +5056,7 @@ plan:
         - node dist/cli.js doctor --json
         - node dist/cli.js plan validate JS-041 --json
       evidence:
-        - "Final JS-041 verification passed: npm test passed 39 files / 151 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed and rebuilt dist with bin-mode fix; env npm_config_cache=/private/tmp/jumpspace-npm-cache npm pack --dry-run --json produced jumpspace@0.1.0 with 277 files, LICENSE included, schemas/link.eval.schema.json included, dist/core/taskLinkEval.js included, and dist/cli.js mode 0755; node dist/cli.js scan indexed 41 tasks; node dist/cli.js semantic build --json refreshed 41 documents with local-task-vector-v1 fallback; audit --json and doctor --json returned ok true with no issues; plan validate JS-041 --json returned ok true; link eval --json returned 4 passing built-in cases with top1_accuracy 1 and mean_reciprocal_rank 1."
+        - "Final JS-041 verification passed: npm test passed 39 files / 151 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed and rebuilt dist with bin-mode fix; env npm_config_cache=/private/tmp/jumpspace-npm-cache npm pack --dry-run --json produced jumpspace@0.1.0 with 277 files, LICENSE included, schemas/task.link.eval.schema.json included, dist/core/taskLinkEval.js included, and dist/cli.js mode 0755; node dist/cli.js scan indexed 41 tasks; node dist/cli.js semantic build --json refreshed 41 documents with local-task-vector-v1 fallback; audit --json and doctor --json returned ok true with no issues; plan validate JS-041 --json returned ok true; link eval --json returned 4 passing built-in cases with top1_accuracy 1 and mean_reciprocal_rank 1."
 acceptance_criteria:
   - id: AC-1
     description: A CLI command evaluates built-in link suggestion ranking fixtures without requiring Git or hosted services.
@@ -5255,7 +5255,7 @@ code:
   - src/templates/SKILL.md
   - src/core/agentSkills.ts
   - docs/specs/jumpspace-v0.md
-  - schemas/link.eval.schema.json
+  - schemas/task.link.eval.schema.json
   - schemas/catalog.json
   - fixtures/link-eval/shared-candidates.json
 tests:
@@ -5370,7 +5370,7 @@ plan:
         - node dist/cli.js doctor --json
         - node dist/cli.js plan validate JS-043 --json
       evidence:
-        - "Final JS-043 verification passed: npm test passed 39 files / 153 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed; npm pack --dry-run --json compact summary reported jumpspace@0.1.0 with 277 entries, dist/cli.js mode 0755, LICENSE included, schemas/link.eval.schema.json included, and dist/core/taskLinkEval.js included; node dist/cli.js scan indexed 44 tasks; semantic build --json refreshed 44 documents with expected local-task-vector-v1 fallback; audit --json and doctor --json returned ok true with only intentional gap warnings for JS-042 and JS-044; plan validate JS-043 --json returned ok true; link eval --json returned 6 passing built-in cases; link eval --file fixtures/link-eval/shared-candidates.json --json returned 2 passing shared-candidate cases with top1_accuracy 1 and mean_reciprocal_rank 1."
+        - "Final JS-043 verification passed: npm test passed 39 files / 153 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed; npm pack --dry-run --json compact summary reported jumpspace@0.1.0 with 277 entries, dist/cli.js mode 0755, LICENSE included, schemas/task.link.eval.schema.json included, and dist/core/taskLinkEval.js included; node dist/cli.js scan indexed 44 tasks; semantic build --json refreshed 44 documents with expected local-task-vector-v1 fallback; audit --json and doctor --json returned ok true with only intentional gap warnings for JS-042 and JS-044; plan validate JS-043 --json returned ok true; link eval --json returned 6 passing built-in cases; link eval --file fixtures/link-eval/shared-candidates.json --json returned 2 passing shared-candidate cases with top1_accuracy 1 and mean_reciprocal_rank 1."
 acceptance_criteria:
   - id: AC-1
     description: link eval can run an external fixture file as well as the built-in suite, without requiring Git or hosted services.
@@ -5562,9 +5562,9 @@ code:
   - src/templates/SKILL.md
   - src/core/agentSkills.ts
   - fixtures/link-eval/source-evidence.json
-  - schemas/link.suggest.schema.json
-  - schemas/link.eval.schema.json
-  - schemas/ci.schema.json
+  - schemas/task.link.suggest.schema.json
+  - schemas/task.link.eval.schema.json
+  - schemas/task.ci.schema.json
   - schemas/catalog.json
 tests:
   - src/core/taskLinks.test.ts
@@ -5680,7 +5680,7 @@ plan:
         - node dist/cli.js link eval --json
         - node dist/cli.js link eval --file fixtures/link-eval/source-evidence.json --json
       evidence:
-        - "Final JS-045 verification passed: npm test passed 40 files/159 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed; env npm_config_cache=/private/tmp/jumpspace-npm-cache npm pack --dry-run --json produced jumpspace@0.1.0 with 281 entries, LICENSE included, schemas/link.suggest.schema.json, schemas/link.eval.schema.json, schemas/ci.schema.json, dist/core/taskLinks.js, dist/core/ci.js, dist/core/taskLinkEval.js, and dist/cli.js mode 0755; scan indexed 45 tasks; semantic build refreshed 45 documents with expected local-task-vector-v1 fallback because optional LanceDB/ONNX dependencies are not installed; audit --json and doctor --json returned ok true with only the known JS-042 release-doctor gap warning; plan validate JS-045 --json returned ok true; schema coverage --json returned 45 declared/catalog/generated/SDK schemas with 0 issues; link eval --json passed 6/6 built-in cases; link eval --file fixtures/link-eval/source-evidence.json --json passed 3/3 source-evidence cases with top1_accuracy 1 and mean_reciprocal_rank 1. jumpspace verify was not run because this workspace is not a Git repository, so commit SHA capture is unavailable."
+        - "Final JS-045 verification passed: npm test passed 40 files/159 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed; env npm_config_cache=/private/tmp/jumpspace-npm-cache npm pack --dry-run --json produced jumpspace@0.1.0 with 281 entries, LICENSE included, schemas/task.link.suggest.schema.json, schemas/task.link.eval.schema.json, schemas/task.ci.schema.json, dist/core/taskLinks.js, dist/core/ci.js, dist/core/taskLinkEval.js, and dist/cli.js mode 0755; scan indexed 45 tasks; semantic build refreshed 45 documents with expected local-task-vector-v1 fallback because optional LanceDB/ONNX dependencies are not installed; audit --json and doctor --json returned ok true with only the known JS-042 release-doctor gap warning; plan validate JS-045 --json returned ok true; schema coverage --json returned 45 declared/catalog/generated/SDK schemas with 0 issues; link eval --json passed 6/6 built-in cases; link eval --file fixtures/link-eval/source-evidence.json --json passed 3/3 source-evidence cases with top1_accuracy 1 and mean_reciprocal_rank 1. jumpspace verify was not run because this workspace is not a Git repository, so commit SHA capture is unavailable."
 acceptance_criteria:
   - id: AC-1
     description: link suggest and PR task-block candidates require positive source evidence from path, basename, identifier, phrase, or bounded content matching before ranking as useful suggestions.
@@ -5721,7 +5721,7 @@ code:
   - src/templates/AGENTS.md
   - src/templates/SKILL.md
   - src/core/agentSkills.ts
-  - schemas/handoff.schema.json
+  - schemas/task.handoff.schema.json
   - schemas/catalog.json
 tests:
   - src/core/handoff.test.ts
@@ -5883,7 +5883,7 @@ code:
   - src/core/taskLinkEval.ts
   - fixtures/link-eval/source-evidence.json
   - src/core/schemas.ts
-  - schemas/pr.comment.schema.json
+  - schemas/task.pr.comment.schema.json
   - schemas/catalog.json
   - fixtures/link-eval/messy-repo-pr-scorer.json
 tests:
@@ -5965,7 +5965,7 @@ plan:
         - npm run generate:schemas
         - npm test -- src/core/taskLinks.test.ts src/core/ci.test.ts src/core/prAssistant.test.ts src/cli.test.ts src/schemaArtifacts.test.ts
       evidence:
-        - "Implemented JS-047 scorer surfaces across PR assistant JSON/Markdown and schema contracts. src/core/prAssistant.ts now exposes task-block useful_candidates and rejected_candidates, and review comments include useful_candidate/rejected_candidate evidence lines with score, matched_terms, match_reasons, and NO_SOURCE_EVIDENCE reasons. src/core/schemas.ts now makes pr.comment review_items explicit for task_block/repair/gap and requires useful_candidates/rejected_candidates for task blocks; schemas/pr.comment.schema.json and schemas/catalog.json were regenerated. Verification passed: npm run generate:schemas generated 47 schema artifacts; npm test -- src/core/taskLinks.test.ts src/core/ci.test.ts src/core/prAssistant.test.ts src/cli.test.ts src/schemaArtifacts.test.ts passed 5 files/28 tests; node dist/cli.js schema show pr.comment --json showed review_items task_block anyOf with useful_candidates and rejected_candidates; node dist/cli.js schema coverage --json returned ok true with declared/catalog/artifacts/sdk_names 47 and 0 issues; node dist/cli.js link eval --file fixtures/link-eval/messy-repo-pr-scorer.json --json passed 4/4 cases."
+        - "Implemented JS-047 scorer surfaces across PR assistant JSON/Markdown and schema contracts. src/core/prAssistant.ts now exposes task-block useful_candidates and rejected_candidates, and review comments include useful_candidate/rejected_candidate evidence lines with score, matched_terms, match_reasons, and NO_SOURCE_EVIDENCE reasons. src/core/schemas.ts now makes pr.comment review_items explicit for task_block/repair/gap and requires useful_candidates/rejected_candidates for task blocks; schemas/task.pr.comment.schema.json and schemas/catalog.json were regenerated. Verification passed: npm run generate:schemas generated 47 schema artifacts; npm test -- src/core/taskLinks.test.ts src/core/ci.test.ts src/core/prAssistant.test.ts src/cli.test.ts src/schemaArtifacts.test.ts passed 5 files/28 tests; node dist/cli.js schema show pr.comment --json showed review_items task_block anyOf with useful_candidates and rejected_candidates; node dist/cli.js schema coverage --json returned ok true with declared/catalog/artifacts/sdk_names 47 and 0 issues; node dist/cli.js link eval --file fixtures/link-eval/messy-repo-pr-scorer.json --json passed 4/4 cases."
     - id: final-verify
       outcome: Full tests, Python contracts, build, package dry-run, scan, semantic rebuild, audit, doctor, plan validation, schema coverage, link eval, and handoff pass.
       status: complete
@@ -5993,7 +5993,7 @@ plan:
         - node dist/cli.js link eval --file fixtures/link-eval/messy-repo-pr-scorer.json --json
         - node dist/cli.js handoff --task JS-047 --json
       evidence:
-        - "Final JS-047 verification passed. npm test passed 42 files/167 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed; env npm_config_cache=/private/tmp/jumpspace-npm-cache npm pack --dry-run --json produced jumpspace@0.1.0 with 295 entries, dist/cli.js mode 493/0755, and schemas/pr.comment.schema.json included; node dist/cli.js scan indexed 47 tasks; node dist/cli.js semantic build --json rebuilt 47 semantic documents with expected local-task-vector fallback because optional LanceDB/ONNX dependencies are not installed; audit --json and doctor --json returned ok true with no issues; plan validate JS-047 --json returned ok true; schema coverage --json returned declared/catalog/artifacts/sdk_names 47 with 0 issues; link eval --file fixtures/link-eval/messy-repo-pr-scorer.json --json passed 4/4 with top1_accuracy 1 and mean_reciprocal_rank 1; handoff --task JS-047 --json returned status ready with pending final-verify before this completion; release doctor --json returned ready with 0 local blockers/warnings and registry unknown because registry check was not requested. jumpspace verify was not run because git status/git rev-parse fail in this workspace: it is not a Git repository, so commit SHA capture is unavailable."
+        - "Final JS-047 verification passed. npm test passed 42 files/167 tests; python3 -m unittest discover -s sdk/python/tests passed 3 tests; npm run build passed; env npm_config_cache=/private/tmp/jumpspace-npm-cache npm pack --dry-run --json produced jumpspace@0.1.0 with 295 entries, dist/cli.js mode 493/0755, and schemas/task.pr.comment.schema.json included; node dist/cli.js scan indexed 47 tasks; node dist/cli.js semantic build --json rebuilt 47 semantic documents with expected local-task-vector fallback because optional LanceDB/ONNX dependencies are not installed; audit --json and doctor --json returned ok true with no issues; plan validate JS-047 --json returned ok true; schema coverage --json returned declared/catalog/artifacts/sdk_names 47 with 0 issues; link eval --file fixtures/link-eval/messy-repo-pr-scorer.json --json passed 4/4 with top1_accuracy 1 and mean_reciprocal_rank 1; handoff --task JS-047 --json returned status ready with pending final-verify before this completion; release doctor --json returned ready with 0 local blockers/warnings and registry unknown because registry check was not requested. jumpspace verify was not run because git status/git rev-parse fail in this workspace: it is not a Git repository, so commit SHA capture is unavailable."
 acceptance_criteria:
   - id: AC-1
     description: A checked-in fixture reproduces the messy-repo failure where multiple unrelated headings share one changed-file pool and previously received identical candidates with empty matched terms.

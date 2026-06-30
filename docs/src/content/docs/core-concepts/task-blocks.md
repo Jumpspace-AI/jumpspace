@@ -45,4 +45,4 @@ acceptance_criteria:
 - `verification_records`
 - `gaps`
 
-Run `jumpspace scan` after editing task blocks.
+Run `jumpspace task scan` after editing task blocks.

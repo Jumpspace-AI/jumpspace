@@ -1,0 +1,633 @@
+{
+  "contract_version": 1,
+  "name": "task.related",
+  "command": "jumpspace task related <id> --json",
+  "description": "Full dependency and reference relationships for a task.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "task",
+      "dependencies",
+      "dependents",
+      "references",
+      "referencedBy"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "task": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "type",
+          "status",
+          "doc",
+          "spec",
+          "code",
+          "tests",
+          "depends_on"
+        ],
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "spec",
+              "engineering",
+              "hotfix",
+              "adr"
+            ]
+          },
+          "status": {
+            "enum": [
+              "draft",
+              "proposed",
+              "approved",
+              "partial",
+              "implemented",
+              "verified",
+              "stale"
+            ]
+          },
+          "module": {
+            "type": "string"
+          },
+          "space": {
+            "enum": [
+              "repo",
+              "module",
+              "global"
+            ]
+          },
+          "doc": {
+            "type": "object",
+            "required": [
+              "path",
+              "heading"
+            ],
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "heading": {
+                "type": "string"
+              },
+              "line": {
+                "type": "number"
+              },
+              "level": {
+                "type": "number"
+              },
+              "parent_headings": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "spec": {
+            "type": "string"
+          },
+          "code": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tests": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "gaps": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "depends_on": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "dependencies": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "id",
+            "title",
+            "type",
+            "status",
+            "doc",
+            "spec",
+            "code",
+            "tests",
+            "depends_on"
+          ],
+          "additionalProperties": true,
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "type": {
+              "enum": [
+                "spec",
+                "engineering",
+                "hotfix",
+                "adr"
+              ]
+            },
+            "status": {
+              "enum": [
+                "draft",
+                "proposed",
+                "approved",
+                "partial",
+                "implemented",
+                "verified",
+                "stale"
+              ]
+            },
+            "module": {
+              "type": "string"
+            },
+            "space": {
+              "enum": [
+                "repo",
+                "module",
+                "global"
+              ]
+            },
+            "doc": {
+              "type": "object",
+              "required": [
+                "path",
+                "heading"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "heading": {
+                  "type": "string"
+                },
+                "line": {
+                  "type": "number"
+                },
+                "level": {
+                  "type": "number"
+                },
+                "parent_headings": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "spec": {
+              "type": "string"
+            },
+            "code": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "tests": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "gaps": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "depends_on": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "dependents": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "id",
+            "title",
+            "type",
+            "status",
+            "doc",
+            "spec",
+            "code",
+            "tests",
+            "depends_on"
+          ],
+          "additionalProperties": true,
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "type": {
+              "enum": [
+                "spec",
+                "engineering",
+                "hotfix",
+                "adr"
+              ]
+            },
+            "status": {
+              "enum": [
+                "draft",
+                "proposed",
+                "approved",
+                "partial",
+                "implemented",
+                "verified",
+                "stale"
+              ]
+            },
+            "module": {
+              "type": "string"
+            },
+            "space": {
+              "enum": [
+                "repo",
+                "module",
+                "global"
+              ]
+            },
+            "doc": {
+              "type": "object",
+              "required": [
+                "path",
+                "heading"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "heading": {
+                  "type": "string"
+                },
+                "line": {
+                  "type": "number"
+                },
+                "level": {
+                  "type": "number"
+                },
+                "parent_headings": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "spec": {
+              "type": "string"
+            },
+            "code": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "tests": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "gaps": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "depends_on": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "references": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "ref"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "ref": {
+              "type": "object",
+              "required": [
+                "type",
+                "id"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "type": {
+                  "enum": [
+                    "depends_on",
+                    "related_to",
+                    "implements",
+                    "supersedes",
+                    "conflicts_with",
+                    "informs"
+                  ]
+                },
+                "id": {
+                  "type": "string"
+                },
+                "note": {
+                  "type": "string"
+                }
+              }
+            },
+            "task": {
+              "type": "object",
+              "required": [
+                "id",
+                "title",
+                "type",
+                "status",
+                "doc",
+                "spec",
+                "code",
+                "tests",
+                "depends_on"
+              ],
+              "additionalProperties": true,
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "spec",
+                    "engineering",
+                    "hotfix",
+                    "adr"
+                  ]
+                },
+                "status": {
+                  "enum": [
+                    "draft",
+                    "proposed",
+                    "approved",
+                    "partial",
+                    "implemented",
+                    "verified",
+                    "stale"
+                  ]
+                },
+                "module": {
+                  "type": "string"
+                },
+                "space": {
+                  "enum": [
+                    "repo",
+                    "module",
+                    "global"
+                  ]
+                },
+                "doc": {
+                  "type": "object",
+                  "required": [
+                    "path",
+                    "heading"
+                  ],
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    },
+                    "heading": {
+                      "type": "string"
+                    },
+                    "line": {
+                      "type": "number"
+                    },
+                    "level": {
+                      "type": "number"
+                    },
+                    "parent_headings": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "spec": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "tests": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "gaps": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "depends_on": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "referencedBy": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "task",
+            "ref"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "task": {
+              "type": "object",
+              "required": [
+                "id",
+                "title",
+                "type",
+                "status",
+                "doc",
+                "spec",
+                "code",
+                "tests",
+                "depends_on"
+              ],
+              "additionalProperties": true,
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "spec",
+                    "engineering",
+                    "hotfix",
+                    "adr"
+                  ]
+                },
+                "status": {
+                  "enum": [
+                    "draft",
+                    "proposed",
+                    "approved",
+                    "partial",
+                    "implemented",
+                    "verified",
+                    "stale"
+                  ]
+                },
+                "module": {
+                  "type": "string"
+                },
+                "space": {
+                  "enum": [
+                    "repo",
+                    "module",
+                    "global"
+                  ]
+                },
+                "doc": {
+                  "type": "object",
+                  "required": [
+                    "path",
+                    "heading"
+                  ],
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    },
+                    "heading": {
+                      "type": "string"
+                    },
+                    "line": {
+                      "type": "number"
+                    },
+                    "level": {
+                      "type": "number"
+                    },
+                    "parent_headings": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "spec": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "tests": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "gaps": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "depends_on": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "ref": {
+              "type": "object",
+              "required": [
+                "type",
+                "id"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "type": {
+                  "enum": [
+                    "depends_on",
+                    "related_to",
+                    "implements",
+                    "supersedes",
+                    "conflicts_with",
+                    "informs"
+                  ]
+                },
+                "id": {
+                  "type": "string"
+                },
+                "note": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

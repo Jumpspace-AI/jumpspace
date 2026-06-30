@@ -21,7 +21,7 @@ describe("handoff packets", () => {
           {
             code: "RUN_SCAN",
             message: "Refresh the generated index.",
-            command: "jumpspace scan",
+            command: "jumpspace task scan",
           },
         ],
       }),
@@ -62,21 +62,21 @@ describe("handoff packets", () => {
     expect(packet.touched_files).toEqual(["README.md", "docs/specs/feature.md", "src/feature.ts"]);
     expect(packet.suggested_commands).toEqual(
       expect.arrayContaining([
-        "jumpspace scan",
-        "jumpspace semantic build --json",
-        "jumpspace audit --json",
-        "jumpspace doctor --json",
+        "jumpspace task scan",
+        "jumpspace task semantic build --json",
+        "jumpspace task audit --json",
+        "jumpspace task doctor --json",
         "jumpspace schema coverage --json",
-        "jumpspace context JS-100 --json",
-        "jumpspace plan validate JS-100 --json",
-        "jumpspace next JS-100 --json",
+        "jumpspace task context JS-100 --json",
+        "jumpspace task plan validate JS-100 --json",
+        "jumpspace task next JS-100 --json",
         "jumpspace release doctor --json",
       ]),
     );
     expect(packet.schemas).toMatchObject({
-      packet: "handoff",
+      packet: "task.handoff",
       failures: "error",
-      history: "history",
+      history: "task.history",
     });
   });
 

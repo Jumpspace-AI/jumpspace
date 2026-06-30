@@ -1,33 +1,32 @@
 ---
 title: Welcome
-description: What Jumpspace is, who it is for, and the first useful thing to try.
+description: What Jumpspace is, who it is for, and the first intent-memory workflow to try.
 ---
 
-Jumpspace is implementation memory for AI coding agents.
+Jumpspace is repo-local intent memory for AI coding agents.
 
-It turns source-controlled Markdown into a map between product intent, code,
-tests, acceptance criteria, durable plans, verification records, drift checks,
-and handoff state.
+It turns source-controlled Markdown into durable decisions, rationale, rejected
+alternatives, and scoped path checks that agents can read before editing code.
 
 ## The First Win
 
 The first win is not a perfect knowledge graph. The first win is giving an
 agent a grounded way to answer:
 
-- What does this repo already know?
-- Which docs describe the behavior?
-- Which code and tests are linked to that intent?
-- What work is approved, blocked, verified, or stale?
-- What should the next agent do without relying on chat history?
+- Which decisions apply to the files I am about to edit?
+- Why did the team choose this direction?
+- Which tempting alternatives were already rejected?
+- Should this branch add one durable intent, or is the code enough?
+- What can the next agent learn without relying on chat history?
 
 ## Who It Is For
 
 Use Jumpspace when:
 
 - your team uses AI coding agents across sessions or branches
-- product intent lives in Markdown docs
-- issue trackers and commits are not enough implementation context
-- code/docs drift causes repeated rediscovery work
+- product or architecture intent is easy to lose between sessions
+- issue trackers and commits do not explain why decisions were made
+- agents keep rediscovering rejected alternatives
 - you want repo-local state instead of hosted memory
 
 Skip it for tiny throwaway repos where a README and grep are enough.
@@ -40,10 +39,18 @@ For a new or clean repo:
 npm install -D @jumpspace/cli
 npx @jumpspace/cli init --auto
 npx @jumpspace/cli add-skill --all
-npx @jumpspace/cli doctor
+npx @jumpspace/cli intent list
+npx @jumpspace/cli intent validate --json
 ```
 
-For an existing repo with useful Markdown docs, continue with
-[Existing Repo Bootstrap](/start-here/existing-repo-bootstrap/).
+Then add one intent under `documentation/intents/` for a decision code cannot
+explain, and run:
+
+```bash
+npx @jumpspace/cli intent check --for src/app/page.tsx
+```
+
+For teams that also want source-backed task state, continue with the
+[advanced bootstrap workflow](/start-here/existing-repo-bootstrap/).
 
 For agent setup, go to [Agent Setup](/start-here/agent-setup/).

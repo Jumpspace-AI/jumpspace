@@ -129,7 +129,7 @@ describe("execution renderers", () => {
 
     expect(packet).toContain("# Jumpspace Execution Packet");
     expect(packet).toContain("Ready for agent execution.");
-    expect(packet).toContain("jumpspace context JS-010");
+    expect(packet).toContain("jumpspace task context JS-010");
   });
 
   it("renders the ready queue", () => {

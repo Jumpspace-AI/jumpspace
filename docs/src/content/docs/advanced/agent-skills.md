@@ -22,25 +22,25 @@ Named installs add the reference workflow skill plus the selected pipeline skill
 The generated guidance tells agents to:
 
 - run Jumpspace discovery before broad repository reads
-- treat `ask` as evidence, not authority
+- treat `task ask` as evidence, not authority
 - use JSON schemas before scripting against command output
-- use `work` for approved implementation
-- use `next` for plan steps
+- use `task work` for approved implementation
+- use `task next` for plan steps
 - record step evidence
-- use `verify` to earn verified state
-- run scan, audit, and doctor after metadata mutations
+- use `task verify` to earn verified state
+- run `task scan`, `task audit`, and `task doctor` after metadata mutations
 - fall back to `rg` and direct code reads when Jumpspace evidence is missing
 
 ## Useful Agent Commands
 
 ```bash
-npx @jumpspace/cli find "approval flow" --json --compact
-npx @jumpspace/cli context DOC-EXAMPLE-001 --json
-npx @jumpspace/cli work DOC-EXAMPLE-001 --json
-npx @jumpspace/cli next DOC-EXAMPLE-001 --json
-npx @jumpspace/cli handoff --task DOC-EXAMPLE-001 --json
-npx @jumpspace/cli last --json
-npx @jumpspace/cli history --json
+npx @jumpspace/cli task find "approval flow" --json --compact
+npx @jumpspace/cli task context DOC-EXAMPLE-001 --json
+npx @jumpspace/cli task work DOC-EXAMPLE-001 --json
+npx @jumpspace/cli task next DOC-EXAMPLE-001 --json
+npx @jumpspace/cli task handoff --task DOC-EXAMPLE-001 --json
+npx @jumpspace/cli task last --json
+npx @jumpspace/cli task history --json
 ```
 
 ## Check The Active Install

@@ -376,7 +376,7 @@ export async function semanticIndexStatus(root: string, sourceIndex: JumpIndex, 
         severity: "warning",
         code: "MISSING_SEMANTIC_INDEX",
         path: settings.path,
-        message: `Semantic retrieval is enabled but ${settings.path} is missing. Run \`jumpspace semantic build\`.`,
+        message: `Semantic retrieval is enabled but ${settings.path} is missing. Run \`jumpspace task semantic build\`.`,
       });
     }
     return {
@@ -398,7 +398,7 @@ export async function semanticIndexStatus(root: string, sourceIndex: JumpIndex, 
       severity: "warning",
       code: "INVALID_SEMANTIC_INDEX",
       path: settings.path,
-      message: `Semantic index is invalid: ${formatError(error)}. Run \`jumpspace semantic build\`.`,
+      message: `Semantic index is invalid: ${formatError(error)}. Run \`jumpspace task semantic build\`.`,
     });
     return {
       enabled: settings.enabled,
@@ -417,7 +417,7 @@ export async function semanticIndexStatus(root: string, sourceIndex: JumpIndex, 
       severity: "warning",
       code: "STALE_SEMANTIC_INDEX",
       path: settings.path,
-      message: `${settings.path} is stale. Run \`jumpspace semantic build\` to refresh hybrid retrieval.`,
+      message: `${settings.path} is stale. Run \`jumpspace task semantic build\` to refresh hybrid retrieval.`,
     });
   }
   const runtimeIssues = await semanticBackendRuntimeIssues(semanticIndex, settings.path);
@@ -848,7 +848,7 @@ async function semanticBackendRuntimeIssues(semanticIndex: SemanticIndex, path: 
       severity: "warning",
       code: "SEMANTIC_BACKEND_UNAVAILABLE",
       path,
-      message: `${path} was built with ${LANCEDB_ONNX_SEMANTIC_BACKEND}, but optional LanceDB/ONNX dependencies are not both available. Install them locally or rebuild with \`jumpspace semantic build --backend local-task-vector-v1\`.`,
+      message: `${path} was built with ${LANCEDB_ONNX_SEMANTIC_BACKEND}, but optional LanceDB/ONNX dependencies are not both available. Install them locally or rebuild with \`jumpspace task semantic build --backend local-task-vector-v1\`.`,
     },
   ];
 }

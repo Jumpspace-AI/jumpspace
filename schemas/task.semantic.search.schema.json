@@ -1,0 +1,291 @@
+{
+  "contract_version": 1,
+  "name": "task.semantic.search",
+  "command": "jumpspace task semantic search <query...> --json",
+  "description": "Searches the generated local semantic task index.",
+  "schema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "required": [
+      "ok",
+      "query",
+      "index_path",
+      "backend",
+      "results"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "ok": {
+        "const": true
+      },
+      "query": {
+        "type": "string"
+      },
+      "index_path": {
+        "type": "string"
+      },
+      "backend": {
+        "type": "object",
+        "required": [
+          "active",
+          "preferred",
+          "selected",
+          "optional_dependencies",
+          "model",
+          "vector_kind",
+          "store",
+          "degraded",
+          "reason"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "active": {
+            "enum": [
+              "local-task-vector-v1",
+              "lancedb-onnx-v1"
+            ]
+          },
+          "preferred": {
+            "const": "lancedb+onnx"
+          },
+          "selected": {
+            "enum": [
+              "auto",
+              "local-task-vector-v1",
+              "lancedb-onnx-v1"
+            ]
+          },
+          "optional_dependencies": {
+            "type": "object",
+            "required": [
+              "lancedb",
+              "onnx"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "lancedb": {
+                "type": "boolean"
+              },
+              "onnx": {
+                "type": "boolean"
+              }
+            }
+          },
+          "model": {
+            "type": "object",
+            "required": [
+              "name",
+              "source"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "source": {
+                "enum": [
+                  "default",
+                  "config",
+                  "option",
+                  "provider"
+                ]
+              },
+              "dimensions": {
+                "type": "number"
+              }
+            }
+          },
+          "vector_kind": {
+            "enum": [
+              "sparse_terms",
+              "dense_embedding"
+            ]
+          },
+          "store": {
+            "type": "object",
+            "required": [
+              "kind",
+              "path",
+              "available"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "kind": {
+                "enum": [
+                  "json",
+                  "lancedb"
+                ]
+              },
+              "path": {
+                "type": "string"
+              },
+              "table": {
+                "type": "string"
+              },
+              "available": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": "string"
+              }
+            }
+          },
+          "degraded": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "results": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": [
+            "task_id",
+            "title",
+            "path",
+            "heading",
+            "score",
+            "matched_terms",
+            "semantic_terms",
+            "match_reasons",
+            "graph_expansion",
+            "connected_tasks"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "task_id": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "heading": {
+              "type": "string"
+            },
+            "score": {
+              "type": "number"
+            },
+            "matched_terms": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "semantic_terms": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "match_reasons": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "graph_expansion": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "kind",
+                  "from",
+                  "to",
+                  "via"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "kind": {
+                    "enum": [
+                      "dependency",
+                      "dependent",
+                      "ref",
+                      "referenced_by",
+                      "supersedes",
+                      "superseded_by",
+                      "supersession_chain",
+                      "module",
+                      "space"
+                    ]
+                  },
+                  "from": {
+                    "type": "string"
+                  },
+                  "to": {
+                    "type": "string"
+                  },
+                  "via": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "ref_type": {
+                    "type": "string"
+                  },
+                  "field": {
+                    "enum": [
+                      "module",
+                      "space"
+                    ]
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "connected_tasks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "task_id",
+                  "title",
+                  "status",
+                  "path",
+                  "heading",
+                  "relation",
+                  "via"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "task_id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "heading": {
+                    "type": "string"
+                  },
+                  "relation": {
+                    "type": "string"
+                  },
+                  "via": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

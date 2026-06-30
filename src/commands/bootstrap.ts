@@ -97,7 +97,7 @@ export async function runBootstrapApply(options: BootstrapFileOptions): Promise<
   if (!result.dry_run) {
     const config = await loadConfig(root);
     await recordMutation(root, {
-      command: "bootstrap apply",
+      command: "task bootstrap apply",
       touched_files: [
         ...result.applied.map((item) => item.path),
         ...(result.config_paths_added.length ? [CONFIG_PATH] : []),

@@ -16,12 +16,14 @@ This creates or updates:
 - `.codex/skills/jumpspace-bootstrap/SKILL.md`
 - `.codex/skills/jumpspace-work/SKILL.md`
 - `.codex/skills/jumpspace-review/SKILL.md`
+- `.codex/skills/jumpspace-intent-review/SKILL.md`
 - `.codex/skills/jumpspace-handoff/SKILL.md`
 
 To install one pipeline skill plus the reference workflow:
 
 ```bash
 npx @jumpspace/cli add-skill jumpspace-work --agent codex
+npx @jumpspace/cli add-skill intent-review --agent codex
 ```
 
 ## Verify
@@ -37,8 +39,16 @@ linked Jumpspace build than the current checkout.
 ## First Prompt
 
 ```text
-Use the repo's Jumpspace guidance. Start with scan/find/context or work packets
-before editing code, and record evidence with Jumpspace when the task changes.
+Use the repo's Jumpspace guidance. Check matching intents before editing likely
+paths, then use task packets only if this repo has opted into the advanced task
+workflow.
+```
+
+For PR comments that mention matched intents:
+
+```text
+Use the jumpspace-intent-review skill to review this branch against the matched
+intents. Report possible violations only with quoted intent and diff evidence.
 ```
 
 ## Safe Reruns

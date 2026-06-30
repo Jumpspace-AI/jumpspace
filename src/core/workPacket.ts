@@ -54,12 +54,12 @@ export type WorkPacket = {
   required_checks: string[];
   drift: WorkPacketDrift;
   schemas: {
-    packet: "work";
+    packet: "task.work";
     failures: "error";
-    context: "context";
-    audit: "audit";
-    drift: "drift";
-    history: "history";
+    context: "task.context";
+    audit: "task.audit";
+    drift: "task.drift";
+    history: "task.history";
   };
   guardrails: string[];
   next_action: string;
@@ -82,7 +82,7 @@ export function buildWorkPacket(
     return {
       ok: false,
       errors: [
-        commandError("UNKNOWN_TASK", `Unknown Jumpspace task ID "${id}". Run \`jumpspace find <query>\` to locate it.`, {
+        commandError("UNKNOWN_TASK", `Unknown Jumpspace task ID "${id}". Run \`jumpspace task find <query>\` to locate it.`, {
           taskId: id,
         }),
       ],
@@ -93,7 +93,7 @@ export function buildWorkPacket(
     return {
       ok: false,
       errors: [
-        commandError("MISSING_PLAN", `Task ${id} does not have a durable plan. Run \`jumpspace plan save ${id} --file <plan-file>\`.`, {
+        commandError("MISSING_PLAN", `Task ${id} does not have a durable plan. Run \`jumpspace task plan save ${id} --file <plan-file>\`.`, {
           taskId: id,
         }),
       ],
@@ -168,21 +168,21 @@ export function buildWorkPacket(
       warnings: [],
     },
     schemas: {
-      packet: "work",
+      packet: "task.work",
       failures: "error",
-      context: "context",
-      audit: "audit",
-      drift: "drift",
-      history: "history",
+      context: "task.context",
+      audit: "task.audit",
+      drift: "task.drift",
+      history: "task.history",
     },
     guardrails: [
       "Treat this packet as the agent start point before editing.",
       "Inspect linked code, tests, dependencies, refs, and next plan steps before changing files.",
       "Keep implementation scoped to the current task and its dependency context.",
-      "Do not claim the task is verified through status alone; use jumpspace verify for verification records.",
+      "Do not claim the task is verified through status alone; use jumpspace task verify for verification records.",
       "Update Jumpspace links or spec text when behavior, source files, or tests change.",
-      "Run required checks, then run jumpspace scan and jumpspace audit --json before finishing.",
-      "Record plan-step evidence with jumpspace step complete after each completed step.",
+      "Run required checks, then run jumpspace task scan and jumpspace task audit --json before finishing.",
+      "Record plan-step evidence with jumpspace task step complete after each completed step.",
     ],
     next_action: renderNextAction(task, nextSteps),
   };
@@ -221,7 +221,7 @@ export function renderWorkPacket(packet: WorkPacket): string {
     "",
     "## Required Checks",
     "",
-    renderList(packet.required_checks.length ? packet.required_checks : ["No step-specific checks; run relevant tests plus jumpspace scan and audit."]),
+    renderList(packet.required_checks.length ? packet.required_checks : ["No step-specific checks; run relevant tests plus jumpspace task scan and audit."]),
     "",
     "## Drift",
     "",
