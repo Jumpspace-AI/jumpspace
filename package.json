@@ -40,7 +40,7 @@
     "./package.json": "./package.json"
   },
   "bin": {
-    "jumpspace": "./dist/cli.js"
+    "jumpspace": "dist/cli.js"
   },
   "publishConfig": {
     "access": "public"
