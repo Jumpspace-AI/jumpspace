@@ -15,7 +15,7 @@ describe("package hygiene", () => {
     expect(packageJson.version).toMatch(/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/);
     expect(packageJson.license).toBe("Apache-2.0");
     expect(packageJson.publishConfig).toMatchObject({ access: "public" });
-    expect(packageJson.bin).toMatchObject({ jumpspace: "./dist/cli.js" });
+    expect(packageJson.bin).toMatchObject({ jumpspace: "dist/cli.js" });
     expect(packageJson.repository).toMatchObject({
       type: "git",
       url: expect.stringContaining("github.com/Jumpspace-AI/jumpspace"),
