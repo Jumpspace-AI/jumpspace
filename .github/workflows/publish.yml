@@ -78,8 +78,8 @@ jobs:
             console.error(`package.json name must be @jumpspace/cli, got ${pkg.name}.`);
             process.exit(1);
           }
-          if (pkg.bin?.jumpspace !== './dist/cli.js') {
-            console.error('package.json must expose the jumpspace command at ./dist/cli.js.');
+          if (pkg.bin?.jumpspace !== 'dist/cli.js') {
+            console.error('package.json must expose the jumpspace command at dist/cli.js.');
             process.exit(1);
           }
           NODE
